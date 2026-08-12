@@ -47,7 +47,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
         href={project.projectUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="relative w-full aspect-16/10 overflow-hidden bg-[#18181B] block group/image cursor-pointer"
+        className="relative w-full aspect-16/10 overflow-hidden bg-[#F7F4F0] block group/image cursor-pointer"
       >
         <Image
           src={project.image}
@@ -56,9 +56,9 @@ export function ProjectCard({ project }: ProjectCardProps) {
           unoptimized
           quality={100}
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 800px"
-          className="object-contain object-top group-hover/image:object-bottom transition-all duration-[7s] ease-in-out"
+          className="object-cover object-top group-hover/image:object-bottom transition-all duration-[8s] ease-in-out"
         />
-        <div className="absolute inset-0 bg-transparent group-hover/image:bg-white/5 transition-colors duration-300 pointer-events-none" />
+        <div className="absolute inset-0 bg-[#252525]/0 group-hover/image:bg-[#252525]/5 transition-colors duration-300" />
       </a>
 
       {/* Project Info Section */}
