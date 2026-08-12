@@ -107,6 +107,16 @@ export const technologiesData: string[] = [
 
 export const projectsData: Project[] = [
   {
+    id: "selo-brasil",
+    title: "SELO BRASIL",
+    category: "Certificação Digital & Plataforma",
+    description: "Desenvolvimento de plataforma para serviços de certificação digital, planos de assinaturas, consultas e soluções de tecnologia.",
+    technologies: ["WordPress", "UI Design", "Front-end"],
+    year: "2026",
+    image: "/projects/selo-brasil.png",
+    projectUrl: "http://selobrasil.com.br/",
+  },
+  {
     id: "louver-games",
     title: "LOUVER GAMES",
     category: "E-commerce",
