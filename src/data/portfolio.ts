@@ -113,7 +113,7 @@ export const projectsData: Project[] = [
     description: "Desenvolvimento de plataforma para serviços de certificação digital, planos de assinaturas, consultas e soluções de tecnologia.",
     technologies: ["WordPress", "UI Design", "Front-end"],
     year: "2026",
-    image: "/projects/selo-brasil.png",
+    image: "/projects/selo-brasil.webp",
     projectUrl: "http://selobrasil.com.br/",
   },
   {
@@ -123,7 +123,7 @@ export const projectsData: Project[] = [
     description: "Website e landing page de alta conversão para consultoria em psicologia infantil, desenvolvimento comportamental e suporte familiar.",
     technologies: ["WordPress", "Elementor", "UI Design"],
     year: "2026",
-    image: "/projects/mirele-fabro.png",
+    image: "/projects/mirele-fabro.webp",
     projectUrl: "https://mirelefabro.com.br/",
   },
   {
@@ -133,7 +133,7 @@ export const projectsData: Project[] = [
     description: "Plataforma e e-commerce especializado na venda de gift cards, moedas virtuais e licenças de jogos digitais com entrega rápida.",
     technologies: ["WordPress", "WooCommerce", "UI Design"],
     year: "2026",
-    image: "/projects/slouver-games.png",
+    image: "/projects/slouver-games.webp",
     projectUrl: "https://slouvergames.com.br/",
   },
   {
@@ -143,7 +143,7 @@ export const projectsData: Project[] = [
     description: "Website corporativo e jurídico de alta autoridade para escritório de advocacia especializado em consultoria empresarial e contencioso.",
     technologies: ["WordPress", "Elementor", "UI Design"],
     year: "2026",
-    image: "/projects/acj-advogados.png",
+    image: "/projects/acj-advogados.webp",
     projectUrl: "https://acjadvogados.com/",
   },
   {
@@ -153,7 +153,7 @@ export const projectsData: Project[] = [
     description: "Plataforma digital e landing page institucional focada em soluções jurídicas especializadas, posicionamento de marca e captação de clientes.",
     technologies: ["WordPress", "Elementor", "UI Design"],
     year: "2026",
-    image: "/projects/neves-padua.png",
+    image: "/projects/neves-padua.webp",
     projectUrl: "https://nevespaduaadvocacia.com.br/",
   },
   {
@@ -163,7 +163,7 @@ export const projectsData: Project[] = [
     description: "Website e portal de serviços médicos e hospitalares com catálogo de produtos, soluções em saúde e estrutura de atendimento digital.",
     technologies: ["WordPress", "UI Design", "Front-end"],
     year: "2026",
-    image: "/projects/riosmed.png",
+    image: "/projects/riosmed.webp",
     projectUrl: "https://riosmed.com.br/",
   },
   {
@@ -173,7 +173,7 @@ export const projectsData: Project[] = [
     description: "Website institucional de alto padrão e landing page jurídica focada em direito de família, atendimento humanizado e conversão de clientes.",
     technologies: ["WordPress", "Elementor", "UI Design"],
     year: "2026",
-    image: "/projects/felipe-bezerril.png",
+    image: "/projects/felipe-bezerril.webp",
     projectUrl: "https://felipebezerril.adv.br/",
   },
 ];
