@@ -117,6 +117,16 @@ export const projectsData: Project[] = [
     projectUrl: "http://selobrasil.com.br/",
   },
   {
+    id: "mirele-fabro",
+    title: "MIRELE FABRO",
+    category: "Landing Page & Saúde",
+    description: "Website e landing page de alta conversão para consultoria em psicologia infantil, desenvolvimento comportamental e suporte familiar.",
+    technologies: ["WordPress", "Elementor", "UI Design"],
+    year: "2026",
+    image: "/projects/mirele-fabro.png",
+    projectUrl: "https://mirelefabro.com.br/",
+  },
+  {
     id: "louver-games",
     title: "LOUVER GAMES",
     category: "E-commerce",
