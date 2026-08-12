@@ -28,6 +28,24 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Subtle Web Designer Editorial Grid Background Pattern */
+.bg-grid-pattern {
+  background-image: radial-gradient(#C96A4A 0.75px, transparent 0.75px), radial-gradient(#252525 0.75px, #F7F4F0 0.75px);
+  background-size: 30px 30px;
+  background-position: 0 0, 15px 15px;
+  opacity: 0.22;
+}
+
+.bg-dot-grid {
+  background-image: radial-gradient(circle, #D8D0C5 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Editorial subtle glow */
+.editorial-glow {
+  background: radial-gradient(circle at 50% 0%, rgba(201, 106, 74, 0.08) 0%, rgba(247, 244, 240, 0) 70%);
+}
+
 /* Custom subtle scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
