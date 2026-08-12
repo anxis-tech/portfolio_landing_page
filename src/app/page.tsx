@@ -8,29 +8,29 @@ export default function Home() {
   const freelasLink = socialLinksData.find((item) => item.name === "99Freelas")?.url || "https://www.99freelas.com.br/user/anxis";
 
   return (
-    <div className="relative min-h-screen bg-[#F7F4F0] text-[#252525] font-sans selection:bg-[#C96A4A] selection:text-[#FFFFFF] overflow-x-hidden">
-      {/* Subtle Web Designer Dot-Grid Background Overlay */}
-      <div className="fixed inset-0 bg-dot-grid opacity-30 pointer-events-none z-0" />
+    <div className="relative min-h-screen bg-[#0F1115] text-[#F3F4F6] font-sans selection:bg-[#E07A5F] selection:text-[#0F1115] overflow-x-hidden">
+      {/* Dark Studio Grid Background Overlay */}
+      <div className="fixed inset-0 bg-dark-grid opacity-30 pointer-events-none z-0" />
       
-      {/* Ambient Top Editorial Glow */}
-      <div className="fixed top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[350px] editorial-glow pointer-events-none z-0" />
+      {/* Ambient Top Terracotta Studio Glow */}
+      <div className="fixed top-0 left-1/2 -translate-x-1/2 w-[1100px] h-[400px] studio-glow pointer-events-none z-0" />
 
       {/* Subtle Top Editorial Utility Bar */}
-      <header className="border-b border-[#E7E1DB] bg-[#F7F4F0]/90 backdrop-blur-md sticky top-0 z-40 shadow-2xs">
+      <header className="border-b border-[#272A34] bg-[#0F1115]/85 backdrop-blur-md sticky top-0 z-40 shadow-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <span className="w-2 h-2 rounded-full bg-[#C96A4A] animate-pulse" />
-            <span className="text-xs font-bold uppercase tracking-wider text-[#252525]">
+            <span className="w-2 h-2 rounded-full bg-[#E07A5F] animate-pulse" />
+            <span className="text-xs font-extrabold uppercase tracking-wider text-[#F3F4F6]">
               {profileData.name} — Web Designer & Developer
             </span>
           </div>
 
           <div className="flex items-center space-x-6">
-            <nav className="flex items-center space-x-5 text-xs font-semibold text-[#73706C]">
-              <a href="#sobre" className="hover:text-[#C96A4A] transition-colors">
+            <nav className="flex items-center space-x-5 text-xs font-bold text-[#9CA3AF]">
+              <a href="#sobre" className="hover:text-[#E07A5F] transition-colors">
                 Sobre
               </a>
-              <a href="#projetos" className="hover:text-[#C96A4A] transition-colors">
+              <a href="#projetos" className="hover:text-[#E07A5F] transition-colors">
                 Projetos
               </a>
             </nav>
@@ -39,10 +39,10 @@ export default function Home() {
               href={freelasLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="px-3.5 py-1.5 rounded-lg bg-[#C96A4A] hover:bg-[#B25638] text-[#FFFFFF] text-xs font-semibold transition-all duration-200 flex items-center space-x-1.5 shadow-2xs hover:shadow-xs"
+              className="px-3.5 py-1.5 rounded-lg bg-[#E07A5F] hover:bg-[#F08A6F] text-[#0F1115] text-xs font-extrabold transition-all duration-200 flex items-center space-x-1.5 shadow-sm"
             >
               <span>99Freelas</span>
-              <ExternalLink className="w-3 h-3 text-[#FFFFFF]" />
+              <ExternalLink className="w-3 h-3 text-[#0F1115]" />
             </a>
           </div>
         </div>

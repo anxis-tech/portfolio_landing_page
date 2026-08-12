@@ -1,62 +1,60 @@
 @import "tailwindcss";
 
 @theme {
-  --color-page-bg: #F7F4F0;
-  --color-card-bg: #FFFFFF;
-  --color-accent: #C96A4A;
-  --color-accent-hover: #B25638;
-  --color-accent-light: #FDF5F2;
-  --color-text-main: #252525;
-  --color-text-muted: #73706C;
-  --color-border-subtle: #E7E1DB;
+  --color-page-bg: #0F1115;
+  --color-card-bg: #181A20;
+  --color-accent: #E07A5F;
+  --color-accent-hover: #F08A6F;
+  --color-accent-light: rgba(224, 122, 95, 0.12);
+  --color-text-main: #F3F4F6;
+  --color-text-muted: #9CA3AF;
+  --color-border-subtle: #272A34;
 }
 
 :root {
-  --background: #F7F4F0;
-  --foreground: #252525;
+  --background: #0F1115;
+  --foreground: #F3F4F6;
 }
 
 html {
   scroll-behavior: smooth;
+  color-scheme: dark;
 }
 
 body {
-  background-color: #F7F4F0;
-  color: #252525;
+  background-color: #0F1115;
+  color: #F3F4F6;
   font-family: var(--font-plus-jakarta), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Subtle Web Designer Editorial Grid Background Pattern */
-.bg-grid-pattern {
-  background-image: radial-gradient(#C96A4A 0.75px, transparent 0.75px), radial-gradient(#252525 0.75px, #F7F4F0 0.75px);
-  background-size: 30px 30px;
-  background-position: 0 0, 15px 15px;
-  opacity: 0.22;
+/* Dark Studio Grid Background Pattern */
+.bg-dark-grid {
+  background-image: radial-gradient(circle, #272A34 1px, transparent 1px);
+  background-size: 28px 28px;
 }
 
-.bg-dot-grid {
-  background-image: radial-gradient(circle, #D8D0C5 1px, transparent 1px);
-  background-size: 24px 24px;
+/* Dark Studio Ambient Terracotta Glow */
+.studio-glow {
+  background: radial-gradient(circle at 50% 0%, rgba(224, 122, 95, 0.14) 0%, rgba(15, 17, 21, 0) 70%);
 }
 
-/* Editorial subtle glow */
-.editorial-glow {
-  background: radial-gradient(circle at 50% 0%, rgba(201, 106, 74, 0.08) 0%, rgba(247, 244, 240, 0) 70%);
+.studio-card-glow {
+  background: radial-gradient(circle at 100% 0%, rgba(224, 122, 95, 0.06) 0%, rgba(24, 26, 32, 0) 60%);
 }
 
-/* Custom subtle scrollbar */
+/* Custom sleek dark scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #F7F4F0;
+  background: #0F1115;
 }
 ::-webkit-scrollbar-thumb {
-  background: #E7E1DB;
+  background: #272A34;
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #C96A4A;
+  background: #E07A5F;
 }

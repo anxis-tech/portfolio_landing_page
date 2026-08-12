@@ -7,9 +7,10 @@ import { Project } from "@/data/portfolio";
 
 interface ProjectCardProps {
   project: Project;
+  index: number;
 }
 
-export function ProjectCard({ project }: ProjectCardProps) {
+export function ProjectCard({ project, index }: ProjectCardProps) {
   // Ensure the top browser bar URL always displays with https://
   const displayUrl = project.projectUrl.startsWith("http://")
     ? project.projectUrl.replace("http://", "https://")
@@ -17,30 +18,34 @@ export function ProjectCard({ project }: ProjectCardProps) {
     ? project.projectUrl
     : `https://${project.projectUrl}`;
 
+  // Formatted project index number (01, 02, 03...)
+  const projectNumber = String(index + 1).padStart(2, "0");
+
   return (
-    <article className="group bg-[#FFFFFF] border border-[#E7E1DB] rounded-2xl overflow-hidden shadow-xs hover:shadow-xl hover:-translate-y-1 hover:border-[#C96A4A]/50 transition-all duration-300 flex flex-col">
-      {/* Minimalist Web Designer Browser Frame Bar */}
-      <div className="flex items-center justify-between px-4 py-3 bg-[#F7F4F0] border-b border-[#E7E1DB]">
+    <article className="group bg-[#181A20] border border-[#272A34] rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl hover:-translate-y-1 hover:border-[#E07A5F]/50 transition-all duration-300 flex flex-col relative studio-card-glow">
+      {/* Minimalist Dark Studio Browser Frame Bar */}
+      <div className="flex items-center justify-between px-4 py-3 bg-[#121419] border-b border-[#272A34]">
         <div className="flex items-center space-x-1.5">
-          <span className="w-2.5 h-2.5 rounded-full bg-[#E7E1DB] group-hover:bg-red-400/80 transition-colors" />
-          <span className="w-2.5 h-2.5 rounded-full bg-[#E7E1DB] group-hover:bg-amber-400/80 transition-colors" />
-          <span className="w-2.5 h-2.5 rounded-full bg-[#E7E1DB] group-hover:bg-emerald-400/80 transition-colors" />
+          <span className="w-2.5 h-2.5 rounded-full bg-[#EF4444]/80 shadow-xs" />
+          <span className="w-2.5 h-2.5 rounded-full bg-[#F59E0B]/80 shadow-xs" />
+          <span className="w-2.5 h-2.5 rounded-full bg-[#10B981]/80 shadow-xs" />
         </div>
         
         <a
           href={project.projectUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center space-x-2 px-3 py-1 rounded-full bg-[#FFFFFF] border border-[#E7E1DB] hover:border-[#C96A4A] text-[10px] text-[#73706C] hover:text-[#C96A4A] transition-all font-mono shadow-2xs"
+          className="flex items-center space-x-2 px-3 py-1 rounded-full bg-[#181A20] border border-[#272A34] hover:border-[#E07A5F] text-[10px] text-[#9CA3AF] hover:text-[#E07A5F] transition-all font-mono shadow-2xs"
         >
-          <Globe className="w-3 h-3 text-[#C96A4A]" />
-          <span className="truncate max-w-[170px] sm:max-w-[220px]">
+          <Globe className="w-3 h-3 text-[#E07A5F]" />
+          <span className="truncate max-w-[160px] sm:max-w-[200px]">
             {displayUrl}
           </span>
         </a>
 
-        <span className="text-[11px] font-semibold text-[#73706C] font-mono px-2 py-0.5 rounded-md bg-[#FFFFFF] border border-[#E7E1DB]">
-          {project.year}
+        {/* Oversized Editorial Project Index Number */}
+        <span className="text-xs font-extrabold text-[#E07A5F] font-mono tracking-widest px-2 py-0.5 rounded-md bg-[#181A20] border border-[#272A34]">
+          {projectNumber}
         </span>
       </div>
 
@@ -49,7 +54,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
         href={project.projectUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="relative w-full aspect-16/10 overflow-hidden bg-[#F7F4F0] block group/image cursor-pointer"
+        className="relative w-full aspect-16/10 overflow-hidden bg-[#121419] block group/image cursor-pointer"
       >
         <Image
           src={project.image}
@@ -62,11 +67,11 @@ export function ProjectCard({ project }: ProjectCardProps) {
         />
         
         {/* Subtle Dark Overlay Gradient on Hover */}
-        <div className="absolute inset-0 bg-[#252525]/0 group-hover/image:bg-[#252525]/5 transition-colors duration-300 pointer-events-none" />
+        <div className="absolute inset-0 bg-[#0F1115]/0 group-hover/image:bg-[#0F1115]/10 transition-colors duration-300 pointer-events-none" />
 
         {/* Hover Cue Badge */}
-        <div className="absolute bottom-3 right-3 px-2.5 py-1 rounded-full bg-[#252525]/85 backdrop-blur-md text-[#FFFFFF] text-[10px] font-semibold tracking-wider uppercase opacity-0 group-hover/image:opacity-100 transition-opacity duration-300 pointer-events-none flex items-center space-x-1.5 shadow-sm">
-          <MousePointer className="w-3 h-3 text-[#C96A4A]" />
+        <div className="absolute bottom-3 right-3 px-3 py-1 rounded-full bg-[#0F1115]/90 border border-[#272A34] backdrop-blur-md text-[#E07A5F] text-[10px] font-bold tracking-wider uppercase opacity-0 group-hover/image:opacity-100 transition-opacity duration-300 pointer-events-none flex items-center space-x-1.5 shadow-md">
+          <MousePointer className="w-3 h-3 text-[#E07A5F]" />
           <span>Role para explorar</span>
         </div>
       </a>
@@ -76,33 +81,33 @@ export function ProjectCard({ project }: ProjectCardProps) {
         <div className="space-y-3">
           {/* Meta Header: Category & Year */}
           <div className="flex items-center justify-between">
-            <span className="text-xs font-extrabold uppercase tracking-wider text-[#C96A4A]">
+            <span className="text-xs font-extrabold uppercase tracking-wider text-[#E07A5F]">
               {project.category}
             </span>
-            <span className="text-xs font-semibold text-[#73706C] border border-[#E7E1DB] px-2.5 py-0.5 rounded-full bg-[#F7F4F0]">
+            <span className="text-xs font-semibold text-[#9CA3AF] border border-[#272A34] px-2.5 py-0.5 rounded-full bg-[#121419]">
               {project.year}
             </span>
           </div>
 
           {/* Title */}
-          <h3 className="text-2xl font-extrabold tracking-tight text-[#252525] group-hover:text-[#C96A4A] transition-colors duration-200">
+          <h3 className="text-2xl font-extrabold tracking-tight text-[#F3F4F6] group-hover:text-[#E07A5F] transition-colors duration-200">
             {project.title}
           </h3>
 
           {/* Description */}
-          <p className="text-sm text-[#73706C] leading-relaxed font-normal">
+          <p className="text-sm text-[#9CA3AF] leading-relaxed font-normal">
             {project.description}
           </p>
 
           {/* Technologies List */}
           <div className="pt-2 flex flex-wrap items-center gap-2">
-            <span className="text-xs font-extrabold text-[#73706C] uppercase tracking-wider mr-1">
+            <span className="text-xs font-extrabold text-[#9CA3AF] uppercase tracking-wider mr-1">
               Tech:
             </span>
             {project.technologies.map((tech) => (
               <span
                 key={tech}
-                className="text-xs text-[#252525] bg-[#F7F4F0] border border-[#E7E1DB] px-2.5 py-1 rounded-md font-medium group-hover:border-[#C96A4A]/30 transition-colors"
+                className="text-xs text-[#F3F4F6] bg-[#121419] border border-[#272A34] px-2.5 py-1 rounded-md font-medium group-hover:border-[#E07A5F]/30 transition-colors"
               >
                 {tech}
               </span>
@@ -111,21 +116,21 @@ export function ProjectCard({ project }: ProjectCardProps) {
         </div>
 
         {/* Action Links */}
-        <div className="pt-4 border-t border-[#E7E1DB] flex flex-wrap items-center gap-4 mt-auto">
+        <div className="pt-4 border-t border-[#272A34] flex flex-wrap items-center gap-4 mt-auto">
           <a
             href={project.projectUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center space-x-2 text-sm font-bold text-[#252525] hover:text-[#C96A4A] transition-colors group/link"
+            className="inline-flex items-center space-x-2 text-sm font-bold text-[#F3F4F6] hover:text-[#E07A5F] transition-colors group/link"
           >
             <span>Ver projeto ao vivo</span>
-            <ArrowUpRight className="w-4 h-4 text-[#C96A4A] group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform" />
+            <ArrowUpRight className="w-4 h-4 text-[#E07A5F] group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform" />
           </a>
 
           {project.caseStudyUrl && (
             <a
               href={project.caseStudyUrl}
-              className="inline-flex items-center space-x-1.5 text-sm font-medium text-[#73706C] hover:text-[#252525] transition-colors"
+              className="inline-flex items-center space-x-1.5 text-sm font-medium text-[#9CA3AF] hover:text-[#F3F4F6] transition-colors"
             >
               <BookOpen className="w-3.5 h-3.5" />
               <span>Estudo de caso</span>
