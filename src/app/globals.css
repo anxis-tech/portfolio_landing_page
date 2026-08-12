@@ -3,9 +3,6 @@
 @theme {
   --color-page-bg: #0F1115;
   --color-card-bg: #181A20;
-  --color-accent: #E07A5F;
-  --color-accent-hover: #F08A6F;
-  --color-accent-light: rgba(224, 122, 95, 0.12);
   --color-text-main: #F3F4F6;
   --color-text-muted: #9CA3AF;
   --color-border-subtle: #272A34;
@@ -29,19 +26,34 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Creative Web Designer Vibrant Gradient Utilities */
+.bg-creative-gradient {
+  background: linear-gradient(135deg, #FF3366 0%, #FF7A00 50%, #E040FB 100%);
+}
+
+.text-gradient-creative {
+  background: linear-gradient(135deg, #FF3366 0%, #FF7A00 50%, #E040FB 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.border-creative-gradient {
+  border-image: linear-gradient(135deg, #FF3366 0%, #FF7A00 50%, #E040FB 100%) 1;
+}
+
 /* Dark Studio Grid Background Pattern */
 .bg-dark-grid {
   background-image: radial-gradient(circle, #272A34 1px, transparent 1px);
   background-size: 28px 28px;
 }
 
-/* Dark Studio Ambient Terracotta Glow */
-.studio-glow {
-  background: radial-gradient(circle at 50% 0%, rgba(224, 122, 95, 0.14) 0%, rgba(15, 17, 21, 0) 70%);
+/* Vibrant Creative Studio Ambient Glow */
+.creative-glow {
+  background: radial-gradient(circle at 50% 0%, rgba(255, 51, 102, 0.18) 0%, rgba(224, 64, 251, 0.1) 45%, rgba(15, 17, 21, 0) 75%);
 }
 
-.studio-card-glow {
-  background: radial-gradient(circle at 100% 0%, rgba(224, 122, 95, 0.06) 0%, rgba(24, 26, 32, 0) 60%);
+.creative-card-glow {
+  background: radial-gradient(circle at 100% 0%, rgba(255, 122, 0, 0.08) 0%, rgba(24, 26, 32, 0) 60%);
 }
 
 /* Custom sleek dark scrollbar */
@@ -56,5 +68,5 @@ body {
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #E07A5F;
+  background: #FF3366;
 }
