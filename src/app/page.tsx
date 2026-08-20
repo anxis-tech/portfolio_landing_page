@@ -1,64 +1,44 @@
+"use client";
+
 import React from "react";
+import Image from "next/image";
+import { Header } from "@/components/header";
 import { ProfileColumn } from "@/components/profile-column";
 import { ProjectsColumn } from "@/components/projects-column";
-import { profileData, socialLinksData } from "@/data/portfolio";
-import { ExternalLink } from "lucide-react";
+import { profileData } from "@/data/portfolio";
 
 export default function Home() {
-  const freelasLink = socialLinksData.find((item) => item.name === "99Freelas")?.url || "https://www.99freelas.com.br/user/anxis";
-
   return (
-    <div className="relative min-h-screen bg-[#0F1115] text-[#F3F4F6] font-sans selection:bg-[#FF3366] selection:text-white overflow-x-hidden">
-      {/* Dark Studio Grid Background Overlay */}
-      <div className="fixed inset-0 bg-dark-grid opacity-30 pointer-events-none z-0" />
-      
-      {/* Vibrant Creative Studio Ambient Glow */}
-      <div className="fixed top-0 left-1/2 -translate-x-1/2 w-[1200px] h-[450px] creative-glow pointer-events-none z-0" />
+    <div className="min-h-screen bg-[#F5F5F7] text-[#191919] font-sans selection:bg-[#0057FF] selection:text-white">
+      {/* 1. Top Navigation Header */}
+      <Header />
 
-      {/* Subtle Top Editorial Utility Bar */}
-      <header className="border-b border-[#272A34] bg-[#0F1115]/85 backdrop-blur-md sticky top-0 z-40 shadow-md">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-gradient-to-r from-[#FF3366] to-[#E040FB] animate-pulse" />
-            <span className="text-xs font-extrabold uppercase tracking-wider text-[#F3F4F6]">
-              {profileData.name} — Web Designer & Developer
-            </span>
-          </div>
+      {/* 2. Panoramic Hero Banner (High-Res 4K Studio Image) */}
+      <div className="w-full relative h-48 sm:h-64 md:h-80 lg:h-[340px] xl:h-[380px] bg-[#111317] overflow-hidden">
+        <Image
+          src={profileData.bannerUrl}
+          alt="Studio Header Banner"
+          fill
+          priority
+          unoptimized
+          sizes="100vw"
+          className="object-cover object-center select-none"
+        />
+        {/* Subtle bottom gradient overlay for seamless contrast */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/30 pointer-events-none" />
+      </div>
 
-          <div className="flex items-center space-x-6">
-            <nav className="flex items-center space-x-5 text-xs font-bold text-[#9CA3AF]">
-              <a href="#sobre" className="hover:text-[#FF3366] transition-colors">
-                Sobre
-              </a>
-              <a href="#projetos" className="hover:text-[#FF3366] transition-colors">
-                Projetos
-              </a>
-            </nav>
-
-            <a
-              href={freelasLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-3.5 py-1.5 rounded-lg bg-creative-gradient hover:opacity-95 text-white text-xs font-extrabold transition-all duration-200 flex items-center space-x-1.5 shadow-sm hover:shadow-md"
-            >
-              <span>99Freelas</span>
-              <ExternalLink className="w-3 h-3 text-white" />
-            </a>
-          </div>
-        </div>
-      </header>
-
-      {/* Main Container: 2 Columns on Desktop, 1 Column on Mobile */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
-        <div className="flex flex-col lg:grid lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+      {/* 3. Main Content: Two-Column Profile & Projects Grid */}
+      <div className="max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+        <div className="flex flex-col lg:flex-row gap-8 lg:gap-10 items-start">
           
-          {/* Left Column (35% Desktop / Sticky) */}
-          <div id="sobre" className="w-full lg:col-span-4 lg:sticky lg:top-20 lg:self-start">
+          {/* Left Column: Profile Card (Sticky on Desktop) */}
+          <div className="w-full lg:w-[320px] xl:w-[360px] shrink-0 lg:sticky lg:top-20 z-10">
             <ProfileColumn />
           </div>
 
-          {/* Right Column (65% Desktop / Scrollable Projects Grid 2/2) */}
-          <div id="projetos" className="w-full lg:col-span-8">
+          {/* Right Column: Projects Grid Showcase */}
+          <div className="w-full flex-1 min-w-0 pt-2 lg:pt-4">
             <ProjectsColumn />
           </div>
 

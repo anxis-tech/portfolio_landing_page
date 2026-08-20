@@ -1,83 +1,110 @@
 "use client";
 
-import React from "react";
-import { Sparkles, ExternalLink, Code2 } from "lucide-react";
-import { projectsData, socialLinksData, profileData } from "@/data/portfolio";
+import React, { useState } from "react";
+import { ExternalLink, Briefcase, Code2 } from "lucide-react";
+import { projectsData, profileData } from "@/data/portfolio";
 import { ProjectCard } from "@/components/project-card";
 
 export function ProjectsColumn() {
-  const freelasLink = socialLinksData.find((item) => item.name === "99Freelas")?.url || "https://www.99freelas.com.br/user/anxis";
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
+
+  const categories = [
+    { id: "all", label: "Todos os Projetos" },
+    { id: "landing-page", label: "Landing Pages" },
+    { id: "institucional", label: "Sites Institucionais" },
+    { id: "ecommerce", label: "E-commerce" },
+  ];
+
+  const filteredProjects =
+    selectedCategory === "all"
+      ? projectsData
+      : projectsData.filter((p) => p.categorySlug === selectedCategory);
 
   return (
-    <main className="space-y-12 sm:space-y-16">
-      {/* Right Column Header */}
-      <div className="space-y-4 bg-[#181A20] border border-[#272A34] rounded-2xl p-6 sm:p-8 shadow-xl hover:border-[#FF3366]/40 transition-all duration-300 relative overflow-hidden creative-card-glow">
+    <main className="space-y-6 sm:space-y-8">
+      {/* 1. Header Area: Section Title & Category Filter Pills */}
+      <div className="space-y-4 border-b border-[#E5E7EB] pb-5">
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-gradient-to-r from-[#FF3366] to-[#E040FB] animate-pulse" />
-            <span className="text-xs font-extrabold uppercase tracking-[0.18em] text-gradient-creative">
-              PROJETOS SELECIONADOS
-            </span>
+          <div>
+            <h2 className="text-xl sm:text-2xl font-black text-[#191919] tracking-tight">
+              Projetos & Casos Reais
+            </h2>
+            <p className="text-xs sm:text-sm text-[#696969] mt-0.5">
+              Sites e aplicações desenvolvidas com foco em conversão, design e código limpo.
+            </p>
           </div>
 
-          <span className="px-3 py-1 rounded-full bg-gradient-to-r from-[#FF3366]/10 via-[#FF7A00]/10 to-[#E040FB]/10 text-white text-xs font-bold border border-[#FF3366]/30 flex items-center gap-1.5 shadow-2xs">
-            <Code2 className="w-3.5 h-3.5 text-[#FF3366]" />
-            <span>{projectsData.length} Projetos Reais</span>
+          <span className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-[#E5E7EB] text-xs font-bold text-[#191919] shadow-2xs">
+            <Code2 className="w-3.5 h-3.5 text-[#0057FF]" />
+            <span>{projectsData.length} Projetos</span>
           </span>
         </div>
-        
-        <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#F3F4F6]">
-          Trabalhos Recentes & Casos Reais
-        </h2>
-        
-        <p className="text-sm sm:text-base text-[#9CA3AF] leading-relaxed max-w-2xl">
-          Uma seleção de sites, landing pages e soluções web desenvolvidas para clientes reais, priorizando arquitetura limpa, performance extrema e conversão de resultados.
-        </p>
+
+        {/* Category Filters */}
+        <div className="flex flex-wrap items-center gap-2 pt-1">
+          {categories.map((cat) => (
+            <button
+              key={cat.id}
+              onClick={() => setSelectedCategory(cat.id)}
+              className={`px-4 py-2 rounded-full text-xs font-bold transition-all cursor-pointer ${
+                selectedCategory === cat.id
+                  ? "bg-[#191919] text-white shadow-xs"
+                  : "bg-white text-[#4B5563] border border-[#E5E7EB] hover:border-[#D1D5DB] hover:text-[#191919]"
+              }`}
+            >
+              {cat.label}
+            </button>
+          ))}
+        </div>
       </div>
 
-      {/* Projects Grid (2 per row) */}
-      <section className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8" aria-label="Lista de Projetos">
-        {projectsData.map((project, idx) => (
+      {/* 2. Main Projects Grid (3 Columns) */}
+      <section
+        id="projetos"
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6"
+        aria-label="Grade de Projetos"
+      >
+        {filteredProjects.map((project, idx) => (
           <ProjectCard key={project.id} project={project} index={idx} />
         ))}
       </section>
 
-      {/* Bottom Contact Section */}
-      <section className="bg-[#181A20] border border-[#272A34] rounded-2xl p-8 sm:p-12 shadow-xl hover:shadow-2xl hover:border-[#FF3366]/50 transition-all duration-300 space-y-6 text-center sm:text-left relative overflow-hidden creative-card-glow">
-        <div className="absolute top-0 right-0 w-72 h-72 bg-gradient-to-br from-[#FF3366]/10 via-[#FF7A00]/10 to-transparent rounded-full blur-3xl pointer-events-none" />
-        
-        <div className="space-y-3 relative z-10">
-          <span className="text-xs font-extrabold uppercase tracking-[0.18em] text-gradient-creative flex items-center justify-center sm:justify-start gap-1.5">
-            <Sparkles className="w-4 h-4 text-[#FF3366]" />
-            VAMOS TRABALHAR JUNTOS?
+      {/* 3. Bottom CTA Box */}
+      <section className="bg-white border border-[#E5E7EB] rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-[0_2px_12px_rgba(0,0,0,0.03)]">
+        <div className="space-y-1.5 text-center sm:text-left">
+          <span className="text-xs font-bold text-[#0057FF] uppercase tracking-wider">
+            Disponível para Novos Projetos
           </span>
-          
-          <h3 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#F3F4F6]">
-            Tem um novo projeto em mente?
+          <h3 className="text-xl sm:text-2xl font-black text-[#191919]">
+            Precisa de um site ou landing page de alta conversão?
           </h3>
-          
-          <p className="text-sm sm:text-base text-[#9CA3AF] max-w-xl">
-            Estou disponível para novos trabalhos e parcerias. Acesse meu perfil verificado no 99Freelas para enviar detalhes da sua proposta.
+          <p className="text-xs sm:text-sm text-[#696969] max-w-xl">
+            Acesse meu perfil oficial no 99Freelas para enviar detalhes da sua proposta e trabalharmos juntos.
           </p>
         </div>
 
-        {/* CTA 99Freelas */}
-        <div className="pt-2 flex flex-col sm:flex-row items-center gap-4 relative z-10">
+        <div className="shrink-0 w-full sm:w-auto">
           <a
-            href={freelasLink}
+            href={profileData.freelasUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full sm:w-auto px-7 py-3.5 rounded-xl bg-creative-gradient hover:opacity-95 text-white text-xs font-extrabold uppercase tracking-widest transition-all duration-300 shadow-md hover:shadow-xl flex items-center justify-center space-x-2 group"
+            className="w-full sm:w-auto px-7 py-3.5 rounded-full bg-[#0057FF] hover:bg-[#0045CC] text-white text-xs sm:text-sm font-bold transition-all shadow-sm flex items-center justify-center space-x-2"
           >
-            <span>Ver perfil no 99Freelas</span>
-            <ExternalLink className="w-4 h-4 text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+            <Briefcase className="w-4 h-4" />
+            <span>Contratar no 99Freelas</span>
+            <ExternalLink className="w-3.5 h-3.5 text-white/80" />
           </a>
         </div>
       </section>
 
-      {/* Footer copyright note */}
-      <footer className="text-center sm:text-left text-xs text-[#9CA3AF] pt-4 pb-8 flex flex-col sm:flex-row items-center justify-between border-t border-[#272A34]">
+      {/* 4. Minimalist Footer */}
+      <footer className="text-center sm:text-left text-xs text-[#959595] pt-4 pb-12 flex flex-col sm:flex-row items-center justify-between border-t border-[#E5E7EB] gap-2">
         <p>© {new Date().getFullYear()} {profileData.name} — Web Designer & Developer.</p>
+        <div className="flex items-center space-x-4 font-medium">
+          <a href="#projetos" className="hover:text-[#191919] transition-colors">Projetos</a>
+          <a href="#sobre" className="hover:text-[#191919] transition-colors">Sobre</a>
+          <a href={profileData.freelasUrl} target="_blank" rel="noopener noreferrer" className="hover:text-[#191919] transition-colors">99Freelas</a>
+        </div>
       </footer>
     </main>
   );
