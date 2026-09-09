@@ -1,49 +1,41 @@
-"use client";
-
 import React from "react";
-import Image from "next/image";
-import { Header } from "@/components/header";
-import { ProfileColumn } from "@/components/profile-column";
-import { ProjectsColumn } from "@/components/projects-column";
-import { profileData } from "@/data/portfolio";
+import { HeaderPill } from "@/components/header-pill";
+import { HeroEditorial } from "@/components/hero-editorial";
+import { AtAGlance } from "@/components/at-a-glance";
+import { RecentProjects } from "@/components/recent-projects";
+import { AgencyCarousel } from "@/components/agency-carousel";
+import { ServicesHelp } from "@/components/services-help";
+import { FooterEditorial } from "@/components/footer-editorial";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-[#F5F5F7] text-[#191919] font-sans selection:bg-[#0057FF] selection:text-white">
-      {/* 1. Top Navigation Header */}
-      <Header />
+    <div className="min-h-screen bg-[#FAFAFA] text-[#121212] flex flex-col items-center selection:bg-neutral-900 selection:text-white">
+      {/* 1. Navegação Flutuante em Cápsula (Pill Navigation) */}
+      <HeaderPill />
 
-      {/* 2. Panoramic Hero Banner (High-Res 4K Studio Image) */}
-      <div className="w-full relative h-48 sm:h-64 md:h-80 lg:h-[340px] xl:h-[380px] bg-[#111317] overflow-hidden">
-        <Image
-          src={profileData.bannerUrl}
-          alt="Studio Header Banner"
-          fill
-          priority
-          unoptimized
-          sizes="100vw"
-          className="object-cover object-center select-none"
-        />
-        {/* Subtle bottom gradient overlay for seamless contrast */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/30 pointer-events-none" />
-      </div>
+      {/* 
+        2. Coluna Central Editorial com Linhas de Grid Arquitetônicas
+        Inspirado diretamente na composição, proporções e grid vertical da imagem de referência.
+      */}
+      <main className="w-full max-w-6xl mx-auto border-x border-neutral-200/80 bg-[#FAFAFA] relative">
+        {/* Hero Autoral */}
+        <HeroEditorial />
 
-      {/* 3. Main Content: Two-Column Profile & Projects Grid */}
-      <div className="max-w-[1720px] mx-auto px-4 sm:px-6 lg:px-8 pb-16">
-        <div className="flex flex-col lg:flex-row gap-8 lg:gap-10 items-start">
-          
-          {/* Left Column: Profile Card (Sticky on Desktop) */}
-          <div className="w-full lg:w-[320px] xl:w-[360px] shrink-0 lg:sticky lg:top-20 z-10">
-            <ProfileColumn />
-          </div>
+        {/* Resumo Profissional / Em números (At a Glance) */}
+        <AtAGlance />
 
-          {/* Right Column: Projects Grid Showcase */}
-          <div className="w-full flex-1 min-w-0 pt-2 lg:pt-4">
-            <ProjectsColumn />
-          </div>
+        {/* Trabalhos Recentes (3 Iniciais + Expansão 'Ver mais') */}
+        <RecentProjects />
 
-        </div>
-      </div>
+        {/* Projetos em Parceria com Agências (Carrossel 2 no desktop / 1 no mobile) */}
+        <AgencyCarousel />
+
+        {/* Seção 'Como posso ajudar' & Convite para Contato */}
+        <ServicesHelp />
+      </main>
+
+      {/* 3. Footer de Alto Contraste Escuro com Mensagem Autoral */}
+      <FooterEditorial />
     </div>
   );
 }

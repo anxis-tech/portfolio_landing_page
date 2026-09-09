@@ -1,11 +1,20 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans } from "next/font/google";
+import { Plus_Jakarta_Sans, Newsreader } from "next/font/google";
 import "./globals.css";
+import { HostingerBadge } from "@/components/hostinger-badge";
 
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
   variable: "--font-plus-jakarta",
-  weight: ["400", "500", "600", "700", "800"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+});
+
+const newsreader = Newsreader({
+  subsets: ["latin"],
+  variable: "--font-newsreader",
+  weight: ["400", "500", "600", "700"],
+  style: ["normal", "italic"],
   display: "swap",
 });
 
@@ -37,9 +46,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR" className={`${plusJakarta.variable}`} suppressHydrationWarning>
-      <body className="bg-[#F5F5F7] text-[#191919] antialiased selection:bg-[#0057FF] selection:text-white font-sans" suppressHydrationWarning>
+    <html lang="pt-BR" className={`${plusJakarta.variable} ${newsreader.variable}`} suppressHydrationWarning>
+      <body className="bg-[#FAFAFA] text-[#121212] antialiased selection:bg-[#121212] selection:text-white font-sans" suppressHydrationWarning>
         {children}
+        <HostingerBadge />
       </body>
     </html>
   );
