@@ -1,7 +1,6 @@
 import React from "react";
 import { HeaderPill } from "@/components/header-pill";
 import { HeroEditorial } from "@/components/hero-editorial";
-import { AtAGlance } from "@/components/at-a-glance";
 import { RecentProjects } from "@/components/recent-projects";
 import { AgencyCarousel } from "@/components/agency-carousel";
 import { ServicesHelp } from "@/components/services-help";
@@ -18,11 +17,8 @@ export default function Home() {
         Inspirado diretamente na composição, proporções e grid vertical da imagem de referência.
       */}
       <main className="w-full max-w-6xl mx-auto border-x border-neutral-200/80 bg-[#FAFAFA] relative">
-        {/* Hero Autoral */}
+        {/* Hero Autoral com Social Proof e Métricas Sutis */}
         <HeroEditorial />
-
-        {/* Resumo Profissional / Em números (At a Glance) */}
-        <AtAGlance />
 
         {/* Trabalhos Recentes (3 Iniciais + Expansão 'Ver mais') */}
         <RecentProjects />
