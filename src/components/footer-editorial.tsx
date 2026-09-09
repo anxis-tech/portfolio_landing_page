@@ -1,6 +1,5 @@
 import React from "react";
 import { profileData } from "@/data/portfolio";
-import { ArrowUpRight } from "lucide-react";
 
 export function FooterEditorial() {
   const currentYear = new Date().getFullYear();
@@ -32,28 +31,6 @@ export function FooterEditorial() {
         <p className="font-serif-editorial text-xl sm:text-2xl text-neutral-400 italic tracking-tight font-normal mt-0.5">
           {profileData.footerQuote.secondary}
         </p>
-
-        {/* Links Discretos Profissionais */}
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-[13px] text-neutral-400">
-          <a
-            href={profileData.linkedin}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-white transition-colors flex items-center gap-1"
-          >
-            <span>LinkedIn</span>
-            <ArrowUpRight size={12} className="text-neutral-500" />
-          </a>
-          <a
-            href={profileData.github}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-white transition-colors flex items-center gap-1"
-          >
-            <span>GitHub</span>
-            <ArrowUpRight size={12} className="text-neutral-500" />
-          </a>
-        </div>
 
         {/* Linha de Copyright e Créditos */}
         <div className="mt-10 pt-6 border-t border-neutral-900/80 w-full max-w-xs flex flex-col items-center gap-1 text-[11px] font-mono text-neutral-500">

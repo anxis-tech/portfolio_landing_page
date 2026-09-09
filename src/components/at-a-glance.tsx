@@ -1,5 +1,6 @@
 import React from "react";
 import { statsData } from "@/data/portfolio";
+import { Star } from "lucide-react";
 
 export function AtAGlance() {
   return (
@@ -20,9 +21,18 @@ export function AtAGlance() {
               idx !== 0 ? "sm:border-l sm:border-neutral-200/70 sm:pl-8 lg:pl-10" : ""
             }`}
           >
-            <span className="font-serif-editorial text-3xl sm:text-4xl lg:text-5xl text-neutral-950 font-normal tracking-tight">
-              {stat.value}
-            </span>
+            <div className="flex items-baseline gap-2.5">
+              <span className="font-serif-editorial text-3xl sm:text-4xl lg:text-5xl text-neutral-950 font-normal tracking-tight">
+                {stat.value}
+              </span>
+              {stat.id === "rating" && (
+                <div className="flex items-center gap-0.5 text-amber-400 mb-1" aria-label="5 de 5 estrelas">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} size={15} className="fill-amber-400 text-amber-400" />
+                  ))}
+                </div>
+              )}
+            </div>
             <span className="text-[13px] font-medium text-neutral-800 mt-1">
               {stat.label}
             </span>

@@ -87,20 +87,20 @@ export const profileData: ProfileInfo = {
    ========================================================================= */
 export const statsData: StatItem[] = [
   {
+    id: "rating",
+    value: "5.0",
+    label: "Avaliação 5 estrelas",
+    description: "Avaliação máxima no 99Freelas",
+  },
+  {
     id: "projects",
     value: "+100",
     label: "Projetos entregues",
     description: "Landing pages, plataformas e sistemas",
   },
   {
-    id: "clients",
-    value: "+100",
-    label: "Clientes",
-    description: "Marcas e parceiros atendidos com excelência",
-  },
-  {
     id: "experience",
-    value: "05+",
+    value: "+4",
     label: "Anos de experiência",
     description: "Projetando e codificando interfaces",
   },
@@ -161,21 +161,6 @@ export const categoriesData: ProjectCategory[] = [
    ========================================================================= */
 export const projectsData: Project[] = [
   // --- PROJETOS RECENTES (Primeira Linha - 3 Iniciais) ---
-  {
-    id: "selo-brasil",
-    title: "Selo Brasil",
-    slug: "selo-brasil",
-    category: "Site Institucional & Tecnologia",
-    categories: ["institucional", "desenvolvimento", "ui-ux"],
-    description: "Plataforma institucional para certificação digital e serviços corporativos com interface limpa e segura.",
-    image: "/projects/selo-brasil.webp",
-    link: "http://selobrasil.com.br/",
-    year: "2026",
-    client: "Selo Brasil Certificados",
-    type: "Web Design & Front-end",
-    recent: true,
-    featured: true,
-  },
   {
     id: "mirele-fabro",
     title: "Mirele Fabro",
@@ -264,20 +249,6 @@ export const projectsData: Project[] = [
     link: "https://nevespaduaadvocacia.com.br/",
     year: "2026",
     type: "Desenvolvimento Front-end",
-    agencyProject: true,
-  },
-  {
-    id: "selo-brasil-agency",
-    title: "Portal Selo Brasil Corporate",
-    slug: "selo-brasil-corporate",
-    category: "Design System & Interface Web",
-    categories: ["parcerias", "ui-ux", "desenvolvimento"],
-    description: "Implementação da interface digital e integração de fluxos corporativos em colaboração com equipe externa.",
-    agency: "Agência Nexus Branding",
-    image: "/projects/selo-brasil.webp",
-    link: "http://selobrasil.com.br/",
-    year: "2026",
-    type: "UI/UX & Desenvolvimento",
     agencyProject: true,
   },
   {

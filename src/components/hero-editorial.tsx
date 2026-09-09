@@ -92,21 +92,21 @@ export function HeroEditorial() {
         </p>
       </div>
 
-      {/* 3. CTA em Cápsula Composta (Semelhante à referência visual) */}
-      <div className="mt-9 flex flex-wrap items-center gap-3">
-        <div className="inline-flex items-center p-1 bg-neutral-100/90 border border-neutral-200/80 rounded-full shadow-2xs">
+      {/* 3. CTA em Cápsula Composta (Sem quebra de linha no mobile) */}
+      <div className="mt-9 flex flex-col sm:flex-row sm:items-center items-start gap-3">
+        <div className="inline-flex items-center p-1 bg-neutral-100/90 border border-neutral-200/80 rounded-full shadow-2xs max-w-full">
           {/* Botão de Navegação para Projetos */}
           <a
             href="#projetos"
-            className="inline-flex items-center gap-2 bg-neutral-950 text-white hover:bg-neutral-800 text-[13px] font-medium px-4 py-2 rounded-full transition-all duration-200 group active:scale-98"
+            className="inline-flex items-center justify-center gap-1.5 sm:gap-2 bg-neutral-950 text-white hover:bg-neutral-800 text-[12px] sm:text-[13px] font-medium px-3 sm:px-4 py-1.5 sm:py-2 rounded-full transition-all duration-200 group active:scale-98 whitespace-nowrap shrink-0"
           >
             <span>Ver projetos</span>
-            <ArrowUpRight size={14} className="text-neutral-400 group-hover:text-white transition-colors" />
+            <ArrowUpRight size={13} className="text-neutral-400 group-hover:text-white transition-colors shrink-0" />
           </a>
 
           {/* Badge de Disponibilidade com Indicador Pulsante */}
-          <div className="px-3.5 py-1.5 flex items-center gap-2 text-[12px] font-medium text-neutral-600">
-            <span className="relative flex h-2 w-2">
+          <div className="px-2.5 sm:px-3.5 py-1 sm:py-1.5 flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-[12px] font-medium text-neutral-600 whitespace-nowrap shrink-0">
+            <span className="relative flex h-2 w-2 shrink-0">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
             </span>
@@ -115,8 +115,8 @@ export function HeroEditorial() {
         </div>
 
         {/* Informação Contextual Suplementar */}
-        <span className="text-[12px] text-neutral-600 flex items-center gap-1.5 pl-1">
-          <Sparkles size={13} className="text-neutral-600" />
+        <span className="text-[12px] text-neutral-500 flex items-center gap-1.5 pl-1 whitespace-nowrap">
+          <Sparkles size={13} className="text-neutral-400 shrink-0" />
           <span>Projetos freelance & parcerias</span>
         </span>
       </div>
