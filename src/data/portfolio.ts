@@ -114,13 +114,6 @@ export const statsData: StatItem[] = [
    ========================================================================= */
 export const categoriesData: ProjectCategory[] = [
   {
-    slug: "ui-ux",
-    name: "UI/UX Design",
-    title: "Projetos de UI/UX Design",
-    description:
-      "Uma seleção de interfaces concebidas com foco em arquitetura de informação, usabilidade, refinamento visual e design systems consistentes.",
-  },
-  {
     slug: "landing-pages",
     name: "Landing Pages",
     title: "Projetos de Landing Pages",
@@ -128,11 +121,11 @@ export const categoriesData: ProjectCategory[] = [
       "Páginas focadas em alta taxa de conversão, velocidade máxima de carregamento, storytelling visual persuasivo e posicionamento de marca.",
   },
   {
-    slug: "desenvolvimento",
-    name: "Desenvolvimento Web",
-    title: "Projetos de Desenvolvimento",
+    slug: "ecommerce",
+    name: "E-commerce",
+    title: "E-commerce & Lojas Virtuais",
     description:
-      "Aplicações e websites construídos com tecnologias modernas, código limpo, semântica acessível e responsividade precisa em qualquer dispositivo.",
+      "Ecossistemas de venda online com fluxos intuitivos de navegação, checkout otimizado e apresentação envolvente de produtos.",
   },
   {
     slug: "institucional",
@@ -140,13 +133,6 @@ export const categoriesData: ProjectCategory[] = [
     title: "Sites Institucionais & Corporativos",
     description:
       "Plataformas digitais corporativas desenvolvidas para transmitir autoridade, elegância e credibilidade imediata ao mercado.",
-  },
-  {
-    slug: "ecommerce",
-    name: "E-commerce",
-    title: "E-commerce & Lojas Virtuais",
-    description:
-      "Ecossistemas de venda online com fluxos intuitivos de navegação, checkout otimizado e apresentação envolvente de produtos.",
   },
   {
     slug: "parcerias",
@@ -168,13 +154,13 @@ export const projectsData: Project[] = [
     title: "Mirele Fabro",
     slug: "mirele-fabro",
     category: "Landing Page & Saúde",
-    categories: ["landing-pages", "ui-ux"],
+    categories: ["landing-pages"],
     description: "Landing page de alto padrão e sensibilidade visual voltada para consultoria em psicologia e desenvolvimento infantil.",
     image: "/projects/behance_mockup_shot_cover.webp",
     link: "https://mirelefabro.com.br/",
     year: "2026",
     client: "Dra. Mirele Fabro",
-    type: "UI/UX & Landing Page",
+    type: "Landing Page",
     recent: true,
     featured: true,
   },
@@ -183,13 +169,13 @@ export const projectsData: Project[] = [
     title: "Slouver Games",
     slug: "slouver-games",
     category: "E-commerce & Plataforma Gamer",
-    categories: ["ecommerce", "desenvolvimento", "ui-ux"],
+    categories: ["ecommerce"],
     description: "E-commerce especializado na distribuição de gift cards digitais, assinaturas e chaves com entrega instantânea.",
     image: "/projects/slouver_cover.webp",
     link: "https://slouvergames.com.br/",
     year: "2026",
     client: "Slouver Games",
-    type: "E-commerce & UX",
+    type: "E-commerce & Loja Virtual",
     recent: true,
     featured: true,
   },
@@ -204,7 +190,7 @@ export const projectsData: Project[] = [
     link: "https://riosmed.com.br/",
     year: "2026",
     client: "Riosmed",
-    type: "Landing Page & Catálogo",
+    type: "Site Institucional & Catálogo",
     recent: true,
   },
   {
@@ -212,7 +198,7 @@ export const projectsData: Project[] = [
     title: "Felipe Bezerril",
     slug: "felipe-bezerril",
     category: "Landing Page de Conversão",
-    categories: ["landing-pages", "ui-ux"],
+    categories: ["landing-pages"],
     description: "Página de conversão humanizada com foco em consultoria jurídica especializada e captação de clientes.",
     image: "/projects/felipe_bezerril_cover.webp",
     link: "https://felipebezerril.adv.br/",
@@ -228,7 +214,7 @@ export const projectsData: Project[] = [
     title: "Decopisos Revestimentos",
     slug: "decopisos",
     category: "E-commerce & Revestimentos",
-    categories: ["parcerias", "ecommerce", "desenvolvimento"],
+    categories: ["parcerias", "ecommerce"],
     description: "Loja virtual especializada em pisos vinílicos, rodapés e acabamentos com catálogo dinâmico e experiência de navegação orientada à conversão.",
     agency: "Virtualiti",
     agencyUrl: "https://virtualiti.com.br/",
@@ -236,7 +222,7 @@ export const projectsData: Project[] = [
     image: "/projects/decopisos.webp",
     link: "https://decopisos.commercesuite.com.br/",
     year: "2026",
-    type: "E-commerce & Front-end",
+    type: "E-commerce & Parceria",
     agencyProject: true,
   },
   {
@@ -244,7 +230,7 @@ export const projectsData: Project[] = [
     title: "Visalens",
     slug: "visalens",
     category: "E-commerce & Lentes de Contato",
-    categories: ["parcerias", "ecommerce", "ui-ux"],
+    categories: ["parcerias", "ecommerce"],
     description: "Plataforma de comércio eletrônico no segmento óptico, oferecendo jornada de compra fluida e precisa para lentes de contato e soluções visuais.",
     agency: "Virtualiti",
     agencyUrl: "https://virtualiti.com.br/",
@@ -252,7 +238,7 @@ export const projectsData: Project[] = [
     image: "/projects/visalens.webp",
     link: "https://www.visalens.com.br/",
     year: "2026",
-    type: "E-commerce & UX",
+    type: "E-commerce & Parceria",
     agencyProject: true,
   },
   {
@@ -260,7 +246,7 @@ export const projectsData: Project[] = [
     title: "Jacaré Home Center",
     slug: "jacare-home-center",
     category: "E-commerce & Home Center",
-    categories: ["parcerias", "ecommerce", "desenvolvimento"],
+    categories: ["parcerias", "ecommerce"],
     description: "Portal de e-commerce de grande porte para materiais de construção, acabamentos e ferramentas, com arquitetura ágil e busca inteligente.",
     agency: "Virtualiti",
     agencyUrl: "https://virtualiti.com.br/",
@@ -268,7 +254,7 @@ export const projectsData: Project[] = [
     image: "/projects/jacare-home-center.webp",
     link: "https://www.jacarehomecenter.com.br/",
     year: "2026",
-    type: "E-commerce & Plataforma",
+    type: "E-commerce & Parceria",
     agencyProject: true,
   },
 ];
