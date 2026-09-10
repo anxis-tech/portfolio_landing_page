@@ -11,11 +11,14 @@
   --color-border-subtle: #EBEBEB;
   --color-border-dark: #222224;
   --color-footer-bg: #0C0C0D;
+  --color-primary-highlight: #d8ff7c;
+  --color-primary-lime: #d8ff7c;
 }
 
 :root {
   --font-serif-family: var(--font-newsreader), Georgia, serif;
   --font-sans-family: var(--font-plus-jakarta), system-ui, sans-serif;
+  --primary-highlight: #d8ff7c;
 }
 
 html {
@@ -38,23 +41,331 @@ body {
   font-family: var(--font-sans-family);
 }
 
+/* Magic UI Shine Border Animation - Borda Corrida Contínua */
+@keyframes shine {
+  0% {
+    background-position: 0% 0%;
+  }
+  25% {
+    background-position: 100% 0%;
+  }
+  50% {
+    background-position: 100% 100%;
+  }
+  75% {
+    background-position: 0% 100%;
+  }
+  100% {
+    background-position: 0% 0%;
+  }
+}
+
+.animate-shine {
+  animation: shine var(--duration, 8s) infinite linear;
+}
+
 /* Editorial hairline grid border */
 .editorial-grid-border {
   border-color: #EAEAEA;
 }
 
-/* Subtle modern scrollbar */
+/* Slim scrollbar with primary green accent */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
-  background: #FAFAFA;
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #D8D8D8;
+  background: #d8ff7c;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #B0B0B0;
+  background: #c4ec64;
 }
+
+/* Firefox scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #d8ff7c transparent;
+}
+
+/* ==========================================================================
+   Uiverse Itchy Wolverine 84 - Popout CTA Button
+   ========================================================================== */
+.popout-btn-container {
+  --btn-color: #d8ff7c;
+  --corner-color: rgba(0, 0, 0, 0.18);
+  --corner-dist: 24px;
+  --corner-multiplier: 1.5;
+  --timing-function: cubic-bezier(0, 0, 0, 2.5);
+  --duration: 250ms;
+
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+}
+
+.popout-btn {
+  position: relative;
+  min-width: 175px;
+  min-height: calc(var(--corner-dist) * 2);
+  border-radius: 16px;
+  border: none;
+  padding: 0.5em 1.4em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+
+  background: linear-gradient(#fff2, #0001), var(--btn-color);
+  box-shadow:
+    1px 1px 2px -1px #fff inset,
+    0 2px 1px #00000010,
+    0 4px 2px #00000010,
+    0 8px 4px #00000010,
+    0 16px 8px #00000010,
+    0 32px 16px #00000010;
+
+  transition:
+    transform var(--duration) var(--timing-function),
+    filter var(--duration) var(--timing-function);
+  -webkit-transition:
+    transform var(--duration) var(--timing-function),
+    -webkit-filter var(--duration) var(--timing-function);
+
+  cursor: pointer;
+  z-index: 2;
+}
+
+.popout-btn-drawer {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+  white-space: nowrap;
+
+  min-height: 30px;
+  border-radius: 16px;
+  border: none;
+  padding: 0.25em 1em;
+  font-size: 0.8em;
+  font-weight: 600;
+  font-family: var(--font-sans-family), "Poppins", monospace;
+  color: rgba(0, 0, 0, 0.7);
+
+  background: linear-gradient(#fff2, #0001), var(--btn-color);
+  background-color: #fbff13;
+  opacity: 0;
+
+  transition:
+    transform calc(0.5 * var(--duration)) ease,
+    filter var(--duration) var(--timing-function),
+    opacity calc(0.5 * var(--duration)) ease;
+  -webkit-transition:
+    transform calc(0.5 * var(--duration)) ease,
+    -webkit-filter var(--duration) var(--timing-function),
+    opacity calc(0.5 * var(--duration)) ease;
+  filter: blur(2px);
+  -webkit-filter: blur(2px);
+  z-index: 1;
+}
+
+.popout-transition-top {
+  top: 0;
+  left: 0;
+  border-radius: 12px 12px 0 0;
+  align-items: start;
+}
+
+.popout-transition-bottom {
+  bottom: 0;
+  right: 0;
+  border-radius: 0 0 12px 12px;
+  align-items: end;
+}
+
+.popout-btn-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+
+  font-size: 1.1em;
+  font-family: var(--font-sans-family), "Inter", sans-serif;
+  font-weight: 650;
+  color: #5550;
+
+  background-image: linear-gradient(#333, #000);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 1px 0 #fff8) drop-shadow(0 -1px 0 #0004);
+  -webkit-filter: drop-shadow(0 1px 0 #fff8) drop-shadow(0 -1px 0 #0004);
+
+  transition:
+    transform var(--duration) var(--timing-function),
+    filter var(--duration) var(--timing-function),
+    color var(--duration) var(--timing-function);
+  -webkit-transition:
+    transform var(--duration) var(--timing-function),
+    -webkit-filter var(--duration) var(--timing-function),
+    color var(--duration) var(--timing-function);
+}
+
+.popout-btn-corner {
+  position: absolute;
+  width: 32px;
+  pointer-events: none;
+
+  fill: none;
+  stroke: var(--corner-color);
+
+  transition:
+    transform var(--duration) var(--timing-function),
+    filter var(--duration) var(--timing-function);
+  -webkit-transition:
+    transform var(--duration) var(--timing-function),
+    -webkit-filter var(--duration) var(--timing-function);
+  z-index: 0;
+}
+
+/* Base corner positions */
+.popout-btn-corner:nth-of-type(1),
+.popout-corner-tl {
+  top: 0;
+  left: 0;
+  transform: translate(calc(-1 * var(--corner-dist)), calc(-1 * var(--corner-dist))) rotate(90deg);
+}
+
+.popout-btn-corner:nth-of-type(2),
+.popout-corner-tr {
+  top: 0;
+  right: 0;
+  transform: translate(var(--corner-dist), calc(-1 * var(--corner-dist))) rotate(180deg);
+}
+
+.popout-btn-corner:nth-of-type(3),
+.popout-corner-br {
+  bottom: 0;
+  right: 0;
+  transform: translate(var(--corner-dist), var(--corner-dist)) rotate(-90deg);
+}
+
+.popout-btn-corner:nth-of-type(4),
+.popout-corner-bl {
+  bottom: 0;
+  left: 0;
+  transform: translate(calc(-1 * var(--corner-dist)), var(--corner-dist)) rotate(0deg);
+}
+
+/* Hover & Focus-visible States */
+.popout-btn-container:hover,
+.popout-btn-container:has(.popout-btn:hover),
+.popout-btn-container:has(.popout-btn:focus-visible) {
+  --corner-color: rgba(0, 0, 0, 0.28);
+}
+
+.popout-btn-container:hover .popout-btn,
+.popout-btn-container:has(.popout-btn:hover) .popout-btn,
+.popout-btn-container:has(.popout-btn:focus-visible) .popout-btn {
+  transform: scale(1.05);
+  filter: drop-shadow(0 16px 16px rgba(0, 0, 0, 0.14));
+  -webkit-filter: drop-shadow(0 16px 16px rgba(0, 0, 0, 0.14));
+}
+
+.popout-btn-container:hover .popout-transition-top,
+.popout-btn-container:has(.popout-btn:hover) .popout-transition-top,
+.popout-btn-container:has(.popout-btn:focus-visible) .popout-transition-top {
+  transform: translateY(-24px) rotateZ(4deg);
+  filter: blur(0px);
+  -webkit-filter: blur(0px);
+  animation: popout-hue-anim 3s infinite linear;
+  -webkit-animation: popout-hue-anim 3s infinite linear;
+  opacity: 1;
+}
+
+.popout-btn-container:hover .popout-transition-bottom,
+.popout-btn-container:has(.popout-btn:hover) .popout-transition-bottom,
+.popout-btn-container:has(.popout-btn:focus-visible) .popout-transition-bottom {
+  transform: translateY(24px) rotateZ(4deg);
+  filter: blur(0px);
+  -webkit-filter: blur(0px);
+  animation: popout-hue-anim 3s infinite linear;
+  -webkit-animation: popout-hue-anim 3s infinite linear;
+  opacity: 1;
+}
+
+.popout-btn-container:hover .popout-btn-text,
+.popout-btn-container:has(.popout-btn:hover) .popout-btn-text,
+.popout-btn-container:has(.popout-btn:focus-visible) .popout-btn-text {
+  filter: drop-shadow(0 1px 0 #fff6) drop-shadow(0 -1px 0 #0006) drop-shadow(0px 6px 2px rgba(0, 0, 0, 0.2));
+  -webkit-filter: drop-shadow(0 1px 0 #fff6) drop-shadow(0 -1px 0 #0006) drop-shadow(0px 6px 2px rgba(0, 0, 0, 0.2));
+  transform: scale(1.05);
+}
+
+.popout-btn-container:hover .popout-btn-corner:nth-of-type(1),
+.popout-btn-container:hover .popout-corner-tl,
+.popout-btn-container:has(.popout-btn:hover) .popout-btn-corner:nth-of-type(1),
+.popout-btn-container:has(.popout-btn:hover) .popout-corner-tl {
+  transform: translate(calc(-1 * var(--corner-multiplier) * var(--corner-dist)), calc(-1 * var(--corner-multiplier) * var(--corner-dist))) rotate(90deg);
+  filter: drop-shadow(-10px 10px 1px var(--corner-color)) drop-shadow(-20px 20px 2px var(--corner-color));
+  -webkit-filter: drop-shadow(-10px 10px 1px var(--corner-color)) drop-shadow(-20px 20px 2px var(--corner-color));
+}
+
+.popout-btn-container:hover .popout-btn-corner:nth-of-type(2),
+.popout-btn-container:hover .popout-corner-tr,
+.popout-btn-container:has(.popout-btn:hover) .popout-btn-corner:nth-of-type(2),
+.popout-btn-container:has(.popout-btn:hover) .popout-corner-tr {
+  transform: translate(calc(var(--corner-multiplier) * var(--corner-dist)), calc(-1 * var(--corner-multiplier) * var(--corner-dist))) rotate(180deg);
+  filter: drop-shadow(-10px 10px 1px var(--corner-color)) drop-shadow(-20px 20px 2px var(--corner-color));
+  -webkit-filter: drop-shadow(-10px 10px 1px var(--corner-color)) drop-shadow(-20px 20px 2px var(--corner-color));
+}
+
+.popout-btn-container:hover .popout-btn-corner:nth-of-type(3),
+.popout-btn-container:hover .popout-corner-br,
+.popout-btn-container:has(.popout-btn:hover) .popout-btn-corner:nth-of-type(3),
+.popout-btn-container:has(.popout-btn:hover) .popout-corner-br {
+  transform: translate(calc(var(--corner-multiplier) * var(--corner-dist)), calc(var(--corner-multiplier) * var(--corner-dist))) rotate(-90deg);
+  filter: drop-shadow(-10px 10px 1px var(--corner-color)) drop-shadow(-20px 20px 2px var(--corner-color));
+  -webkit-filter: drop-shadow(-10px 10px 1px var(--corner-color)) drop-shadow(-20px 20px 2px var(--corner-color));
+}
+
+.popout-btn-container:hover .popout-btn-corner:nth-of-type(4),
+.popout-btn-container:hover .popout-corner-bl,
+.popout-btn-container:has(.popout-btn:hover) .popout-btn-corner:nth-of-type(4),
+.popout-btn-container:has(.popout-btn:hover) .popout-corner-bl {
+  transform: translate(calc(-1 * var(--corner-multiplier) * var(--corner-dist)), calc(var(--corner-multiplier) * var(--corner-dist))) rotate(0deg);
+  filter: drop-shadow(-10px 10px 1px var(--corner-color)) drop-shadow(-20px 20px 2px var(--corner-color));
+  -webkit-filter: drop-shadow(-10px 10px 1px var(--corner-color)) drop-shadow(-20px 20px 2px var(--corner-color));
+}
+
+/* Active State */
+.popout-btn-container:active .popout-btn {
+  transform: scale(0.95);
+  filter: drop-shadow(0 10px 4px rgba(0, 0, 0, 0.15));
+  -webkit-filter: drop-shadow(0 10px 4px rgba(0, 0, 0, 0.15));
+}
+
+.popout-btn-container:active .popout-transition-top,
+.popout-btn-container:active .popout-transition-bottom {
+  transform: translateY(0px) scale(0.5);
+}
+
+.popout-btn-container:active .popout-btn-text {
+  transform: scale(1);
+}
+
+@keyframes popout-hue-anim {
+  0%, 100% {
+    filter: hue-rotate(0deg);
+    -webkit-filter: hue-rotate(0deg);
+  }
+  50% {
+    filter: hue-rotate(-70deg);
+    -webkit-filter: hue-rotate(-70deg);
+  }
+}
+

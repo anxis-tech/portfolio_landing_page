@@ -3,7 +3,8 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { profileData } from "@/data/portfolio";
-import { ArrowUpRight, Sparkles, Star, FolderGit2, Clock } from "lucide-react";
+import { Star, FolderGit2, Clock } from "lucide-react";
+import { NumberTicker } from "@/components/ui/number-ticker";
 
 export function HeroEditorial() {
   const fullText = `${profileData.headlinePrefix} ${profileData.name}.`;
@@ -27,10 +28,10 @@ export function HeroEditorial() {
           return;
         }
       } else {
-        if (displayText.length > 0) {
+        if (displayText.length > prefix.length) {
           setDisplayText(fullText.slice(0, displayText.length - 1));
         } else {
-          // Pausa com o texto deletado antes de recomeçar o looping
+          // Pausa antes de recomeçar
           timer = setTimeout(() => {
             setIsDeleting(false);
           }, 600);
@@ -46,7 +47,7 @@ export function HeroEditorial() {
   }, [displayText, isDeleting, fullText]);
 
   return (
-    <section id="inicio" className="pt-24 pb-12 sm:pt-32 sm:pb-16 px-6 sm:px-10 lg:px-14">
+    <section id="inicio" className="relative isolate pt-24 pb-12 sm:pt-32 sm:pb-16 px-6 sm:px-10 lg:px-14">
       {/* 1. Monograma / Identidade Visual Autoral */}
       <div className="mb-8">
         <div className="w-11 h-11 rounded-xl bg-neutral-950 flex items-center justify-center text-white shadow-xs group hover:scale-105 transition-transform duration-300">
@@ -74,7 +75,9 @@ export function HeroEditorial() {
           ) : (
             <>
               <span className="whitespace-pre">{prefix}</span>
-              <span className="font-semibold text-neutral-900">{displayText.slice(prefix.length)}</span>
+              <span className="font-semibold text-neutral-950">
+                {displayText.slice(prefix.length)}
+              </span>
             </>
           )}
           <span
@@ -83,42 +86,73 @@ export function HeroEditorial() {
           />
         </h1>
 
-        <p className="font-serif-editorial text-2xl sm:text-3xl lg:text-[38px] leading-[1.2] text-neutral-800 tracking-[-0.02em] font-normal">
+        <p className="font-serif-editorial text-lg sm:text-xl lg:text-[26px] leading-[1.2] text-neutral-800 tracking-[-0.02em] font-normal">
           Desenvolvedor e <span className="italic font-medium text-neutral-950">UI/UX Designer</span> criando experiências digitais funcionais, estratégicas e visualmente refinadas.
         </p>
 
-        <p className="mt-5 text-[15px] text-neutral-500 leading-relaxed max-w-2xl">
+        <p className="text-[15px] text-neutral-500 leading-relaxed max-w-2xl">
           Especializado em unir arquitetura de software front-end de alto padrão à direção visual editorial para marcas, criadores e agências.
         </p>
       </div>
 
-      {/* 3. CTA em Cápsula Composta (Sem quebra de linha no mobile) */}
-      <div className="mt-8 flex flex-col sm:flex-row sm:items-center items-start gap-3">
-        <div className="inline-flex items-center p-1 bg-neutral-100/90 border border-neutral-200/80 rounded-full shadow-2xs max-w-full">
-          {/* Botão de Navegação para Projetos */}
+      {/* 3. CTA Principal Interativo (Efeito Popout Uiverse Itchy Wolverine) */}
+      <div className="mt-16 mb-7 sm:mb-9 flex items-center pl-7 sm:pl-8">
+        <div className="popout-btn-container">
+          {/* Drawer Superior com transição e rotação */}
+          <div className="popout-btn-drawer popout-transition-top" aria-hidden="true">
+            cases selecionados...
+          </div>
+
+          {/* Drawer Inferior com transição e rotação */}
+          <div className="popout-btn-drawer popout-transition-bottom" aria-hidden="true">
+            ...rolar para ver ↓
+          </div>
+
+          {/* Botão de Redirecionamento para a Seção de Projetos (Sem ícone) */}
           <a
             href="#projetos"
-            className="inline-flex items-center justify-center gap-1.5 sm:gap-2 bg-neutral-950 text-white hover:bg-neutral-800 text-[12px] sm:text-[13px] font-medium px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full transition-all duration-200 group active:scale-98 whitespace-nowrap shrink-0"
+            className="popout-btn group"
+            aria-label="Navegar até a seção de projetos selecionados"
           >
-            <span>Ver projetos</span>
-            <ArrowUpRight size={13} className="text-neutral-400 group-hover:text-white transition-colors shrink-0" />
+            <span className="popout-btn-text">
+              Ver projetos
+            </span>
           </a>
 
-          {/* Badge de Disponibilidade com Indicador Pulsante */}
-          <div className="px-2.5 sm:px-3.5 py-1 sm:py-1.5 flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-[12px] font-medium text-neutral-600 whitespace-nowrap shrink-0">
-            <span className="relative flex h-2 w-2 shrink-0">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-            </span>
-            <span>{profileData.availabilityText}</span>
-          </div>
+          {/* 4 Cantos Dinâmicos com Expansão e Sombra no Hover */}
+          <svg
+            className="popout-btn-corner popout-corner-tl"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="-1 1 32 32"
+            aria-hidden="true"
+          >
+            <path d="M32,32C14.355,32,0,17.645,0,0h.985c0,17.102,13.913,31.015,31.015,31.015v.985Z" />
+          </svg>
+          <svg
+            className="popout-btn-corner popout-corner-tr"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="-1 1 32 32"
+            aria-hidden="true"
+          >
+            <path d="M32,32C14.355,32,0,17.645,0,0h.985c0,17.102,13.913,31.015,31.015,31.015v.985Z" />
+          </svg>
+          <svg
+            className="popout-btn-corner popout-corner-br"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="-1 1 32 32"
+            aria-hidden="true"
+          >
+            <path d="M32,32C14.355,32,0,17.645,0,0h.985c0,17.102,13.913,31.015,31.015,31.015v.985Z" />
+          </svg>
+          <svg
+            className="popout-btn-corner popout-corner-bl"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="-1 1 32 32"
+            aria-hidden="true"
+          >
+            <path d="M32,32C14.355,32,0,17.645,0,0h.985c0,17.102,13.913,31.015,31.015,31.015v.985Z" />
+          </svg>
         </div>
-
-        {/* Informação Contextual Suplementar */}
-        <span className="text-[12px] text-neutral-500 flex items-center gap-1.5 pl-1 whitespace-nowrap">
-          <Sparkles size={13} className="text-neutral-400 shrink-0" />
-          <span>Projetos freelance & parcerias</span>
-        </span>
       </div>
 
       {/* 4. Social Proof & Métricas Sutis Abaixo do CTA */}
@@ -127,7 +161,9 @@ export function HeroEditorial() {
         <div className="flex flex-col gap-2">
           {/* Linha 1: +78 avaliações no [Badge Azul Oficial 99Freelas Clicável] + 5 estrelas */}
           <div className="flex items-center gap-2 text-[13px] text-neutral-600 flex-wrap">
-            <span className="font-medium text-neutral-700">+78 avaliações no</span>
+            <span className="font-medium text-neutral-700">
+              <NumberTicker value={78} prefix="+" duration={1200} /> avaliações no
+            </span>
             <a
               href="https://www.99freelas.com.br/user/anxis"
               target="_blank"
@@ -202,7 +238,7 @@ export function HeroEditorial() {
                 className="w-7 h-7 rounded-full border-2 border-white bg-neutral-900 text-white text-[10px] font-bold font-mono flex items-center justify-center shadow-2xs hover:bg-neutral-800 transition-colors cursor-pointer"
                 title="Ver 78 avaliações no 99Freelas"
               >
-                78
+                <NumberTicker value={78} duration={1200} />
               </a>
             </div>
           </div>
@@ -219,7 +255,7 @@ export function HeroEditorial() {
           <div>
             <div className="flex items-baseline gap-1.5">
               <span className="font-serif-editorial text-2xl lg:text-[26px] text-neutral-950 font-normal leading-none">
-                +100
+                <NumberTicker value={100} prefix="+" duration={1400} />
               </span>
               <span className="text-[12px] font-medium text-neutral-800">
                 Projetos entregues
@@ -242,7 +278,7 @@ export function HeroEditorial() {
           <div>
             <div className="flex items-baseline gap-1.5">
               <span className="font-serif-editorial text-2xl lg:text-[26px] text-neutral-950 font-normal leading-none">
-                +4
+                <NumberTicker value={4} prefix="+" duration={1000} />
               </span>
               <span className="text-[12px] font-medium text-neutral-800">
                 Anos de experiência

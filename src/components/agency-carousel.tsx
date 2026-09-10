@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { getAgencyProjects } from "@/data/portfolio";
 import { ChevronLeft, ChevronRight, ArrowUpRight, Handshake } from "lucide-react";
+import { SpotlightCard } from "@/components/ui/spotlight-card";
 
 export function AgencyCarousel() {
   const agencyProjects = getAgencyProjects();
@@ -31,16 +32,20 @@ export function AgencyCarousel() {
   };
 
   return (
-    <section id="parcerias" className="border-t border-neutral-200/80 pt-12 pb-14 px-6 sm:px-10 lg:px-14">
+    <section id="parcerias" className="pt-10 pb-16 sm:pt-14 sm:pb-20 px-6 sm:px-10 lg:px-14">
       {/* Header com Título e Controles Minimalistas */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 mb-3">
+            <span className="w-2 h-2 rounded-full bg-[#d8ff7c] border border-black/20" />
             <span className="text-[11px] font-semibold tracking-wider uppercase text-neutral-400 font-mono">
               Projetos em parceria
             </span>
           </div>
-          <p className="text-[12px] text-neutral-500 mt-0.5">
+          <h2 className="font-serif-editorial text-2xl sm:text-3xl lg:text-4xl text-neutral-950 font-normal tracking-tight leading-tight">
+            Colaborações com agências e estúdios.
+          </h2>
+          <p className="text-[13px] text-neutral-500 mt-2 max-w-lg">
             Trabalhos desenvolvidos em colaboração com agências e estúdios
           </p>
         </div>
@@ -84,13 +89,15 @@ export function AgencyCarousel() {
         <div
           className="flex transition-transform duration-500 ease-out gap-4"
           style={{
-            transform: `translateX(-${currentIndex * (isMobile ? 100 : 50)}%)`,
+            transform: isMobile
+              ? `translateX(calc(-${currentIndex} * (100% + 16px)))`
+              : `translateX(calc(-${currentIndex} * (50% + 8px)))`,
           }}
         >
           {agencyProjects.map((project) => (
-            <div
+            <SpotlightCard
               key={project.id}
-              className="w-full sm:w-[calc(50%-8px)] shrink-0 flex flex-col group"
+              className="w-full sm:w-[calc(50%-8px)] shrink-0 flex flex-col group p-3 -m-1 rounded-2xl hover:bg-white/80 transition-colors duration-300"
             >
               {/* Imagem do Projeto */}
               <a
@@ -125,18 +132,39 @@ export function AgencyCarousel() {
                   {project.title}
                 </a>
 
-                {project.agency && (
-                  <p className="text-[12px] font-medium text-neutral-500 mt-0.5 flex items-center gap-1.5">
-                    <Handshake size={12} className="text-neutral-400" />
-                    <span>Em parceria com <strong className="font-semibold text-neutral-700">{project.agency}</strong></span>
-                  </p>
-                )}
+                {/* Parceria com Agência: Logo clicável */}
+                <div className="text-[12px] font-medium text-neutral-500 mt-1 flex items-center gap-2 flex-wrap">
+                  <span className="flex items-center gap-1.5 text-neutral-500">
+                    <Handshake size={13} className="text-neutral-400 shrink-0" />
+                    <span>Em parceria com:</span>
+                  </span>
+                  {project.agencyLogo ? (
+                    <a
+                      href={project.agencyUrl || "https://virtualiti.com.br/"}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center hover:opacity-80 transition-opacity"
+                      title={project.agency ? `Visitar site da agência ${project.agency}` : "Visitar site da agência"}
+                    >
+                      <Image
+                        src={project.agencyLogo}
+                        alt={project.agency || "Virtualiti"}
+                        width={110}
+                        height={26}
+                        unoptimized
+                        className="h-5 sm:h-5.5 w-auto object-contain"
+                      />
+                    </a>
+                  ) : (
+                    <strong className="font-semibold text-neutral-700">{project.agency}</strong>
+                  )}
+                </div>
 
                 <p className="text-[12px] text-neutral-500 mt-1.5 leading-relaxed line-clamp-2">
                   {project.description}
                 </p>
               </div>
-            </div>
+            </SpotlightCard>
           ))}
         </div>
       </div>

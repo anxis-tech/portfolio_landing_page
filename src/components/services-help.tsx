@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { servicesHelpData } from "@/data/portfolio";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { SpotlightCard } from "@/components/ui/spotlight-card";
 
 export function ServicesHelp() {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -48,14 +49,17 @@ export function ServicesHelp() {
   };
 
   return (
-    <section id="servicos" className="border-t border-neutral-200/80 pt-12 pb-14 px-6 sm:px-10 lg:px-14">
+    <section id="servicos" className="pt-10 pb-20 sm:pt-14 sm:pb-24 px-6 sm:px-10 lg:px-14">
       {/* Cabeçalho da Seção com Título e Controles de Passar Cards */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
         <div>
-          <span className="text-[11px] font-semibold tracking-wider uppercase text-neutral-400 font-mono">
-            Como posso ajudar
-          </span>
-          <h2 className="font-serif-editorial text-2xl sm:text-3xl lg:text-4xl text-neutral-950 font-normal tracking-tight mt-1.5">
+          <div className="flex items-center gap-2 mb-3">
+            <span className="w-2 h-2 rounded-full bg-[#d8ff7c] border border-black/20" />
+            <span className="text-[11px] font-semibold tracking-wider uppercase text-neutral-400 font-mono">
+              Como posso ajudar
+            </span>
+          </div>
+          <h2 className="font-serif-editorial text-2xl sm:text-3xl lg:text-4xl text-neutral-950 font-normal tracking-tight mt-0">
             Estratégia, design visual e sistemas sob medida.
           </h2>
         </div>
@@ -109,37 +113,38 @@ export function ServicesHelp() {
           }}
         >
           {servicesHelpData.map((service) => (
-            <div
+            <SpotlightCard
               key={service.number}
-              className="w-full md:w-[calc(50%-12px)] shrink-0 p-5 sm:p-7 rounded-3xl bg-white border border-neutral-200/80 hover:border-neutral-300 transition-all duration-300 shadow-2xs hover:shadow-md group flex flex-col justify-between"
+              className="w-full md:w-[calc(50%-12px)] shrink-0 rounded-2xl overflow-hidden group relative"
             >
-              <div>
-                {/* Topo do Card: Número Monospaçado e Indicador */}
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-[12px] font-mono font-bold tracking-wider text-neutral-500 bg-neutral-100 border border-neutral-200/70 px-2.5 py-1 rounded-md">
-                    {service.number}
-                  </span>
-                  <span className="w-2 h-2 rounded-full bg-neutral-300 group-hover:bg-neutral-900 transition-colors" />
-                </div>
+              {/* Imagem Full-Bleed como Fundo do Card */}
+              <div className="relative aspect-[16/10] sm:aspect-[16/9] w-full overflow-hidden">
+                <Image
+                  src={service.image}
+                  alt={service.title}
+                  fill
+                  unoptimized
+                  sizes="(max-width: 768px) 100vw, 550px"
+                  className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
+                />
 
-                {/* Imagem Visual Ampliada e com Destaque */}
-                <div className="relative aspect-[16/10] sm:aspect-[16/9] w-full overflow-hidden rounded-2xl bg-neutral-100 border border-neutral-200/70 mb-5 shadow-2xs">
-                  <Image
-                    src={service.image}
-                    alt={service.title}
-                    fill
-                    unoptimized
-                    sizes="(max-width: 768px) 100vw, 550px"
-                    className="object-cover object-center transition-transform duration-700 ease-out group-hover:scale-105"
-                  />
-                </div>
+                {/* Gradiente escuro inferior para legibilidade do texto */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent pointer-events-none" />
 
-                {/* Título com Destaque Editorial e Sem Descrição */}
-                <h3 className="font-serif-editorial text-2xl sm:text-[26px] text-neutral-950 font-normal leading-snug group-hover:text-neutral-800 transition-colors">
+                {/* Numeração — Topo Esquerdo */}
+                <span className="absolute top-4 left-4 text-[12px] font-mono font-semibold tracking-wider text-white/80">
+                  {service.number}
+                </span>
+
+                {/* Dot Verde — Topo Direito */}
+                <span className="absolute top-4 right-4 w-2.5 h-2.5 rounded-full bg-[#d8ff7c] shadow-sm group-hover:scale-125 transition-transform duration-300" />
+
+                {/* Título — Inferior Esquerdo */}
+                <h3 className="absolute bottom-5 left-5 right-5 font-serif-editorial text-xl sm:text-2xl text-white font-normal leading-snug drop-shadow-md">
                   {service.title}
                 </h3>
               </div>
-            </div>
+            </SpotlightCard>
           ))}
         </div>
       </div>

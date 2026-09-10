@@ -77,13 +77,13 @@ export function HeaderPill() {
           </button>
         </div>
 
-        {/* CTA "Ver projetos" Pill */}
+        {/* CTA "Ver projetos" Pill com cor primária de destaque (#d8ff7c) */}
         <a
           href="#projetos"
-          className="ml-1 sm:ml-2 inline-flex items-center gap-1.5 bg-neutral-900 text-white hover:bg-neutral-800 text-[12px] font-medium tracking-tight px-3.5 py-1.5 rounded-full transition-all duration-200 active:scale-95 group shadow-2xs"
+          className="ml-1 sm:ml-2 inline-flex items-center gap-1.5 bg-[#d8ff7c] text-neutral-950 hover:bg-[#cbf765] border border-black/10 text-[12px] font-semibold tracking-tight px-3.5 py-1.5 rounded-full transition-all duration-200 active:scale-95 group shadow-2xs"
         >
           <span>Ver projetos</span>
-          <ArrowUpRight size={13} className="text-neutral-400 group-hover:text-white transition-colors" />
+          <ArrowUpRight size={13} className="text-neutral-800 group-hover:text-neutral-950 transition-colors" />
         </a>
       </nav>
 

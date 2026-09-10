@@ -11,6 +11,7 @@ import {
 } from "@/data/portfolio";
 import { ArrowLeft, ArrowUpRight, FolderGit2 } from "lucide-react";
 import { FooterEditorial } from "@/components/footer-editorial";
+import { GlobalDotBackground } from "@/components/ui/global-dot-background";
 
 type Props = {
   params: Promise<{ categoria: string }>;
@@ -49,7 +50,19 @@ export default async function CategoryProjectsPage({ params }: Props) {
   const projects = getProjectsByCategory(category.slug);
 
   return (
-    <div className="min-h-screen bg-[#FAFAFA] text-[#121212] flex flex-col items-center selection:bg-neutral-900 selection:text-white">
+    <div className="min-h-screen bg-[#FAFAFA] text-[#121212] flex flex-col items-center selection:bg-[#d8ff7c] selection:text-neutral-950">
+      {/* Fundo Interativo Global com Dots */}
+      <GlobalDotBackground
+        dotRadius={1.15}
+        dotSpacing={19}
+        cursorRadius={320}
+        bulgeStrength={40}
+        glowRadius={190}
+        glowColor="#d8ff7c"
+        dotColor="rgba(0, 0, 0, 0.12)"
+        opacity={0.5}
+      />
+
       {/* Barra Superior com Link de Retorno */}
       <div className="w-full border-b border-neutral-200/80 bg-white/85 backdrop-blur-md sticky top-0 z-40">
         <div className="max-w-6xl mx-auto px-6 sm:px-10 lg:px-14 py-3.5 flex items-center justify-between">
@@ -70,15 +83,40 @@ export default async function CategoryProjectsPage({ params }: Props) {
         </div>
       </div>
 
-      {/* Miolo Editorial com Sidebar à Esquerda e Grade de 2 Colunas à Direita */}
-      <main className="w-full max-w-6xl mx-auto border-x border-neutral-200/80 bg-[#FAFAFA] min-h-[calc(100vh-60px)] px-6 sm:px-10 lg:px-14 py-12">
+      {/* Conteúdo Principal */}
+      <main className="w-full max-w-6xl mx-auto relative min-h-[calc(100vh-60px)] px-6 sm:px-10 lg:px-14 py-12" style={{ zIndex: 1 }}>
+
+        {/* =========================================================================
+            CABEÇALHO EDITORIAL DA CATEGORIA (FULL-WIDTH, TOPO)
+           ========================================================================= */}
+        <div className="pb-8 border-b border-neutral-200/80 mb-10">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-neutral-100 border border-neutral-200 text-[11px] font-mono text-neutral-600 mb-3.5">
+            <span>Coleção</span>
+            <span>·</span>
+            <span className="font-semibold text-neutral-900">{category.name}</span>
+          </div>
+
+          <h1 className="font-serif-editorial text-3xl sm:text-4xl lg:text-[42px] text-neutral-950 font-normal tracking-tight leading-tight">
+            {category.title}
+          </h1>
+
+          <p className="text-[14px] sm:text-[15px] text-neutral-600 mt-3 leading-relaxed max-w-2xl">
+            {category.description}
+          </p>
+
+          <div className="mt-4 flex items-center gap-2 text-[12px] text-neutral-400 font-mono">
+            <span>{projects.length} {projects.length === 1 ? "projeto listado" : "projetos listados"}</span>
+          </div>
+        </div>
+
+        {/* =========================================================================
+            SIDEBAR + GRADE DE PROJETOS (ABAIXO DO CABEÇALHO)
+           ========================================================================= */}
         <div className="flex flex-col md:flex-row items-start gap-10 lg:gap-14">
           
-          {/* =========================================================================
-              SIDEBAR VERTICAL DE FILTRAGEM (LADO ESQUERDO)
-             ========================================================================= */}
+          {/* SIDEBAR VERTICAL DE FILTRAGEM (LADO ESQUERDO) */}
           <aside className="w-full md:w-64 lg:w-72 shrink-0 md:sticky md:top-24">
-            <div className="p-5 rounded-2xl bg-white border border-neutral-200/80 shadow-2xs">
+            <div className="p-5 rounded-2xl bg-white/80 backdrop-blur-sm border border-neutral-200/80 shadow-2xs">
               <div className="flex items-center gap-2 mb-4 pb-3 border-b border-neutral-100">
                 <FolderGit2 size={15} className="text-neutral-500" />
                 <span className="text-[11px] font-mono uppercase tracking-wider text-neutral-400 font-semibold">
@@ -128,32 +166,8 @@ export default async function CategoryProjectsPage({ params }: Props) {
             </div>
           </aside>
 
-          {/* =========================================================================
-              CONTEÚDO PRINCIPAL (GRADE DE PROJETOS EM 2 COLUNAS)
-             ========================================================================= */}
+          {/* GRADE DE PROJETOS EM 2 COLUNAS */}
           <div className="flex-1 min-w-0">
-            {/* Cabeçalho Editorial da Categoria */}
-            <div className="pb-8 border-b border-neutral-200/80 mb-8">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-neutral-100 border border-neutral-200 text-[11px] font-mono text-neutral-600 mb-3.5">
-                <span>Coleção</span>
-                <span>·</span>
-                <span className="font-semibold text-neutral-900">{category.name}</span>
-              </div>
-
-              <h1 className="font-serif-editorial text-3xl sm:text-4xl lg:text-[42px] text-neutral-950 font-normal tracking-tight leading-tight">
-                {category.title}
-              </h1>
-
-              <p className="text-[14px] sm:text-[15px] text-neutral-600 mt-3 leading-relaxed max-w-2xl">
-                {category.description}
-              </p>
-
-              <div className="mt-4 flex items-center gap-2 text-[12px] text-neutral-400 font-mono">
-                <span>{projects.length} {projects.length === 1 ? "projeto listado" : "projetos listados"}</span>
-              </div>
-            </div>
-
-            {/* GRADE DE PROJETOS EM 2 COLUNAS */}
             {projects.length === 0 ? (
               <div className="py-16 text-center text-neutral-500 border border-dashed border-neutral-200 rounded-2xl">
                 <p>Nenhum projeto encontrado nesta categoria no momento.</p>
@@ -176,7 +190,7 @@ export default async function CategoryProjectsPage({ params }: Props) {
                       href={project.link}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="relative aspect-[4/3] w-full overflow-hidden rounded-xl bg-neutral-100 border border-neutral-200/80 mb-3 block cursor-pointer transition-transform duration-300"
+                      className="relative aspect-[5/3] w-full overflow-hidden rounded-xl bg-neutral-100 border border-neutral-200/80 mb-3 block cursor-pointer transition-transform duration-300"
                     >
                       <Image
                         src={project.image}
@@ -209,6 +223,29 @@ export default async function CategoryProjectsPage({ params }: Props) {
                     <p className="text-[12px] text-neutral-500 mt-0.5 leading-snug">
                       {project.type || project.category}
                     </p>
+
+                    {/* Parceria com Agência se existir */}
+                    {project.agencyLogo && (
+                      <div className="text-[12px] font-medium text-neutral-500 mt-2 flex items-center gap-1.5 flex-wrap">
+                        <span>Em parceria com:</span>
+                        <a
+                          href={project.agencyUrl || "https://virtualiti.com.br/"}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center hover:opacity-80 transition-opacity"
+                          title={project.agency ? `Visitar site da agência ${project.agency}` : "Visitar site da agência"}
+                        >
+                          <Image
+                            src={project.agencyLogo}
+                            alt={project.agency || "Virtualiti"}
+                            width={95}
+                            height={22}
+                            unoptimized
+                            className="h-4 sm:h-4.5 w-auto object-contain"
+                          />
+                        </a>
+                      </div>
+                    )}
                   </article>
                 ))}
               </div>

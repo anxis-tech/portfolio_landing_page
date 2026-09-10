@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, Newsreader } from "next/font/google";
 import "./globals.css";
 import { HostingerBadge } from "@/components/hostinger-badge";
+import { ColoredPointer } from "@/components/ui/colored-pointer";
 
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -50,6 +51,7 @@ export default function RootLayout({
       <body className="bg-[#FAFAFA] text-[#121212] antialiased selection:bg-[#121212] selection:text-white font-sans" suppressHydrationWarning>
         {children}
         <HostingerBadge />
+        <ColoredPointer color="#d8ff7c" strokeColor="#000000" size={22} />
       </body>
     </html>
   );

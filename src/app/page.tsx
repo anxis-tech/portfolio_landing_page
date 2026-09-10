@@ -5,19 +5,31 @@ import { RecentProjects } from "@/components/recent-projects";
 import { AgencyCarousel } from "@/components/agency-carousel";
 import { ServicesHelp } from "@/components/services-help";
 import { FooterEditorial } from "@/components/footer-editorial";
+import { GlobalDotBackground } from "@/components/ui/global-dot-background";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-[#FAFAFA] text-[#121212] flex flex-col items-center selection:bg-neutral-900 selection:text-white">
+    <div className="min-h-screen bg-[#FAFAFA] text-[#121212] flex flex-col items-center selection:bg-[#d8ff7c] selection:text-neutral-950">
+      {/* Fundo Interativo Global com Dots Reactivos ao Cursor */}
+      <GlobalDotBackground
+        dotRadius={1.15}
+        dotSpacing={19}
+        cursorRadius={320}
+        bulgeStrength={40}
+        glowRadius={190}
+        glowColor="#d8ff7c"
+        dotColor="rgba(0, 0, 0, 0.12)"
+        opacity={0.5}
+      />
+
       {/* 1. Navegação Flutuante em Cápsula (Pill Navigation) */}
       <HeaderPill />
 
       {/* 
-        2. Coluna Central Editorial com Linhas de Grid Arquitetônicas
-        Inspirado diretamente na composição, proporções e grid vertical da imagem de referência.
+        2. Coluna Central Fluida e Orgânica (Sem caixas ou bordas delimitadoras rígidas)
       */}
-      <main className="w-full max-w-6xl mx-auto border-x border-neutral-200/80 bg-[#FAFAFA] relative">
-        {/* Hero Autoral com Social Proof e Métricas Sutis */}
+      <main className="w-full max-w-6xl mx-auto relative" style={{ zIndex: 1 }}>
+        {/* Hero Autoral com Social Proof, Fundo Interativo e Métricas Sutis */}
         <HeroEditorial />
 
         {/* Trabalhos Recentes (3 Iniciais + Expansão 'Ver mais') */}
