@@ -59,7 +59,7 @@ export function HeaderPill() {
   const previewProject: Project | undefined = previewProjects[0];
 
   return (
-    <header className="fixed top-5 inset-x-0 z-50 flex justify-center px-4 pointer-events-none">
+    <header className="fixed top-5 inset-x-0 z-30 flex justify-center px-4 pointer-events-none">
       <nav
         aria-label="Navegação Principal"
         className={`pointer-events-auto relative transition-all duration-300 rounded-full border border-neutral-200/80 bg-white/90 backdrop-blur-md px-2 py-1.5 flex items-center gap-1 shadow-[0_2px_16px_rgba(0,0,0,0.04)] ${

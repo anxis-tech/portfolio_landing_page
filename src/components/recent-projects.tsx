@@ -4,13 +4,27 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { getRecentProjects, Project } from "@/data/portfolio";
-import { ArrowUpRight, ChevronDown, ChevronUp } from "lucide-react";
+import { ArrowUpRight, ChevronDown, ChevronUp, Eye } from "lucide-react";
 import { SpotlightCard } from "@/components/ui/spotlight-card";
 import { ShineBorder } from "@/components/ui/shine-border";
+import { ProjectExpandableModal, ProjectModalOrigin } from "@/components/project-expandable-modal";
 
 export function RecentProjects() {
   const [showAll, setShowAll] = useState(false);
   const recentProjects = getRecentProjects();
+
+  // Estado do Modal Expandido
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [originRect, setOriginRect] = useState<ProjectModalOrigin | null>(null);
+
+  const handleOpenProject = (project: Project, rect: ProjectModalOrigin) => {
+    setOriginRect(rect);
+    setSelectedProject(project);
+  };
+
+  const handleCloseProject = () => {
+    setSelectedProject(null);
+  };
 
   // Se houver 4 ou menos projetos, exibe todos diretamente em grid equilibrado (2x2)
   const isCompact = recentProjects.length <= 4;
@@ -48,7 +62,11 @@ export function RecentProjects() {
       {/* Grid Principal (2 colunas equilibradas para 4 projetos, ou 3 colunas se mais) */}
       <div className={`grid ${gridColsClass} gap-6 sm:gap-7 lg:gap-8`}>
         {initialProjects.map((project) => (
-          <ProjectCard key={project.id} project={project} />
+          <ProjectCard
+            key={project.id}
+            project={project}
+            onSelect={handleOpenProject}
+          />
         ))}
       </div>
 
@@ -60,7 +78,11 @@ export function RecentProjects() {
           }`}
         >
           {extraProjects.map((project) => (
-            <ProjectCard key={project.id} project={project} />
+            <ProjectCard
+              key={project.id}
+              project={project}
+              onSelect={handleOpenProject}
+            />
           ))}
         </div>
       )}
@@ -82,31 +104,63 @@ export function RecentProjects() {
           </button>
         </div>
       )}
+
+      {/* Modal Expandido com Shared Element Transition */}
+      <ProjectExpandableModal
+        project={selectedProject}
+        originRect={originRect}
+        onClose={handleCloseProject}
+      />
     </section>
   );
 }
 
-function ProjectCard({ project }: { project: Project }) {
+function ProjectCard({
+  project,
+  onSelect,
+}: {
+  project: Project;
+  onSelect: (project: Project, rect: ProjectModalOrigin) => void;
+}) {
+  const handleCardClick = (e: React.MouseEvent<HTMLElement>) => {
+    e.preventDefault();
+    const rect = e.currentTarget.getBoundingClientRect();
+    onSelect(project, {
+      top: rect.top,
+      left: rect.left,
+      width: rect.width,
+      height: rect.height,
+    });
+  };
+
   return (
     <SpotlightCard className="group flex flex-col p-2.5 -m-2.5 rounded-2xl hover:bg-white/80 transition-colors duration-300">
-      {/* Imagem do Projeto */}
-      <a
-        href={project.link}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="relative aspect-[5/3] w-full overflow-hidden rounded-xl bg-neutral-100 border border-neutral-200/80 mb-3 block cursor-pointer transition-transform duration-300"
+      {/* Imagem do Projeto (Dispara o Modal Expandido) */}
+      <div
+        onClick={handleCardClick}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            handleCardClick(e as unknown as React.MouseEvent<HTMLElement>);
+          }
+        }}
+        aria-label={`Abrir detalhes do projeto ${project.title}`}
+        className="relative aspect-[5/3] w-full overflow-hidden rounded-xl bg-neutral-100 border border-neutral-200/80 mb-3 block cursor-pointer transition-transform duration-300 select-none outline-none focus-visible:ring-2 focus-visible:ring-[#84cc16]"
       >
         <Image
           src={project.image}
           alt={project.title}
           fill
           unoptimized
-          sizes="(max-width: 640px) 100vw, 360px"
+          sizes="(max-width: 640px) 100vw, 560px"
           className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
         />
-        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 flex items-start justify-end p-2.5 z-10">
-          <span className="w-7 h-7 rounded-full bg-white/90 backdrop-blur-sm text-neutral-900 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center shadow-xs">
-            <ArrowUpRight size={14} />
+        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/15 transition-colors duration-300 flex items-start justify-end p-2.5 z-10">
+          <span className="px-2.5 py-1 rounded-full bg-white/90 backdrop-blur-sm text-neutral-900 text-[11px] font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center gap-1 shadow-xs">
+            <span>Explorar</span>
+            <ArrowUpRight size={12} />
           </span>
         </div>
 
@@ -116,18 +170,17 @@ function ProjectCard({ project }: { project: Project }) {
           duration={8}
           shineColor={["#d8ff7c", "#22c55e", "#84cc16", "#d8ff7c"]}
         />
-      </a>
+      </div>
 
-      {/* Título do Projeto */}
+      {/* Título do Projeto (Dispara o Modal Expandido) */}
       <div className="flex items-center justify-between">
-        <a
-          href={project.link}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="font-medium text-[14px] text-neutral-900 hover:text-neutral-600 transition-colors flex items-center gap-1 leading-snug"
+        <button
+          type="button"
+          onClick={handleCardClick}
+          className="font-medium text-[14px] text-neutral-900 hover:text-neutral-600 transition-colors flex items-center gap-1 leading-snug text-left cursor-pointer"
         >
           <span>{project.title}</span>
-        </a>
+        </button>
       </div>
 
       {/* Categoria / Tipo */}
@@ -135,7 +188,7 @@ function ProjectCard({ project }: { project: Project }) {
         {project.type || project.category}
       </p>
 
-      {/* Categorias / Tags navegáveis */}
+      {/* Categorias / Tags navegáveis (Levam para a página de categoria) */}
       {project.categories && project.categories.length > 0 && (
         <div className="flex flex-wrap items-center gap-1.5 mt-2">
           {project.categories.slice(0, 2).map((catSlug) => (
@@ -152,3 +205,4 @@ function ProjectCard({ project }: { project: Project }) {
     </SpotlightCard>
   );
 }
+

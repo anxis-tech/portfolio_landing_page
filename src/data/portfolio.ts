@@ -39,7 +39,8 @@ export interface Project {
   category: string;
   categories: string[]; // Slugs for dynamic category routing
   description: string;
-  image: string;
+  image: string; // Editorial cover image
+  fullPageImage?: string; // Full-page real screenshot
   link: string;
   year?: string;
   client?: string;
@@ -157,6 +158,7 @@ export const projectsData: Project[] = [
     categories: ["landing-pages"],
     description: "Landing page de alto padrão e sensibilidade visual voltada para consultoria em psicologia e desenvolvimento infantil.",
     image: "/projects/behance_mockup_shot_cover.webp",
+    fullPageImage: "/projects/mirele-fabro.webp",
     link: "https://mirelefabro.com.br/",
     year: "2026",
     client: "Dra. Mirele Fabro",
@@ -172,6 +174,7 @@ export const projectsData: Project[] = [
     categories: ["ecommerce"],
     description: "E-commerce especializado na distribuição de gift cards digitais, assinaturas e chaves com entrega instantânea.",
     image: "/projects/slouver_cover.webp",
+    fullPageImage: "/projects/slouver-games.webp",
     link: "https://slouvergames.com.br/",
     year: "2026",
     client: "Slouver Games",
@@ -187,6 +190,7 @@ export const projectsData: Project[] = [
     categories: ["landing-pages", "institucional"],
     description: "Portal e catálogo digital moderno para fornecimento de produtos hospitalares e equipamentos clínicos.",
     image: "/projects/riosmed_cover.webp",
+    fullPageImage: "/projects/riosmed.webp",
     link: "https://riosmed.com.br/",
     year: "2026",
     client: "Riosmed",
@@ -201,6 +205,7 @@ export const projectsData: Project[] = [
     categories: ["landing-pages"],
     description: "Página de conversão humanizada com foco em consultoria jurídica especializada e captação de clientes.",
     image: "/projects/felipe_bezerril_cover.webp",
+    fullPageImage: "/projects/felipe-bezerril.webp",
     link: "https://felipebezerril.adv.br/",
     year: "2026",
     client: "Felipe Bezerril Advocacia",
@@ -220,6 +225,7 @@ export const projectsData: Project[] = [
     agencyUrl: "https://virtualiti.com.br/",
     agencyLogo: "/badges/virtualiti-logo.png",
     image: "/projects/decopisos.webp",
+    fullPageImage: "/projects/decopisos.webp",
     link: "https://decopisos.commercesuite.com.br/",
     year: "2026",
     type: "E-commerce & Parceria",
@@ -236,6 +242,7 @@ export const projectsData: Project[] = [
     agencyUrl: "https://virtualiti.com.br/",
     agencyLogo: "/badges/virtualiti-logo.png",
     image: "/projects/visalens.webp",
+    fullPageImage: "/projects/visalens.webp",
     link: "https://www.visalens.com.br/",
     year: "2026",
     type: "E-commerce & Parceria",
@@ -252,6 +259,7 @@ export const projectsData: Project[] = [
     agencyUrl: "https://virtualiti.com.br/",
     agencyLogo: "/badges/virtualiti-logo.png",
     image: "/projects/jacare-home-center.webp",
+    fullPageImage: "/projects/jacare-home-center.webp",
     link: "https://www.jacarehomecenter.com.br/",
     year: "2026",
     type: "E-commerce & Parceria",

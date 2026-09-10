@@ -12,6 +12,8 @@ import {
 import { ArrowLeft, ArrowUpRight, FolderGit2 } from "lucide-react";
 import { FooterEditorial } from "@/components/footer-editorial";
 import { GlobalDotBackground } from "@/components/ui/global-dot-background";
+import { CategoryProjectList } from "@/components/category-project-list";
+import { CategoryFilterDropdown } from "@/components/category-filter-dropdown";
 
 type Props = {
   params: Promise<{ categoria: string }>;
@@ -87,188 +89,76 @@ export default async function CategoryProjectsPage({ params }: Props) {
       <main className="w-full max-w-6xl mx-auto relative min-h-[calc(100vh-60px)] px-6 sm:px-10 lg:px-14 py-12" style={{ zIndex: 1 }}>
 
         {/* =========================================================================
-            CABEÇALHO EDITORIAL DA CATEGORIA (FULL-WIDTH, TOPO)
+            CABEÇALHO EDITORIAL DA CATEGORIA + BOTÃO DE FILTRO NA MESMA LINHA
            ========================================================================= */}
         <div className="pb-8 border-b border-neutral-200/80 mb-10">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-neutral-100 border border-neutral-200 text-[11px] font-mono text-neutral-600 mb-3.5">
-            <span>Coleção</span>
-            <span>·</span>
-            <span className="font-semibold text-neutral-900">{category.name}</span>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-neutral-100 border border-neutral-200 text-[11px] font-mono text-neutral-600 w-fit">
+              <span>Coleção</span>
+              <span>·</span>
+              <span className="font-semibold text-neutral-900">{category.name}</span>
+            </div>
+
+            {/* Botão de Filtro de Categorias Expandível com Transição Suave */}
+            <CategoryFilterDropdown
+              categories={categoriesData}
+              currentCategorySlug={category.slug}
+              projectCounts={categoriesData.reduce((acc, cat) => {
+                acc[cat.slug] = getProjectsByCategory(cat.slug).length;
+                return acc;
+              }, {} as Record<string, number>)}
+            />
           </div>
 
           <h1 className="font-serif-editorial text-3xl sm:text-4xl lg:text-[42px] text-neutral-950 font-normal tracking-tight leading-tight">
             {category.title}
           </h1>
 
-          <p className="text-[14px] sm:text-[15px] text-neutral-600 mt-3 leading-relaxed max-w-2xl">
-            {category.description}
-          </p>
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mt-3">
+            <p className="text-[14px] sm:text-[15px] text-neutral-600 leading-relaxed max-w-2xl">
+              {category.description}
+            </p>
 
-          <div className="mt-4 flex items-center gap-2 text-[12px] text-neutral-400 font-mono">
-            <span>{projects.length} {projects.length === 1 ? "projeto listado" : "projetos listados"}</span>
+            <div className="flex items-center gap-2 text-[12px] text-neutral-400 font-mono shrink-0">
+              <span>{projects.length} {projects.length === 1 ? "projeto listado" : "projetos listados"}</span>
+            </div>
           </div>
         </div>
 
         {/* =========================================================================
-            SIDEBAR + GRADE DE PROJETOS (ABAIXO DO CABEÇALHO)
+            GRADE DE PROJETOS EM 3 COLUNAS (FULL-WIDTH, SEM SIDEBAR)
            ========================================================================= */}
-        <div className="flex flex-col md:flex-row items-start gap-10 lg:gap-14">
-          
-          {/* SIDEBAR VERTICAL DE FILTRAGEM (LADO ESQUERDO) */}
-          <aside className="w-full md:w-64 lg:w-72 shrink-0 md:sticky md:top-24">
-            <div className="p-5 rounded-2xl bg-white/80 backdrop-blur-sm border border-neutral-200/80 shadow-2xs">
-              <div className="flex items-center gap-2 mb-4 pb-3 border-b border-neutral-100">
-                <FolderGit2 size={15} className="text-neutral-500" />
-                <span className="text-[11px] font-mono uppercase tracking-wider text-neutral-400 font-semibold">
-                  Categorias
-                </span>
-              </div>
-
-              <nav className="flex flex-col gap-1.5" aria-label="Filtro de categorias">
-                {categoriesData.map((cat) => {
-                  const isCurrent = cat.slug === category.slug;
-                  const count = getProjectsByCategory(cat.slug).length;
-
-                  return (
-                    <Link
-                      key={cat.slug}
-                      href={`/projetos/${cat.slug}`}
-                      className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-[13px] transition-all duration-200 ${
-                        isCurrent
-                          ? "bg-neutral-950 text-white font-medium shadow-2xs"
-                          : "text-neutral-600 hover:text-neutral-950 hover:bg-neutral-100/80"
-                      }`}
-                    >
-                      <span className="truncate">{cat.name}</span>
-                      <span
-                        className={`text-[11px] font-mono px-2 py-0.5 rounded-md ${
-                          isCurrent
-                            ? "bg-neutral-800 text-neutral-300"
-                            : "bg-neutral-100 text-neutral-500"
-                        }`}
-                      >
-                        {count}
-                      </span>
-                    </Link>
-                  );
-                })}
-              </nav>
-
-              <div className="mt-6 pt-4 border-t border-neutral-100">
-                <Link
-                  href="/#projetos"
-                  className="text-[12px] font-medium text-neutral-500 hover:text-neutral-900 flex items-center gap-1.5 px-2 py-1 transition-colors"
-                >
-                  <ArrowLeft size={12} />
-                  <span>Todos os projetos</span>
-                </Link>
-              </div>
-            </div>
-          </aside>
-
-          {/* GRADE DE PROJETOS EM 2 COLUNAS */}
-          <div className="flex-1 min-w-0">
-            {projects.length === 0 ? (
-              <div className="py-16 text-center text-neutral-500 border border-dashed border-neutral-200 rounded-2xl">
-                <p>Nenhum projeto encontrado nesta categoria no momento.</p>
-                <Link
-                  href="/"
-                  className="mt-4 inline-block text-neutral-900 underline font-medium text-sm"
-                >
-                  Ver todos os projetos na página inicial
-                </Link>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 lg:gap-8">
-                {projects.map((project) => (
-                  <article
-                    key={project.id}
-                    className="group flex flex-col"
-                  >
-                    {/* Imagem do Projeto */}
-                    <a
-                      href={project.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="relative aspect-[5/3] w-full overflow-hidden rounded-xl bg-neutral-100 border border-neutral-200/80 mb-3 block cursor-pointer transition-transform duration-300"
-                    >
-                      <Image
-                        src={project.image}
-                        alt={project.title}
-                        fill
-                        unoptimized
-                        sizes="(max-width: 640px) 100vw, 400px"
-                        className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
-                      />
-                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 flex items-start justify-end p-2.5">
-                        <span className="w-7 h-7 rounded-full bg-white/90 backdrop-blur-sm text-neutral-900 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center shadow-xs">
-                          <ArrowUpRight size={14} />
-                        </span>
-                      </div>
-                    </a>
-
-                    {/* Título do Projeto */}
-                    <div className="flex items-center justify-between">
-                      <a
-                        href={project.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="font-medium text-[15px] text-neutral-900 hover:text-neutral-600 transition-colors flex items-center gap-1 leading-snug"
-                      >
-                        <span>{project.title}</span>
-                      </a>
-                    </div>
-
-                    {/* Categoria / Tipo */}
-                    <p className="text-[12px] text-neutral-500 mt-0.5 leading-snug">
-                      {project.type || project.category}
-                    </p>
-
-                    {/* Parceria com Agência se existir */}
-                    {project.agencyLogo && (
-                      <div className="text-[12px] font-medium text-neutral-500 mt-2 flex items-center gap-1.5 flex-wrap">
-                        <span>Em parceria com:</span>
-                        <a
-                          href={project.agencyUrl || "https://virtualiti.com.br/"}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center hover:opacity-80 transition-opacity"
-                          title={project.agency ? `Visitar site da agência ${project.agency}` : "Visitar site da agência"}
-                        >
-                          <Image
-                            src={project.agencyLogo}
-                            alt={project.agency || "Virtualiti"}
-                            width={95}
-                            height={22}
-                            unoptimized
-                            className="h-4 sm:h-4.5 w-auto object-contain"
-                          />
-                        </a>
-                      </div>
-                    )}
-                  </article>
-                ))}
-              </div>
-            )}
-
-            {/* Rodapé da Listagem */}
-            <div className="mt-12 p-8 rounded-2xl bg-neutral-100/70 border border-neutral-200/80 text-center flex flex-col items-center">
-              <h3 className="font-serif-editorial text-2xl sm:text-3xl text-neutral-950 font-normal">
-                Projetos Selecionados
-              </h3>
-              <p className="text-[13px] text-neutral-600 mt-1.5 max-w-md">
-                Trabalhos focados em precisão técnica, experiência do usuário e conversão estratégica.
-              </p>
+        <div className="w-full">
+          {projects.length === 0 ? (
+            <div className="py-16 text-center text-neutral-500 border border-dashed border-neutral-200 rounded-2xl">
+              <p>Nenhum projeto encontrado nesta categoria no momento.</p>
               <Link
                 href="/"
-                className="mt-4 inline-flex items-center gap-1.5 text-[13px] font-medium text-neutral-900 hover:text-neutral-700 bg-white border border-neutral-200 px-5 py-2.5 rounded-full transition-all shadow-2xs"
+                className="mt-4 inline-block text-neutral-900 underline font-medium text-sm"
               >
-                <ArrowLeft size={13} />
-                <span>Voltar à página inicial</span>
+                Ver todos os projetos na página inicial
               </Link>
             </div>
-          </div>
+          ) : (
+            <CategoryProjectList projects={projects} />
+          )}
 
+          {/* Rodapé da Listagem */}
+          <div className="mt-14 p-8 rounded-2xl bg-neutral-100/70 border border-neutral-200/80 text-center flex flex-col items-center">
+            <h3 className="font-serif-editorial text-2xl sm:text-3xl text-neutral-950 font-normal">
+              Projetos Selecionados
+            </h3>
+            <p className="text-[13px] text-neutral-600 mt-1.5 max-w-md">
+              Trabalhos focados em precisão técnica, experiência do usuário e conversão estratégica.
+            </p>
+            <Link
+              href="/"
+              className="mt-4 inline-flex items-center gap-1.5 text-[13px] font-medium text-neutral-900 hover:text-neutral-700 bg-white border border-neutral-200 px-5 py-2.5 rounded-full transition-all shadow-2xs cursor-pointer active:scale-95"
+            >
+              <ArrowLeft size={13} />
+              <span>Voltar à página inicial</span>
+            </Link>
+          </div>
         </div>
       </main>
 

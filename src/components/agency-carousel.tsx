@@ -2,14 +2,35 @@
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import { getAgencyProjects } from "@/data/portfolio";
+import { getAgencyProjects, Project } from "@/data/portfolio";
 import { ChevronLeft, ChevronRight, ArrowUpRight, Handshake } from "lucide-react";
 import { SpotlightCard } from "@/components/ui/spotlight-card";
+import { ProjectExpandableModal, ProjectModalOrigin } from "@/components/project-expandable-modal";
 
 export function AgencyCarousel() {
   const agencyProjects = getAgencyProjects();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
+
+  // Estado do Modal Expandido
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [originRect, setOriginRect] = useState<ProjectModalOrigin | null>(null);
+
+  const handleOpenProject = (project: Project, e: React.MouseEvent<HTMLElement>) => {
+    e.preventDefault();
+    const rect = e.currentTarget.getBoundingClientRect();
+    setOriginRect({
+      top: rect.top,
+      left: rect.left,
+      width: rect.width,
+      height: rect.height,
+    });
+    setSelectedProject(project);
+  };
+
+  const handleCloseProject = () => {
+    setSelectedProject(null);
+  };
 
   useEffect(() => {
     const checkMobile = () => {
@@ -43,27 +64,17 @@ export function AgencyCarousel() {
             </span>
           </div>
           <h2 className="font-serif-editorial text-2xl sm:text-3xl lg:text-4xl text-neutral-950 font-normal tracking-tight leading-tight">
-            Colaborações com agências e estúdios.
+            Em colaboração técnica com agências.
           </h2>
-          <p className="text-[13px] text-neutral-500 mt-2 max-w-lg">
-            Trabalhos desenvolvidos em colaboração com agências e estúdios
-          </p>
         </div>
 
-        {/* Controles do Carrossel (Setas Discretas e Indicador) */}
-        <div className="flex items-center gap-1.5">
-          <span className="text-[11px] font-mono text-neutral-400 mr-1.5 hidden sm:inline">
-            {String(currentIndex + 1).padStart(2, "0")} / {String(maxIndex + 1).padStart(2, "0")}
-          </span>
+        {/* Setas de Navegação do Carrossel */}
+        <div className="flex items-center gap-2 shrink-0">
           <button
             type="button"
             onClick={prevSlide}
             disabled={currentIndex === 0}
-            className={`w-7 h-7 rounded-full border border-neutral-200 flex items-center justify-center transition-all ${
-              currentIndex === 0
-                ? "text-neutral-300 border-neutral-100 cursor-not-allowed"
-                : "text-neutral-700 hover:bg-neutral-100 hover:border-neutral-300 active:scale-95"
-            }`}
+            className="w-9 h-9 rounded-full border border-neutral-200 bg-white hover:bg-neutral-50 disabled:opacity-30 disabled:pointer-events-none flex items-center justify-center text-neutral-700 transition-colors shadow-2xs active:scale-95 cursor-pointer"
             aria-label="Projeto anterior"
           >
             <ChevronLeft size={15} />
@@ -72,11 +83,7 @@ export function AgencyCarousel() {
             type="button"
             onClick={nextSlide}
             disabled={currentIndex >= maxIndex}
-            className={`w-7 h-7 rounded-full border border-neutral-200 flex items-center justify-center transition-all ${
-              currentIndex >= maxIndex
-                ? "text-neutral-300 border-neutral-100 cursor-not-allowed"
-                : "text-neutral-700 hover:bg-neutral-100 hover:border-neutral-300 active:scale-95"
-            }`}
+            className="w-9 h-9 rounded-full border border-neutral-200 bg-white hover:bg-neutral-50 disabled:opacity-30 disabled:pointer-events-none flex items-center justify-center text-neutral-700 transition-colors shadow-2xs active:scale-95 cursor-pointer"
             aria-label="Próximo projeto"
           >
             <ChevronRight size={15} />
@@ -99,38 +106,45 @@ export function AgencyCarousel() {
               key={project.id}
               className="w-full sm:w-[calc(50%-8px)] shrink-0 flex flex-col group p-3 -m-1 rounded-2xl hover:bg-white/80 transition-colors duration-300"
             >
-              {/* Imagem do Projeto */}
-              <a
-                href={project.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="relative aspect-[16/10] w-full overflow-hidden rounded-xl bg-neutral-100 border border-neutral-200/80 mb-3 block cursor-pointer"
+              {/* Imagem do Projeto (Dispara o Modal Expandido) */}
+              <div
+                onClick={(e) => handleOpenProject(project, e)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    handleOpenProject(project, e as unknown as React.MouseEvent<HTMLElement>);
+                  }
+                }}
+                aria-label={`Abrir detalhes do projeto ${project.title}`}
+                className="relative aspect-[16/10] w-full overflow-hidden rounded-xl bg-neutral-100 border border-neutral-200/80 mb-3 block cursor-pointer transition-transform duration-300 select-none outline-none focus-visible:ring-2 focus-visible:ring-[#84cc16]"
               >
                 <Image
                   src={project.image}
                   alt={project.title}
                   fill
                   unoptimized
-                  sizes="(max-width: 640px) 100vw, 360px"
+                  sizes="(max-width: 640px) 100vw, 560px"
                   className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 flex items-start justify-end p-2.5">
-                  <span className="w-7 h-7 rounded-full bg-white/90 backdrop-blur-sm text-neutral-900 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center shadow-xs">
-                    <ArrowUpRight size={14} />
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/15 transition-colors duration-300 flex items-start justify-end p-2.5">
+                  <span className="px-2.5 py-1 rounded-full bg-white/90 backdrop-blur-sm text-neutral-900 text-[11px] font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center gap-1 shadow-xs">
+                    <span>Explorar</span>
+                    <ArrowUpRight size={12} />
                   </span>
                 </div>
-              </a>
+              </div>
 
               {/* Informações: Título, Parceria e Descrição */}
               <div>
-                <a
-                  href={project.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="font-semibold text-[14px] text-neutral-950 uppercase tracking-tight hover:text-neutral-700 transition-colors inline-block"
+                <button
+                  type="button"
+                  onClick={(e) => handleOpenProject(project, e)}
+                  className="font-semibold text-[14px] text-neutral-950 uppercase tracking-tight hover:text-neutral-700 transition-colors inline-block text-left cursor-pointer"
                 >
                   {project.title}
-                </a>
+                </button>
 
                 {/* Parceria com Agência: Logo clicável */}
                 <div className="text-[12px] font-medium text-neutral-500 mt-1 flex items-center gap-2 flex-wrap">
@@ -168,6 +182,13 @@ export function AgencyCarousel() {
           ))}
         </div>
       </div>
+
+      {/* Modal Expandido com Shared Element Transition */}
+      <ProjectExpandableModal
+        project={selectedProject}
+        originRect={originRect}
+        onClose={handleCloseProject}
+      />
     </section>
   );
 }
