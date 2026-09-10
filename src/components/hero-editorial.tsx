@@ -69,19 +69,19 @@ export function HeroEditorial() {
 
       {/* 2. Headline Editorial e Apresentação Autoral com Efeito de Digitação */}
       <div className="max-w-4xl">
-        <h1 className="font-serif-editorial text-3xl sm:text-5xl lg:text-[52px] leading-[1.15] text-neutral-950 tracking-[-0.025em] font-normal mb-4 min-h-[1.25em] flex items-center flex-wrap">
+        <h1 className="font-serif-editorial text-[26px] xs:text-3xl sm:text-5xl lg:text-[52px] leading-[1.15] text-neutral-950 tracking-[-0.025em] font-normal mb-4 min-h-[1.25em] flex items-center whitespace-nowrap">
           {displayText.length <= prefix.length ? (
             <span className="whitespace-pre">{displayText}</span>
           ) : (
-            <>
+            <span className="whitespace-nowrap inline-flex items-center">
               <span className="whitespace-pre">{prefix}</span>
               <span className="font-semibold text-neutral-950">
                 {displayText.slice(prefix.length)}
               </span>
-            </>
+            </span>
           )}
           <span
-            className="inline-block w-[3px] h-[0.82em] bg-neutral-900 ml-1.5 align-middle animate-pulse"
+            className="inline-block w-[3px] h-[0.82em] bg-neutral-900 ml-1.5 align-middle animate-pulse shrink-0"
             aria-hidden="true"
           />
         </h1>
