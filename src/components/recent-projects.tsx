@@ -26,10 +26,10 @@ export function RecentProjects() {
     setSelectedProject(null);
   };
 
-  // Se houver 4 ou menos projetos, exibe todos diretamente em grid equilibrado (2x2)
+  // Exibe os projetos recentes diretamente em grid de 3 colunas (ou 2 colunas se até 4)
   const isCompact = recentProjects.length <= 4;
-  const initialProjects = isCompact ? recentProjects : recentProjects.slice(0, 4);
-  const extraProjects = isCompact ? [] : recentProjects.slice(4);
+  const initialProjects = recentProjects.length <= 6 ? recentProjects : recentProjects.slice(0, 6);
+  const extraProjects = recentProjects.length <= 6 ? [] : recentProjects.slice(6);
 
   const toggleShowAll = () => {
     setShowAll((prev) => !prev);
