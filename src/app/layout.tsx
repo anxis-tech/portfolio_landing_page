@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, Newsreader } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import { HostingerBadge } from "@/components/hostinger-badge";
 import { ColoredPointer } from "@/components/ui/colored-pointer";
@@ -48,6 +49,21 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR" className={`${plusJakarta.variable} ${newsreader.variable}`} suppressHydrationWarning>
+      <head>
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-E28T8J5P5Z"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-E28T8J5P5Z');
+          `}
+        </Script>
+      </head>
       <body className="bg-[#FAFAFA] text-[#121212] antialiased selection:bg-[#121212] selection:text-white font-sans" suppressHydrationWarning>
         {children}
         <HostingerBadge />
