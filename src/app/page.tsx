@@ -3,7 +3,7 @@ import { HeaderPill } from "@/components/header-pill";
 import { HeroEditorial } from "@/components/hero-editorial";
 import { RecentProjects } from "@/components/recent-projects";
 import { AgencyCarousel } from "@/components/agency-carousel";
-import { ServicesHelp } from "@/components/services-help";
+import { IntegrationsShowcase } from "@/components/integrations-showcase";
 import { FooterEditorial } from "@/components/footer-editorial";
 import { GlobalDotBackground } from "@/components/ui/global-dot-background";
 
@@ -38,8 +38,8 @@ export default function Home() {
         {/* Projetos em Parceria com Agências (Carrossel 2 no desktop / 1 no mobile) */}
         <AgencyCarousel />
 
-        {/* Seção 'Como posso ajudar' & Convite para Contato */}
-        <ServicesHelp />
+        {/* Seção 'Integrações' (Referência Aura F76DCB) */}
+        <IntegrationsShowcase />
       </main>
 
       {/* 3. Footer de Alto Contraste Escuro com Mensagem Autoral */}

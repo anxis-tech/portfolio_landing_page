@@ -36,7 +36,7 @@ export function HeaderPill() {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 40);
 
-      const sections = ["inicio", "numeros", "projetos", "parcerias", "servicos", "sobre"];
+      const sections = ["inicio", "numeros", "projetos", "parcerias", "integracoes", "sobre"];
       const current = sections.find((section) => {
         const el = document.getElementById(section);
         if (el) {
@@ -254,16 +254,16 @@ export function HeaderPill() {
             Parcerias
           </a>
 
-          {/* Link Serviços */}
+          {/* Link Integrações */}
           <a
-            href="#servicos"
+            href="#integracoes"
             className={`px-3.5 py-1.5 text-[13px] font-medium transition-all duration-200 rounded-full ${
-              activeSection === "servicos"
+              activeSection === "integracoes"
                 ? "bg-neutral-100 text-neutral-900 font-semibold shadow-2xs"
                 : "text-neutral-500 hover:text-neutral-900 hover:bg-neutral-50"
             }`}
           >
-            Serviços
+            Integrações
           </a>
         </div>
 
@@ -331,11 +331,11 @@ export function HeaderPill() {
           </a>
 
           <a
-            href="#servicos"
+            href="#integracoes"
             onClick={() => setMobileMenuOpen(false)}
             className="px-3.5 py-2 text-sm font-medium text-neutral-700 hover:text-neutral-950 hover:bg-neutral-50 rounded-xl transition-colors"
           >
-            Serviços
+            Integrações
           </a>
         </div>
       )}
