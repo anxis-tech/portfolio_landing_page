@@ -193,7 +193,7 @@ export function HeaderPill() {
                             fill
                             unoptimized
                             sizes="280px"
-                            className="object-cover object-top transition-transform duration-500 group-hover/card:scale-105"
+                            className="project-scroll-card-image"
                           />
                           <div className="absolute inset-0 bg-black/0 group-hover/card:bg-black/15 transition-colors duration-200 flex items-start justify-end p-2">
                             <span className="w-6 h-6 rounded-full bg-white/90 backdrop-blur-sm text-neutral-900 opacity-0 group-hover/card:opacity-100 transition-opacity duration-200 flex items-center justify-center shadow-xs">

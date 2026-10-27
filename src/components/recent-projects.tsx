@@ -155,7 +155,7 @@ function ProjectCard({
           fill
           unoptimized
           sizes="(max-width: 640px) 100vw, 560px"
-          className="object-cover object-top transition-transform duration-500 group-hover:scale-105"
+          className="project-scroll-card-image"
         />
         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/15 transition-colors duration-300 flex items-start justify-end p-2.5 z-10">
           <span className="px-2.5 py-1 rounded-full bg-white/90 backdrop-blur-sm text-neutral-900 text-[11px] font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center gap-1 shadow-xs">
