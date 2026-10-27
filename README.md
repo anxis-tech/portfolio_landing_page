@@ -63,3 +63,19 @@ Com o build de produção rodando (`npm run start -- --port 3100`), execute
 `npm run test:modal`. Use `PORTFOLIO_URL` para apontar para outro servidor.
 O teste cobre prévia imediata, imagem completa atrasada, erro de rede, reabertura,
 mobile, grid, categorias e carrossel.
+
+## Dependências e verificação de tipos
+
+Instale as versões registradas no lockfile com `npm ci`. Use `npm audit` para
+verificar também as dependências de desenvolvimento.
+
+O TypeScript 7 executa `npm run typecheck`, que também roda ao final do build.
+O alias `typescript` fornece a API do TypeScript 6 para o ESLint e a verificação
+integrada do Next.js; `@typescript/native` fornece o executável `tsc` do
+TypeScript 7. Essa combinação segue a
+[orientação oficial para usar as duas versões](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/#running-side-by-side-with-typescript-6-0).
+
+O ESLint permanece em 9.39.5 porque as versões atuais dos plugins React,
+acessibilidade e imports usados por `eslint-config-next` aceitam apenas até a
+versão 9. Antes de migrar para o ESLint 10, confirme o suporte desses plugins;
+não use `--force` ou `--legacy-peer-deps` para ignorar incompatibilidades.
