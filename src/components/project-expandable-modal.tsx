@@ -23,74 +23,53 @@ interface ProjectExpandableModalProps {
   onClose: () => void;
 }
 
+const MODAL_TRANSITION_MS = 320;
+const MODAL_EASING = "cubic-bezier(0.22, 1, 0.36, 1)";
+
 export function ProjectExpandableModal({
   project,
   originRect,
   onClose,
 }: ProjectExpandableModalProps) {
-  const [phase, setPhase] = useState<"idle" | "expanding" | "expanded" | "closing">("expanding");
-  const [currentStyle, setCurrentStyle] = useState<React.CSSProperties>(() => ({
-    top: `${originRect?.top ?? 0}px`, left: `${originRect?.left ?? 0}px`,
-    width: `${originRect?.width ?? 360}px`, height: `${originRect?.height ?? 240}px`,
-    borderRadius: "16px", transform: "none",
-  }));
+  const [phase, setPhase] = useState<"expanding" | "expanded" | "closing">("expanding");
   const [screenshotStatus, setScreenshotStatus] = useState<"loading" | "ready" | "error">("loading");
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-
+  const enterFrameRef = useRef<number | null>(null);
+  const closingRef = useRef(false);
   const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   useEffect(() => () => { if (closeTimerRef.current) clearTimeout(closeTimerRef.current); }, []);
 
-  // Função para fechar suavemente com animação reversa de morphing
+  const finishClose = useCallback(() => {
+    if (closeTimerRef.current === null) return;
+    clearTimeout(closeTimerRef.current);
+    closeTimerRef.current = null;
+    onClose();
+  }, [onClose]);
+
   const handleClose = useCallback(() => {
-    if (phase === "closing" || !project) return;
-
+    if (closingRef.current || !project) return;
+    closingRef.current = true;
+    if (enterFrameRef.current !== null) cancelAnimationFrame(enterFrameRef.current);
     setPhase("closing");
-
-    // Rolar o preview de volta ao topo antes de recolher
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollTo({ top: 0, behavior: "smooth" });
-    }
-
-    const fallbackRect = {
-      top: window.innerHeight / 2 - 120,
-      left: window.innerWidth / 2 - 180,
-      width: 360,
-      height: 240,
-    };
-    const targetRect = originRect || fallbackRect;
-
-    // Animar de volta às coordenadas originais do card
-    setCurrentStyle({
-      top: `${targetRect.top}px`,
-      left: `${targetRect.left}px`,
-      width: `${targetRect.width}px`,
-      height: `${targetRect.height}px`,
-      borderRadius: "16px",
-      transform: "none",
-      transition: "all 340ms cubic-bezier(0.25, 0.8, 0.25, 1)",
-    });
-
-    // Desmontar após a transição
-    closeTimerRef.current = setTimeout(() => {
-      onClose();
-      setPhase("idle");
-    }, 350);
-  }, [phase, project, originRect, onClose]);
+    const immediate = phase === "expanding" || window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    // Normally transitionend completes the close; the timer covers interrupted transitions.
+    closeTimerRef.current = setTimeout(finishClose, immediate ? 0 : MODAL_TRANSITION_MS + 80);
+  }, [phase, project, finishClose]);
 
   // Bloquear scroll do body quando o modal estiver aberto
   useEffect(() => {
     if (!project) return;
 
     const previousFocus = document.activeElement as HTMLElement | null;
-    const focusFrame = requestAnimationFrame(() => containerRef.current?.querySelector<HTMLButtonElement>("button")?.focus());
+    const focusFrame = requestAnimationFrame(() => containerRef.current?.querySelector<HTMLButtonElement>("button")?.focus({ preventScroll: true }));
     const originalOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
 
     return () => {
       cancelAnimationFrame(focusFrame);
       document.body.style.overflow = originalOverflow;
-      previousFocus?.focus();
+      previousFocus?.focus({ preventScroll: true });
     };
   }, [project]);
 
@@ -114,39 +93,19 @@ export function ProjectExpandableModal({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [project, handleClose]);
 
-  // Executar a expansão do card (Shared Element Transition)
+  // Paint the initial scale before starting the transition, without resizing content.
   useEffect(() => {
-    if (!project) {
-      return;
-    }
-
-    // Próximo frame: transicionar para a posição e dimensão do modal expandido
-    const animFrame = requestAnimationFrame(() => {
-      const isMobile = window.innerWidth < 640;
-      const targetWidth = isMobile ? "calc(100vw - 24px)" : "min(92vw, 1200px)";
-      const targetHeight = isMobile ? "calc(100vh - 40px)" : "min(88vh, 860px)";
-
-      setCurrentStyle({
-        top: "50%",
-        left: "50%",
-        width: targetWidth,
-        height: targetHeight,
-        borderRadius: isMobile ? "20px" : "24px",
-        transform: "translate(-50%, -50%)",
-        transition: "all 420ms cubic-bezier(0.16, 1, 0.3, 1)",
+    if (!project) return;
+    enterFrameRef.current = requestAnimationFrame(() => {
+      enterFrameRef.current = requestAnimationFrame(() => {
+        enterFrameRef.current = null;
+        if (!closingRef.current) setPhase("expanded");
       });
     });
-
-    // Fase 3: Concluir expansão e revelar detalhes do projeto
-    const finishTimer = setTimeout(() => {
-      setPhase("expanded");
-    }, 440);
-
     return () => {
-      cancelAnimationFrame(animFrame);
-      clearTimeout(finishTimer);
+      if (enterFrameRef.current !== null) cancelAnimationFrame(enterFrameRef.current);
     };
-  }, [project, originRect]);
+  }, [project]);
 
 
   if (!project) return null;
@@ -154,7 +113,6 @@ export function ProjectExpandableModal({
   const fullPageSrc = getProjectImage(project);
   const dimensions = imageDetails[project.id as keyof typeof imageDetails] || { width: 1440, height: 3600 };
   const isExpanded = phase === "expanded";
-  const isClosing = phase === "closing";
 
   const modalContent = (
     <div
@@ -166,17 +124,26 @@ export function ProjectExpandableModal({
       {/* Backdrop Escuro com Blur cobrindo tudo, inclusive o header de fundo */}
       <div
         onClick={handleClose}
-        className={`fixed inset-0 bg-black/75 backdrop-blur-md transition-opacity duration-400 ease-out cursor-pointer ${
-          isClosing ? "opacity-0" : "opacity-100"
-        }`}
+        className="fixed inset-0 bg-black/75 backdrop-blur-md cursor-pointer"
+        style={{
+          opacity: isExpanded ? 1 : 0,
+          transition: `opacity ${MODAL_TRANSITION_MS}ms ${MODAL_EASING}`,
+        }}
         aria-hidden="true"
       />
 
-      {/* Painel Central com Shared Element Transition */}
+      {/* Stable layout; the same compositor transition handles opening and closing. */}
       <div
         ref={containerRef}
-        style={currentStyle}
-        className="fixed z-[10000] bg-white overflow-hidden shadow-[0_25px_60px_-15px_rgba(0,0,0,0.55)] border border-neutral-200/90 flex flex-col will-change-[top,left,width,height,border-radius]"
+        style={{
+          opacity: isExpanded ? 1 : 0,
+          transform: `translate(-50%, -50%) scale(${isExpanded ? 1 : 0.96})`,
+          transition: `transform ${MODAL_TRANSITION_MS}ms ${MODAL_EASING}, opacity ${MODAL_TRANSITION_MS}ms ${MODAL_EASING}`,
+        }}
+        onTransitionEnd={(event) => {
+          if (event.target === event.currentTarget && event.propertyName === "transform" && closingRef.current) finishClose();
+        }}
+        className="fixed top-1/2 left-1/2 w-[calc(100vw-24px)] h-[calc(100dvh-40px)] sm:w-[min(92vw,1200px)] sm:h-[min(88dvh,860px)] rounded-[20px] sm:rounded-[24px] z-[10000] bg-white overflow-hidden shadow-[0_25px_60px_-15px_rgba(0,0,0,0.55)] border border-neutral-200/90 flex flex-col will-change-[transform,opacity]"
       >
         {/* =========================================================================
             BARRA DE CABEÇALHO DO MODAL (ESTILO BROWSER / CHROME DISCRETO)
@@ -252,7 +219,7 @@ export function ProjectExpandableModal({
             </div>
 
             {/* Dica de rolagem com ícone de mouse no desktop e toque no mobile */}
-            {isExpanded && (
+            {phase !== "expanding" && (
               <div className="sticky bottom-3.5 inset-x-0 flex justify-center pointer-events-none pb-1 animate-in fade-in duration-500">
                 <span className="px-3.5 py-1.5 rounded-full bg-neutral-900/85 backdrop-blur-md text-white text-[11px] font-medium shadow-lg flex items-center gap-2 border border-white/10">
                   {/* Ícone de Mouse (Desktop) */}
@@ -298,9 +265,7 @@ export function ProjectExpandableModal({
 
           {/* COLUNA DIREITA: PAINEL DE INFORMAÇÕES E AÇÕES DO PROJETO */}
           <div
-            className={`p-6 sm:p-7 flex flex-col justify-between overflow-y-auto bg-white transition-all duration-300 ${
-              phase === "expanding" ? "opacity-0" : "opacity-100"
-            }`}
+            className="p-6 sm:p-7 flex flex-col justify-between overflow-y-auto bg-white"
           >
             <div className="space-y-5">
               {/* Badge de Categoria */}
