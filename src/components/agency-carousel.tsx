@@ -6,9 +6,7 @@ import { getProjectImage } from "@/lib/project-image";
 import { getAgencyProjects, Project } from "@/data/portfolio";
 import { ChevronLeft, ChevronRight, ArrowUpRight, Handshake } from "lucide-react";
 import { SpotlightCard } from "@/components/ui/spotlight-card";
-import dynamic from "next/dynamic";
-import type { ProjectModalOrigin } from "@/components/project-expandable-modal";
-const ProjectExpandableModal = dynamic(() => import("@/components/project-expandable-modal").then(mod => mod.ProjectExpandableModal));
+import { ProjectExpandableModal, type ProjectModalOrigin } from "@/components/project-expandable-modal";
 
 export function AgencyCarousel() {
   const agencyProjects = getAgencyProjects();
@@ -27,6 +25,7 @@ export function AgencyCarousel() {
       left: rect.left,
       width: rect.width,
       height: rect.height,
+      previewSrc: e.currentTarget.closest(".group")?.querySelector("img")?.currentSrc,
     });
     setSelectedProject(project);
   };

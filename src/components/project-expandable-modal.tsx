@@ -14,6 +14,7 @@ export interface ProjectModalOrigin {
   left: number;
   width: number;
   height: number;
+  previewSrc?: string;
 }
 
 interface ProjectExpandableModalProps {
@@ -33,7 +34,7 @@ export function ProjectExpandableModal({
     width: `${originRect?.width ?? 360}px`, height: `${originRect?.height ?? 240}px`,
     borderRadius: "16px", transform: "none",
   }));
-  const [screenshotRevealed, setScreenshotRevealed] = useState(false);
+  const [screenshotStatus, setScreenshotStatus] = useState<"loading" | "ready" | "error">("loading");
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
@@ -45,7 +46,6 @@ export function ProjectExpandableModal({
     if (phase === "closing" || !project) return;
 
     setPhase("closing");
-    setScreenshotRevealed(false);
 
     // Rolar o preview de volta ao topo antes de recolher
     if (scrollContainerRef.current) {
@@ -137,11 +137,6 @@ export function ProjectExpandableModal({
       });
     });
 
-    // Fase 2: Revelar a screenshot real full-page
-    const revealTimer = setTimeout(() => {
-      setScreenshotRevealed(true);
-    }, 180);
-
     // Fase 3: Concluir expansão e revelar detalhes do projeto
     const finishTimer = setTimeout(() => {
       setPhase("expanded");
@@ -149,7 +144,6 @@ export function ProjectExpandableModal({
 
     return () => {
       cancelAnimationFrame(animFrame);
-      clearTimeout(revealTimer);
       clearTimeout(finishTimer);
     };
   }, [project, originRect]);
@@ -229,36 +223,31 @@ export function ProjectExpandableModal({
             className="relative flex-1 h-full overflow-y-auto bg-neutral-100/70 border-b lg:border-b-0 lg:border-r border-neutral-200/80 overscroll-contain"
             style={{ WebkitOverflowScrolling: "touch" }}
           >
-            {/* Camada 1: Capa Editorial do Figma (Inicia a expansão) */}
-            <div
-              className={`absolute inset-0 w-full transition-opacity duration-500 ease-out z-0 pointer-events-none ${
-                screenshotRevealed ? "opacity-0" : "opacity-100"
-              }`}
-            >
+            {/* Keep the already loaded card image scrollable until the full image decodes. */}
+            <div className="relative w-full min-h-full" aria-busy={screenshotStatus === "loading"}>
               <Image
-                src={getProjectImage(project, true)}
-                alt={project.title}
-                fill
+                src={originRect?.previewSrc || getProjectImage(project, true)}
+                alt=""
+                aria-hidden="true"
+                width={dimensions.width}
+                height={dimensions.height}
+                unoptimized
                 loading="eager"
-                className="object-cover object-top"
-                sizes="(max-width: 1024px) 100vw, 70vw"
+                className="w-full h-auto block select-none"
               />
-            </div>
-
-            {/* Camada 2: Screenshot Real Full-Page (Entra suavemente sobre a capa e aceita scroll) */}
-            <div
-              className={`relative w-full transition-opacity duration-600 ease-out min-h-full ${
-                screenshotRevealed ? "opacity-100" : "opacity-0"
-              }`}
-            >
               <Image
                 src={fullPageSrc}
                 alt={`Screenshot completa do site ${project.title}`}
                 width={dimensions.width}
                 height={dimensions.height}
-                sizes="(max-width: 1024px) 100vw, 840px"
+                unoptimized
                 loading="eager"
-                className="w-full h-auto block select-none"
+                fetchPriority="high"
+                onLoad={() => setScreenshotStatus("ready")}
+                onError={() => setScreenshotStatus("error")}
+                className={`absolute top-0 left-0 w-full h-auto block select-none transition-opacity duration-150 ${
+                  screenshotStatus === "ready" ? "opacity-100" : "opacity-0"
+                }`}
               />
             </div>
 

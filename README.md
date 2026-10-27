@@ -56,3 +56,10 @@ cards com rolagem no hover. O modal carrega a versão maior sob demanda.
 Os JPGs simplificados da primeira tela e o relatório `projects.json` ficam em
 `exports/99freelas/` (fora do Git e do conteúdo público do site). As descrições
 breves, sem links, ficam em `scripts/marketplace-descriptions.json`.
+
+## Verificação do pop-up dos projetos
+
+Com o build de produção rodando (`npm run start -- --port 3100`), execute
+`npm run test:modal`. Use `PORTFOLIO_URL` para apontar para outro servidor.
+O teste cobre prévia imediata, imagem completa atrasada, erro de rede, reabertura,
+mobile, grid, categorias e carrossel.

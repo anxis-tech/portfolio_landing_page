@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "capture": "node capture-full.js",
-    "test:capture": "node scripts/verify-capture.mjs"
+    "test:capture": "node scripts/verify-capture.mjs",
+    "test:modal": "node scripts/verify-modal.mjs"
   },
   "dependencies": {
     "lucide-react": "^1.31.0",

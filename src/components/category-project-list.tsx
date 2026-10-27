@@ -5,9 +5,7 @@ import Image from "next/image";
 import { getProjectImage } from "@/lib/project-image";
 import { ArrowUpRight } from "lucide-react";
 import { Project } from "@/data/portfolio";
-import dynamic from "next/dynamic";
-import type { ProjectModalOrigin } from "@/components/project-expandable-modal";
-const ProjectExpandableModal = dynamic(() => import("@/components/project-expandable-modal").then(mod => mod.ProjectExpandableModal));
+import { ProjectExpandableModal, type ProjectModalOrigin } from "@/components/project-expandable-modal";
 
 interface CategoryProjectListProps {
   projects: Project[];
@@ -25,6 +23,7 @@ export function CategoryProjectList({ projects }: CategoryProjectListProps) {
       left: rect.left,
       width: rect.width,
       height: rect.height,
+      previewSrc: e.currentTarget.closest(".group")?.querySelector("img")?.currentSrc,
     });
     setSelectedProject(project);
   };

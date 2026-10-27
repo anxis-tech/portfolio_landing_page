@@ -8,9 +8,7 @@ import { getRecentProjects, Project } from "@/data/portfolio";
 import { ArrowUpRight, ChevronDown, ChevronUp } from "lucide-react";
 import { SpotlightCard } from "@/components/ui/spotlight-card";
 import { ShineBorder } from "@/components/ui/shine-border";
-import dynamic from "next/dynamic";
-import type { ProjectModalOrigin } from "@/components/project-expandable-modal";
-const ProjectExpandableModal = dynamic(() => import("@/components/project-expandable-modal").then(mod => mod.ProjectExpandableModal));
+import { ProjectExpandableModal, type ProjectModalOrigin } from "@/components/project-expandable-modal";
 
 export function RecentProjects() {
   const [showAll, setShowAll] = useState(false);
@@ -133,6 +131,7 @@ function ProjectCard({
       left: rect.left,
       width: rect.width,
       height: rect.height,
+      previewSrc: e.currentTarget.closest(".group")?.querySelector("img")?.currentSrc,
     });
   };
 
