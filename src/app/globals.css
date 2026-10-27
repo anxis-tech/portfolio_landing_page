@@ -64,6 +64,30 @@ body {
   animation: shine var(--duration, 8s) infinite linear;
 }
 
+/* Integrações: pulsos e feixes, pausados fora da tela */
+@keyframes integration-pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+@keyframes integration-beam {
+  0%, 100% { stroke-dashoffset: var(--beam-length); }
+  50% { stroke-dashoffset: 0; }
+}
+
+.integration-pulse {
+  animation: integration-pulse 2.4s linear infinite paused;
+}
+
+.integration-beam {
+  animation: integration-beam 3.2s ease-in-out infinite paused;
+}
+
+[data-animating] .integration-pulse,
+[data-animating] .integration-beam {
+  animation-play-state: running;
+}
+
 /* Editorial hairline grid border */
 .editorial-grid-border {
   border-color: #EAEAEA;

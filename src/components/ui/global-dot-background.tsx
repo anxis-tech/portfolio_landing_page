@@ -34,7 +34,7 @@ export function GlobalDotBackground({
   opacity = 0.55,
 }: GlobalDotBackgroundProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const glowCircleRef = useRef<SVGCircleElement | null>(null);
+  const glowRef = useRef<HTMLDivElement | null>(null);
   const dotsRef = useRef<Dot[]>([]);
 
   const mouseRef = useRef({
@@ -71,7 +71,7 @@ export function GlobalDotBackground({
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    const glowCircle = glowCircleRef.current;
+    const glow = glowRef.current;
     if (!canvas) return;
 
     const ctx = canvas.getContext("2d", { alpha: true });
@@ -175,11 +175,11 @@ export function GlobalDotBackground({
       glowFactorRef.current += (currentFactor - glowFactorRef.current) * 0.09;
       if (glowFactorRef.current < 0.001) glowFactorRef.current = 0;
 
-      // Update SVG glow
-      if (glowCircle) {
-        glowCircle.setAttribute("cx", String(mouse.x));
-        glowCircle.setAttribute("cy", String(mouse.y));
-        glowCircle.style.opacity = String(glowFactorRef.current);
+      // Glow movido só por transform (composição, sem repintura)
+      if (glow) {
+        const glowR = currentProps.glowRadius;
+        glow.style.transform = `translate3d(${mouse.x - glowR}px, ${mouse.y - glowR}px, 0)`;
+        glow.style.opacity = String(glowFactorRef.current);
       }
 
       // Clear + draw
@@ -288,36 +288,22 @@ export function GlobalDotBackground({
         }}
       />
 
-      {/* SVG Radial Glow que segue o cursor */}
-      <svg
+      {/* Glow radial que segue o cursor */}
+      <div
+        ref={glowRef}
         style={{
           position: "fixed",
-          inset: 0,
-          width: "100%",
-          height: "100%",
-          pointerEvents: "none",
+          left: 0,
+          top: 0,
+          width: glowRadius * 2,
+          height: glowRadius * 2,
+          borderRadius: "50%",
+          background: `radial-gradient(circle closest-side, color-mix(in srgb, ${glowColor} 35%, transparent) 0%, color-mix(in srgb, ${glowColor} 12%, transparent) 50%, transparent 100%)`,
+          opacity: 0,
+          transform: "translate3d(-9999px, -9999px, 0)",
+          willChange: "transform, opacity",
         }}
-      >
-        <defs>
-          <radialGradient id="global-dot-glow">
-            <stop offset="0%" stopColor={glowColor} stopOpacity="0.35" />
-            <stop offset="50%" stopColor={glowColor} stopOpacity="0.12" />
-            <stop offset="100%" stopColor={glowColor} stopOpacity="0" />
-          </radialGradient>
-        </defs>
-        <circle
-          ref={glowCircleRef}
-          cx="-9999"
-          cy="-9999"
-          r={glowRadius}
-          fill="url(#global-dot-glow)"
-          style={{
-            opacity: 0,
-            willChange: "opacity, cx, cy",
-            transition: "opacity 300ms ease-out",
-          }}
-        />
-      </svg>
+      />
     </div>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Plug,
   Zap,
@@ -10,10 +10,37 @@ import {
   MousePointerClick,
 } from "lucide-react";
 
+const CONNECTOR_X = [150, 270, 390, 510, 630, 750];
+
+const BEAMS = [
+  { d: "M450 300 C 450 200, 300 120, 150 30", length: 600 },
+  { d: "M450 300 C 450 210, 360 130, 270 30", length: 520 },
+  { d: "M450 300 C 450 150, 420 80, 390 30", length: 450 },
+  { d: "M450 300 C 450 150, 480 80, 510 30", length: 450 },
+  { d: "M450 300 C 450 210, 540 130, 630 30", length: 520 },
+  { d: "M450 300 C 450 200, 600 120, 750 30", length: 600 },
+];
+
 export function IntegrationsShowcase() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  // Animações só rodam com a seção na tela
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+    const observer = new IntersectionObserver(([entry]) => setIsVisible(entry.isIntersecting), {
+      rootMargin: "120px 0px",
+    });
+    observer.observe(section);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <section
+      ref={sectionRef}
       id="integracoes"
+      data-animating={isVisible ? "true" : undefined}
       className="pt-8 pb-20 sm:pt-12 sm:pb-24 px-4 sm:px-8 lg:px-12 scroll-mt-24"
     >
       {/* Container Card Estilo Bento Escuro com Borda Fina e Glow Neve */}
@@ -211,235 +238,59 @@ export function IntegrationsShowcase() {
               preserveAspectRatio="xMidYMid meet"
             >
               <defs>
-                {/* Filtro Neon de Brilho */}
-                <filter id="aura-glow" x="-50%" y="-50%" width="200%" height="200%">
-                  <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur" />
-                  <feMerge>
-                    <feMergeNode in="blur" />
-                    <feMergeNode in="SourceGraphic" />
-                  </feMerge>
-                </filter>
+                {/* Halo Neon dos Conectores (gradiente em vez de filtro de desfoque) */}
+                <radialGradient id="aura-glow">
+                  <stop offset="0%" stopColor="#A3E635" stopOpacity="0.9" />
+                  <stop offset="40%" stopColor="#A3E635" stopOpacity="0.45" />
+                  <stop offset="100%" stopColor="#A3E635" stopOpacity="0" />
+                </radialGradient>
               </defs>
 
               {/* Trilhos Estáticos Sutis das Curvas */}
-              <path
-                d="M450 300 C 450 200, 300 120, 150 30"
-                stroke="#A3E635"
-                strokeWidth="1.5"
-                strokeOpacity="0.12"
-                strokeLinecap="round"
-                fill="none"
-              />
-              <path
-                d="M450 300 C 450 210, 360 130, 270 30"
-                stroke="#A3E635"
-                strokeWidth="1.5"
-                strokeOpacity="0.12"
-                strokeLinecap="round"
-                fill="none"
-              />
-              <path
-                d="M450 300 C 450 150, 420 80, 390 30"
-                stroke="#A3E635"
-                strokeWidth="1.5"
-                strokeOpacity="0.12"
-                strokeLinecap="round"
-                fill="none"
-              />
-              <path
-                d="M450 300 C 450 150, 480 80, 510 30"
-                stroke="#A3E635"
-                strokeWidth="1.5"
-                strokeOpacity="0.12"
-                strokeLinecap="round"
-                fill="none"
-              />
-              <path
-                d="M450 300 C 450 210, 540 130, 630 30"
-                stroke="#A3E635"
-                strokeWidth="1.5"
-                strokeOpacity="0.12"
-                strokeLinecap="round"
-                fill="none"
-              />
-              <path
-                d="M450 300 C 450 200, 600 120, 750 30"
-                stroke="#A3E635"
-                strokeWidth="1.5"
-                strokeOpacity="0.12"
-                strokeLinecap="round"
-                fill="none"
-              />
+              {BEAMS.map((beam) => (
+                <path
+                  key={`track-${beam.d}`}
+                  d={beam.d}
+                  stroke="#A3E635"
+                  strokeWidth="1.5"
+                  strokeOpacity="0.12"
+                  strokeLinecap="round"
+                  fill="none"
+                />
+              ))}
 
               {/* Círculos Conectores Superiores com Efeito Pulsante */}
-              <circle cx="150" cy="30" r="4.5" fill="#A3E635" filter="url(#aura-glow)">
-                <animate
-                  attributeName="opacity"
-                  values="0.4;1;0.4"
-                  dur="2.4s"
-                  repeatCount="indefinite"
-                />
-              </circle>
-              <circle cx="270" cy="30" r="4.5" fill="#A3E635" filter="url(#aura-glow)">
-                <animate
-                  attributeName="opacity"
-                  values="0.4;1;0.4"
-                  dur="2.4s"
-                  begin="0.2s"
-                  repeatCount="indefinite"
-                />
-              </circle>
-              <circle cx="390" cy="30" r="4.5" fill="#A3E635" filter="url(#aura-glow)">
-                <animate
-                  attributeName="opacity"
-                  values="0.4;1;0.4"
-                  dur="2.4s"
-                  begin="0.4s"
-                  repeatCount="indefinite"
-                />
-              </circle>
-              <circle cx="510" cy="30" r="4.5" fill="#A3E635" filter="url(#aura-glow)">
-                <animate
-                  attributeName="opacity"
-                  values="0.4;1;0.4"
-                  dur="2.4s"
-                  begin="0.6s"
-                  repeatCount="indefinite"
-                />
-              </circle>
-              <circle cx="630" cy="30" r="4.5" fill="#A3E635" filter="url(#aura-glow)">
-                <animate
-                  attributeName="opacity"
-                  values="0.4;1;0.4"
-                  dur="2.4s"
-                  begin="0.8s"
-                  repeatCount="indefinite"
-                />
-              </circle>
-              <circle cx="750" cy="30" r="4.5" fill="#A3E635" filter="url(#aura-glow)">
-                <animate
-                  attributeName="opacity"
-                  values="0.4;1;0.4"
-                  dur="2.4s"
-                  begin="1s"
-                  repeatCount="indefinite"
-                />
-              </circle>
+              {CONNECTOR_X.map((cx, index) => (
+                <g
+                  key={cx}
+                  className="integration-pulse"
+                  style={{ animationDelay: `${index * 0.2}s` }}
+                >
+                  <circle cx={cx} cy="30" r="13" fill="url(#aura-glow)" />
+                  <circle cx={cx} cy="30" r="4.5" fill="#A3E635" />
+                </g>
+              ))}
 
               {/* Feixes Animados de Luz com Dashoffset Sequencial */}
-              <path
-                d="M450 300 C 450 200, 300 120, 150 30"
-                stroke="#A3E635"
-                strokeWidth="2"
-                strokeLinecap="round"
-                fill="none"
-                style={{ strokeDasharray: 600, strokeDashoffset: 600 }}
-              >
-                <animate
-                  attributeName="stroke-dashoffset"
-                  values="600;0;600"
-                  dur="3.2s"
-                  begin="0s"
-                  repeatCount="indefinite"
-                  calcMode="spline"
-                  keySplines="0.42 0 0.58 1; 0.42 0 0.58 1"
+              {BEAMS.map((beam, index) => (
+                <path
+                  key={`beam-${beam.d}`}
+                  d={beam.d}
+                  className="integration-beam"
+                  stroke="#A3E635"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  fill="none"
+                  style={
+                    {
+                      "--beam-length": beam.length,
+                      strokeDasharray: beam.length,
+                      strokeDashoffset: beam.length,
+                      animationDelay: `${index * 0.25}s`,
+                    } as React.CSSProperties
+                  }
                 />
-              </path>
-
-              <path
-                d="M450 300 C 450 210, 360 130, 270 30"
-                stroke="#A3E635"
-                strokeWidth="2"
-                strokeLinecap="round"
-                fill="none"
-                style={{ strokeDasharray: 520, strokeDashoffset: 520 }}
-              >
-                <animate
-                  attributeName="stroke-dashoffset"
-                  values="520;0;520"
-                  dur="3.2s"
-                  begin="0.25s"
-                  repeatCount="indefinite"
-                  calcMode="spline"
-                  keySplines="0.42 0 0.58 1; 0.42 0 0.58 1"
-                />
-              </path>
-
-              <path
-                d="M450 300 C 450 150, 420 80, 390 30"
-                stroke="#A3E635"
-                strokeWidth="2"
-                strokeLinecap="round"
-                fill="none"
-                style={{ strokeDasharray: 450, strokeDashoffset: 450 }}
-              >
-                <animate
-                  attributeName="stroke-dashoffset"
-                  values="450;0;450"
-                  dur="3.2s"
-                  begin="0.5s"
-                  repeatCount="indefinite"
-                  calcMode="spline"
-                  keySplines="0.42 0 0.58 1; 0.42 0 0.58 1"
-                />
-              </path>
-
-              <path
-                d="M450 300 C 450 150, 480 80, 510 30"
-                stroke="#A3E635"
-                strokeWidth="2"
-                strokeLinecap="round"
-                fill="none"
-                style={{ strokeDasharray: 450, strokeDashoffset: 450 }}
-              >
-                <animate
-                  attributeName="stroke-dashoffset"
-                  values="450;0;450"
-                  dur="3.2s"
-                  begin="0.75s"
-                  repeatCount="indefinite"
-                  calcMode="spline"
-                  keySplines="0.42 0 0.58 1; 0.42 0 0.58 1"
-                />
-              </path>
-
-              <path
-                d="M450 300 C 450 210, 540 130, 630 30"
-                stroke="#A3E635"
-                strokeWidth="2"
-                strokeLinecap="round"
-                fill="none"
-                style={{ strokeDasharray: 520, strokeDashoffset: 520 }}
-              >
-                <animate
-                  attributeName="stroke-dashoffset"
-                  values="520;0;520"
-                  dur="3.2s"
-                  begin="1s"
-                  repeatCount="indefinite"
-                  calcMode="spline"
-                  keySplines="0.42 0 0.58 1; 0.42 0 0.58 1"
-                />
-              </path>
-
-              <path
-                d="M450 300 C 450 200, 600 120, 750 30"
-                stroke="#A3E635"
-                strokeWidth="2"
-                strokeLinecap="round"
-                fill="none"
-                style={{ strokeDasharray: 600, strokeDashoffset: 600 }}
-              >
-                <animate
-                  attributeName="stroke-dashoffset"
-                  values="600;0;600"
-                  dur="3.2s"
-                  begin="1.25s"
-                  repeatCount="indefinite"
-                  calcMode="spline"
-                  keySplines="0.42 0 0.58 1; 0.42 0 0.58 1"
-                />
-              </path>
+              ))}
             </svg>
 
             {/* Emblema Central Iluminado com Ícone Zap */}
