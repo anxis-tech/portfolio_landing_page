@@ -1,11 +1,13 @@
 "use client";
 
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
+import { getProjectImage } from "@/lib/project-image";
 import Link from "next/link";
-import { X, ArrowUpRight, Globe, Layers, Sparkles } from "lucide-react";
+import { X, ArrowUpRight, Globe } from "lucide-react";
 import { Project } from "@/data/portfolio";
+import imageDetails from "@/data/project-images.json";
 
 export interface ProjectModalOrigin {
   top: number;
@@ -25,44 +27,29 @@ export function ProjectExpandableModal({
   originRect,
   onClose,
 }: ProjectExpandableModalProps) {
-  const [phase, setPhase] = useState<"idle" | "expanding" | "expanded" | "closing">("idle");
-  const [currentStyle, setCurrentStyle] = useState<React.CSSProperties>({});
+  const [phase, setPhase] = useState<"idle" | "expanding" | "expanded" | "closing">("expanding");
+  const [currentStyle, setCurrentStyle] = useState<React.CSSProperties>(() => ({
+    top: `${originRect?.top ?? 0}px`, left: `${originRect?.left ?? 0}px`,
+    width: `${originRect?.width ?? 360}px`, height: `${originRect?.height ?? 240}px`,
+    borderRadius: "16px", transform: "none",
+  }));
   const [screenshotRevealed, setScreenshotRevealed] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  // Bloquear scroll do body quando o modal estiver aberto
-  useEffect(() => {
-    if (!project) return;
+  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => () => { if (closeTimerRef.current) clearTimeout(closeTimerRef.current); }, []);
 
-    const originalOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+  // Função para fechar suavemente com animação reversa de morphing
+  const handleClose = useCallback(() => {
+    if (phase === "closing" || !project) return;
 
-    return () => {
-      document.body.style.overflow = originalOverflow;
-    };
-  }, [project]);
+    setPhase("closing");
+    setScreenshotRevealed(false);
 
-  // Listener da tecla Escape
-  useEffect(() => {
-    if (!project) return;
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        handleClose();
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [project, phase]);
-
-  // Executar a expansão do card (Shared Element Transition)
-  useEffect(() => {
-    if (!project) {
-      setPhase("idle");
-      setScreenshotRevealed(false);
-      return;
+    // Rolar o preview de volta ao topo antes de recolher
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTo({ top: 0, behavior: "smooth" });
     }
 
     const fallbackRect = {
@@ -71,19 +58,67 @@ export function ProjectExpandableModal({
       width: 360,
       height: 240,
     };
-    const startRect = originRect || fallbackRect;
+    const targetRect = originRect || fallbackRect;
 
-    // Estado inicial: posicionado exatamente onde estava o card original
+    // Animar de volta às coordenadas originais do card
     setCurrentStyle({
-      top: `${startRect.top}px`,
-      left: `${startRect.left}px`,
-      width: `${startRect.width}px`,
-      height: `${startRect.height}px`,
+      top: `${targetRect.top}px`,
+      left: `${targetRect.left}px`,
+      width: `${targetRect.width}px`,
+      height: `${targetRect.height}px`,
       borderRadius: "16px",
       transform: "none",
+      transition: "all 340ms cubic-bezier(0.25, 0.8, 0.25, 1)",
     });
 
-    setPhase("expanding");
+    // Desmontar após a transição
+    closeTimerRef.current = setTimeout(() => {
+      onClose();
+      setPhase("idle");
+    }, 350);
+  }, [phase, project, originRect, onClose]);
+
+  // Bloquear scroll do body quando o modal estiver aberto
+  useEffect(() => {
+    if (!project) return;
+
+    const previousFocus = document.activeElement as HTMLElement | null;
+    const focusFrame = requestAnimationFrame(() => containerRef.current?.querySelector<HTMLButtonElement>("button")?.focus());
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      cancelAnimationFrame(focusFrame);
+      document.body.style.overflow = originalOverflow;
+      previousFocus?.focus();
+    };
+  }, [project]);
+
+  // Listener da tecla Escape
+  useEffect(() => {
+    if (!project) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Tab") {
+        const controls = [...(containerRef.current?.querySelectorAll<HTMLElement>('button, a[href], [tabindex="0"]') || [])].filter(el => el.getClientRects().length);
+        const first = controls[0], last = controls[controls.length - 1];
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last?.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first?.focus(); }
+      }
+      if (e.key === "Escape") {
+        handleClose();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [project, handleClose]);
+
+  // Executar a expansão do card (Shared Element Transition)
+  useEffect(() => {
+    if (!project) {
+      return;
+    }
 
     // Próximo frame: transicionar para a posição e dimensão do modal expandido
     const animFrame = requestAnimationFrame(() => {
@@ -119,47 +154,11 @@ export function ProjectExpandableModal({
     };
   }, [project, originRect]);
 
-  // Função para fechar suavemente com animação reversa de morphing
-  const handleClose = () => {
-    if (phase === "closing" || !project) return;
-
-    setPhase("closing");
-    setScreenshotRevealed(false);
-
-    // Rolar o preview de volta ao topo antes de recolher
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollTo({ top: 0, behavior: "smooth" });
-    }
-
-    const fallbackRect = {
-      top: window.innerHeight / 2 - 120,
-      left: window.innerWidth / 2 - 180,
-      width: 360,
-      height: 240,
-    };
-    const targetRect = originRect || fallbackRect;
-
-    // Animar de volta às coordenadas originais do card
-    setCurrentStyle({
-      top: `${targetRect.top}px`,
-      left: `${targetRect.left}px`,
-      width: `${targetRect.width}px`,
-      height: `${targetRect.height}px`,
-      borderRadius: "16px",
-      transform: "none",
-      transition: "all 340ms cubic-bezier(0.25, 0.8, 0.25, 1)",
-    });
-
-    // Desmontar após a transição
-    setTimeout(() => {
-      onClose();
-      setPhase("idle");
-    }, 350);
-  };
 
   if (!project) return null;
 
-  const fullPageSrc = project.fullPageImage || project.image;
+  const fullPageSrc = getProjectImage(project);
+  const dimensions = imageDetails[project.id as keyof typeof imageDetails] || { width: 1440, height: 3600 };
   const isExpanded = phase === "expanded";
   const isClosing = phase === "closing";
 
@@ -237,10 +236,10 @@ export function ProjectExpandableModal({
               }`}
             >
               <Image
-                src={project.image}
+                src={getProjectImage(project, true)}
                 alt={project.title}
                 fill
-                priority
+                loading="eager"
                 className="object-cover object-top"
                 sizes="(max-width: 1024px) 100vw, 70vw"
               />
@@ -255,10 +254,10 @@ export function ProjectExpandableModal({
               <Image
                 src={fullPageSrc}
                 alt={`Screenshot completa do site ${project.title}`}
-                width={1440}
-                height={3600}
-                unoptimized
-                priority
+                width={dimensions.width}
+                height={dimensions.height}
+                sizes="(max-width: 1024px) 100vw, 840px"
+                loading="eager"
                 className="w-full h-auto block select-none"
               />
             </div>

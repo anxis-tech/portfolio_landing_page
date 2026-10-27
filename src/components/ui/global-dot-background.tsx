@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useCallback } from "react";
+import React, { useEffect, useRef } from "react";
 
 interface GlobalDotBackgroundProps {
   dotRadius?: number;
@@ -78,9 +78,7 @@ export function GlobalDotBackground({
     if (!ctx) return;
 
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    const isCoarsePointer =
-      typeof window !== "undefined" &&
-      window.matchMedia("(pointer: coarse)").matches;
+    const staticOnly = window.matchMedia("(pointer: coarse), (prefers-reduced-motion: reduce)");
 
     let resizeTimer: NodeJS.Timeout | null = null;
     let lastTime = 0;
@@ -130,7 +128,7 @@ export function GlobalDotBackground({
 
     function wakeUp() {
       isSleepingRef.current = false;
-      if (rafId.current === null) {
+      if (!document.hidden && rafId.current === null) {
         lastTime = performance.now();
         accum = FIXED_STEP;
         rafId.current = requestAnimationFrame(renderLoop);
@@ -163,7 +161,7 @@ export function GlobalDotBackground({
       accum -= FIXED_STEP;
 
       // Smooth cursor factor
-      const targetFactor = isCoarsePointer
+      const targetFactor = staticOnly.matches
         ? 0
         : isHoveringRef.current
         ? 0.85
@@ -193,7 +191,7 @@ export function GlobalDotBackground({
       const r = currentProps.dotRadius;
       const strength = currentProps.bulgeStrength;
 
-      let allSettled = currentFactor === 0 && glowFactorRef.current === 0;
+      let allSettled = Math.abs(currentFactor - targetFactor) < 0.001 && Math.abs(glowFactorRef.current - currentFactor) < 0.001;
 
       ctx.beginPath();
       const PI2 = Math.PI * 2;
@@ -204,6 +202,8 @@ export function GlobalDotBackground({
         const dy = mouse.y - dot.ay;
         const distSq = dx * dx + dy * dy;
 
+        const previousX = dot.sx;
+        const previousY = dot.sy;
         if (distSq < cRadiusSq && currentFactor > 0.01) {
           const dist = Math.sqrt(distSq) || 1;
           const normX = dx / dist;
@@ -218,8 +218,8 @@ export function GlobalDotBackground({
         }
 
         if (
-          Math.abs(dot.sx - dot.ax) > 0.04 ||
-          Math.abs(dot.sy - dot.ay) > 0.04
+          Math.abs(dot.sx - previousX) > 0.01 ||
+          Math.abs(dot.sy - previousY) > 0.01
         ) {
           allSettled = false;
         }
@@ -230,7 +230,7 @@ export function GlobalDotBackground({
 
       ctx.fill();
 
-      if (allSettled && !isHoveringRef.current) {
+      if (allSettled) {
         isSleepingRef.current = true;
         stopLoop();
       }
@@ -238,6 +238,7 @@ export function GlobalDotBackground({
 
     // Listen on the entire window for seamless scrolling interaction
     const handlePointerMove = (e: PointerEvent) => {
+      if (staticOnly.matches) return;
       mouseRef.current.x = e.clientX;
       mouseRef.current.y = e.clientY;
       isHoveringRef.current = true;
@@ -251,13 +252,18 @@ export function GlobalDotBackground({
       wakeUp();
     };
 
+    const handleVisibility = () => { if (document.hidden) stopLoop(); else wakeUp(); };
     resizeCanvas();
+    document.addEventListener("visibilitychange", handleVisibility);
+    staticOnly.addEventListener("change", handlePointerLeave);
     window.addEventListener("resize", onWindowResize);
     window.addEventListener("pointermove", handlePointerMove, { passive: true });
     document.addEventListener("pointerleave", handlePointerLeave);
 
     return () => {
       stopLoop();
+      document.removeEventListener("visibilitychange", handleVisibility);
+      staticOnly.removeEventListener("change", handlePointerLeave);
       if (resizeTimer) clearTimeout(resizeTimer);
       window.removeEventListener("resize", onWindowResize);
       window.removeEventListener("pointermove", handlePointerMove);

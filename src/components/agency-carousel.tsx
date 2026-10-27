@@ -2,10 +2,13 @@
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
+import { getProjectImage } from "@/lib/project-image";
 import { getAgencyProjects, Project } from "@/data/portfolio";
 import { ChevronLeft, ChevronRight, ArrowUpRight, Handshake } from "lucide-react";
 import { SpotlightCard } from "@/components/ui/spotlight-card";
-import { ProjectExpandableModal, ProjectModalOrigin } from "@/components/project-expandable-modal";
+import dynamic from "next/dynamic";
+import type { ProjectModalOrigin } from "@/components/project-expandable-modal";
+const ProjectExpandableModal = dynamic(() => import("@/components/project-expandable-modal").then(mod => mod.ProjectExpandableModal));
 
 export function AgencyCarousel() {
   const agencyProjects = getAgencyProjects();
@@ -34,12 +37,14 @@ export function AgencyCarousel() {
 
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 640);
+      const mobile = window.innerWidth < 640;
+      setIsMobile(mobile);
+      setCurrentIndex(index => Math.min(index, Math.max(0, agencyProjects.length - (mobile ? 1 : 2))));
     };
     checkMobile();
     window.addEventListener("resize", checkMobile);
     return () => window.removeEventListener("resize", checkMobile);
-  }, []);
+  }, [agencyProjects.length]);
 
   const itemsPerView = isMobile ? 1 : 2;
   const maxIndex = Math.max(0, agencyProjects.length - itemsPerView);
@@ -121,11 +126,10 @@ export function AgencyCarousel() {
                 className="relative aspect-[16/10] w-full overflow-hidden rounded-xl bg-neutral-100 border border-neutral-200/80 mb-3 block cursor-pointer transition-transform duration-300 select-none outline-none focus-visible:ring-2 focus-visible:ring-[#84cc16]"
               >
                 <Image
-                  src={project.image}
+                  src={getProjectImage(project, true)}
                   alt={project.title}
                   fill
-                  unoptimized
-                  sizes="(max-width: 640px) 100vw, 560px"
+                          sizes="(max-width: 640px) 100vw, 560px"
                   className="project-scroll-card-image"
                 />
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/15 transition-colors duration-300 flex items-start justify-end p-2.5">
@@ -165,8 +169,7 @@ export function AgencyCarousel() {
                         alt={project.agency || "Virtualiti"}
                         width={110}
                         height={26}
-                        unoptimized
-                        className="h-5 sm:h-5.5 w-auto object-contain"
+                                      className="h-5 sm:h-5.5 w-auto object-contain"
                       />
                     </a>
                   ) : (
@@ -184,11 +187,11 @@ export function AgencyCarousel() {
       </div>
 
       {/* Modal Expandido com Shared Element Transition */}
-      <ProjectExpandableModal
+      {selectedProject && <ProjectExpandableModal
         project={selectedProject}
         originRect={originRect}
         onClose={handleCloseProject}
-      />
+      />}
     </section>
   );
 }

@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build --webpack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "capture": "node capture-full.js",
+    "test:capture": "node scripts/verify-capture.mjs"
   },
   "dependencies": {
     "lucide-react": "^1.31.0",

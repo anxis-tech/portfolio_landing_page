@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
+import { getProjectImage } from "@/lib/project-image";
 import Link from "next/link";
 import { ArrowUpRight, Menu, X, ChevronDown, FolderGit2, Sparkles } from "lucide-react";
 import { getAllCategories, getProjectsByCategory, ProjectCategory, Project } from "@/data/portfolio";
@@ -188,11 +189,10 @@ export function HeaderPill() {
                           className="group/card relative aspect-[5/3] w-full overflow-hidden rounded-xl bg-neutral-100 border border-neutral-200/80 mb-2.5 block cursor-pointer"
                         >
                           <Image
-                            src={previewProject.image}
+                            src={getProjectImage(previewProject, true)}
                             alt={previewProject.title}
                             fill
-                            unoptimized
-                            sizes="280px"
+                                              sizes="280px"
                             className="project-scroll-card-image"
                           />
                           <div className="absolute inset-0 bg-black/0 group-hover/card:bg-black/15 transition-colors duration-200 flex items-start justify-end p-2">

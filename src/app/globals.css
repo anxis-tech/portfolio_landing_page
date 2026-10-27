@@ -378,11 +378,28 @@ body {
   object-fit: cover !important;
   object-position: top !important;
   transition: object-position 3s ease-out !important;
-  will-change: object-position;
+
 }
 
 .group:hover .project-scroll-card-image,
 .project-scroll-card-image:hover {
   object-position: bottom !important;
   transition: object-position 7.5s ease-in-out !important;
+}
+
+.custom-pointer-active, .custom-pointer-active * { cursor: none !important; }
+.group:hover, .group:focus-within { --shine-play-state: running; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .project-scroll-card-image,
+  .group:hover .project-scroll-card-image,
+  .project-scroll-card-image:hover {
+    object-position: top !important;
+    transition: none !important;
+  }
 }

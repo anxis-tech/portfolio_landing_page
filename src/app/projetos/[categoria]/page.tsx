@@ -1,5 +1,4 @@
 import React from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -9,7 +8,7 @@ import {
   getProjectsByCategory,
   profileData,
 } from "@/data/portfolio";
-import { ArrowLeft, ArrowUpRight, FolderGit2 } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { FooterEditorial } from "@/components/footer-editorial";
 import { GlobalDotBackground } from "@/components/ui/global-dot-background";
 import { CategoryProjectList } from "@/components/category-project-list";

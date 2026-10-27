@@ -22,7 +22,6 @@ export function HostingerBadge() {
             alt="Hostinger Partner"
             width={152}
             height={57}
-            priority
             className="w-[146px] h-auto select-none transition-transform duration-300 group-hover:scale-[1.02]"
           />
         </div>
@@ -34,7 +33,6 @@ export function HostingerBadge() {
             alt="Hostinger Partner"
             width={50}
             height={50}
-            priority
             className="w-[48px] h-[48px] select-none transition-transform duration-300 group-hover:scale-105"
           />
         </div>

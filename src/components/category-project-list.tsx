@@ -2,9 +2,12 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
+import { getProjectImage } from "@/lib/project-image";
 import { ArrowUpRight } from "lucide-react";
 import { Project } from "@/data/portfolio";
-import { ProjectExpandableModal, ProjectModalOrigin } from "@/components/project-expandable-modal";
+import dynamic from "next/dynamic";
+import type { ProjectModalOrigin } from "@/components/project-expandable-modal";
+const ProjectExpandableModal = dynamic(() => import("@/components/project-expandable-modal").then(mod => mod.ProjectExpandableModal));
 
 interface CategoryProjectListProps {
   projects: Project[];
@@ -50,11 +53,10 @@ export function CategoryProjectList({ projects }: CategoryProjectListProps) {
               className="relative aspect-[5/3] w-full overflow-hidden rounded-xl bg-neutral-100 border border-neutral-200/80 mb-3 block cursor-pointer transition-transform duration-300 outline-none select-none focus-visible:ring-2 focus-visible:ring-[#84cc16]"
             >
               <Image
-                src={project.image}
+                src={getProjectImage(project, true)}
                 alt={project.title}
                 fill
-                unoptimized
-                sizes="(max-width: 640px) 100vw, 400px"
+                      sizes="(max-width: 640px) 100vw, 400px"
                 className="project-scroll-card-image"
               />
               <div className="absolute inset-0 bg-black/0 group-hover:bg-black/15 transition-colors duration-300 flex items-start justify-end p-2.5">
@@ -97,8 +99,7 @@ export function CategoryProjectList({ projects }: CategoryProjectListProps) {
                     alt={project.agency || "Virtualiti"}
                     width={95}
                     height={22}
-                    unoptimized
-                    className="h-4 sm:h-4.5 w-auto object-contain"
+                              className="h-4 sm:h-4.5 w-auto object-contain"
                   />
                 </a>
               </div>
@@ -108,11 +109,11 @@ export function CategoryProjectList({ projects }: CategoryProjectListProps) {
       </div>
 
       {/* Modal Expandido com Shared Element Transition */}
-      <ProjectExpandableModal
+      {selectedProject && <ProjectExpandableModal
         project={selectedProject}
         originRect={originRect}
         onClose={handleCloseProject}
-      />
+      />}
     </>
   );
 }

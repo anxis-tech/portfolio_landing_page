@@ -14,6 +14,7 @@ export function HeroEditorial() {
   const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     let timer: NodeJS.Timeout;
 
     const handleTyping = () => {
@@ -44,7 +45,7 @@ export function HeroEditorial() {
     timer = setTimeout(handleTyping, speed);
 
     return () => clearTimeout(timer);
-  }, [displayText, isDeleting, fullText]);
+  }, [displayText, isDeleting, fullText, prefix.length]);
 
   return (
     <section id="inicio" className="relative isolate pt-24 pb-12 sm:pt-32 sm:pb-16 px-6 sm:px-10 lg:px-14">
@@ -176,8 +177,7 @@ export function HeroEditorial() {
                 alt="99Freelas"
                 width={76}
                 height={21}
-                priority
-                className="h-[15px] w-auto object-contain align-middle"
+                    className="h-[15px] w-auto object-contain align-middle"
               />
             </a>
             <a

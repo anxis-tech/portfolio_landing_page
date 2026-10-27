@@ -2,12 +2,15 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
+import { getProjectImage } from "@/lib/project-image";
 import Link from "next/link";
 import { getRecentProjects, Project } from "@/data/portfolio";
-import { ArrowUpRight, ChevronDown, ChevronUp, Eye } from "lucide-react";
+import { ArrowUpRight, ChevronDown, ChevronUp } from "lucide-react";
 import { SpotlightCard } from "@/components/ui/spotlight-card";
 import { ShineBorder } from "@/components/ui/shine-border";
-import { ProjectExpandableModal, ProjectModalOrigin } from "@/components/project-expandable-modal";
+import dynamic from "next/dynamic";
+import type { ProjectModalOrigin } from "@/components/project-expandable-modal";
+const ProjectExpandableModal = dynamic(() => import("@/components/project-expandable-modal").then(mod => mod.ProjectExpandableModal));
 
 export function RecentProjects() {
   const [showAll, setShowAll] = useState(false);
@@ -71,10 +74,10 @@ export function RecentProjects() {
       </div>
 
       {/* Área Expansível (Se houver mais projetos) */}
-      {extraProjects.length > 0 && (
+      {showAll && extraProjects.length > 0 && (
         <div
           className={`grid ${gridColsClass} gap-6 sm:gap-7 lg:gap-8 transition-all duration-500 ease-in-out overflow-hidden ${
-            showAll ? "max-h-[1400px] opacity-100 mt-6 sm:mt-7 lg:mt-8 pt-2" : "max-h-0 opacity-0 pointer-events-none mt-0"
+            showAll ? "opacity-100 mt-6 sm:mt-7 lg:mt-8 pt-2" : "max-h-0 opacity-0 pointer-events-none mt-0"
           }`}
         >
           {extraProjects.map((project) => (
@@ -106,11 +109,11 @@ export function RecentProjects() {
       )}
 
       {/* Modal Expandido com Shared Element Transition */}
-      <ProjectExpandableModal
+      {selectedProject && <ProjectExpandableModal
         project={selectedProject}
         originRect={originRect}
         onClose={handleCloseProject}
-      />
+      />}
     </section>
   );
 }
@@ -150,10 +153,9 @@ function ProjectCard({
         className="relative aspect-[5/3] w-full overflow-hidden rounded-xl bg-neutral-100 border border-neutral-200/80 mb-3 block cursor-pointer transition-transform duration-300 select-none outline-none focus-visible:ring-2 focus-visible:ring-[#84cc16]"
       >
         <Image
-          src={project.image}
+          src={getProjectImage(project, true)}
           alt={project.title}
           fill
-          unoptimized
           sizes="(max-width: 640px) 100vw, 560px"
           className="project-scroll-card-image"
         />

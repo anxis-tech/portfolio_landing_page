@@ -43,6 +43,7 @@ export function ShineBorder({
           "--border-width": `${borderWidth}px`,
           "--duration": `${duration}s`,
           animation: `shine ${duration}s infinite linear`,
+          animationPlayState: "var(--shine-play-state, paused)",
           backgroundImage: `radial-gradient(transparent,transparent, ${
             Array.isArray(shineColor) ? shineColor.join(",") : shineColor
           },transparent,transparent)`,
@@ -55,7 +56,7 @@ export function ShineBorder({
           ...style,
         } as React.CSSProperties
       }
-      className={`pointer-events-none absolute inset-0 size-full rounded-[inherit] will-change-[background-position] z-20 ${className}`}
+      className={`pointer-events-none absolute inset-0 size-full rounded-[inherit] z-20 ${className}`}
       aria-hidden="true"
       {...props}
     />

@@ -15,13 +15,13 @@ export function SpotlightCard({
   ...props
 }: SpotlightCardProps) {
   const divRef = useRef<HTMLDivElement>(null);
-  const [position, setPosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [opacity, setOpacity] = useState(0);
 
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     if (!divRef.current) return;
     const rect = divRef.current.getBoundingClientRect();
-    setPosition({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+    divRef.current.style.setProperty("--spotlight-x", `${e.clientX - rect.left}px`);
+    divRef.current.style.setProperty("--spotlight-y", `${e.clientY - rect.top}px`);
   }, []);
 
   const handleMouseEnter = useCallback(() => {
@@ -46,7 +46,7 @@ export function SpotlightCard({
         className="pointer-events-none absolute -inset-px rounded-2xl transition-opacity duration-300 z-10"
         style={{
           opacity,
-          background: `radial-gradient(450px circle at ${position.x}px ${position.y}px, ${spotlightColor}, transparent 75%)`,
+          background: `radial-gradient(450px circle at var(--spotlight-x, 0px) var(--spotlight-y, 0px), ${spotlightColor}, transparent 75%)`,
         }}
         aria-hidden="true"
       />

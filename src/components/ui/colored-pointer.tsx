@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 
 interface ColoredPointerProps {
   /** Fill color of the pointer SVG */
@@ -25,81 +25,46 @@ export function ColoredPointer({
   const posRef = useRef({ x: -100, y: -100 });
   const targetRef = useRef({ x: -100, y: -100 });
   const rafRef = useRef<number | null>(null);
-  const [isVisible, setIsVisible] = useState(false);
-  const isCoarseRef = useRef(false);
-
   useEffect(() => {
-    // Don't show custom pointer on touch devices
-    isCoarseRef.current =
-      typeof window !== "undefined" &&
-      window.matchMedia("(pointer: coarse)").matches;
-
-    if (isCoarseRef.current) return;
-
-    const handleMove = (e: PointerEvent) => {
-      targetRef.current.x = e.clientX;
-      targetRef.current.y = e.clientY;
-      if (!isVisible) setIsVisible(true);
+    const pointer = pointerRef.current;
+    const enabled = window.matchMedia("(pointer: fine) and (prefers-reduced-motion: no-preference)");
+    if (!pointer) return;
+    const stop = () => {
+      if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
+      rafRef.current = null;
+      pointer.style.opacity = "0";
+      document.documentElement.classList.remove("custom-pointer-active");
     };
-
-    const handleEnter = () => {
-      setIsVisible(true);
-    };
-
-    const handleLeave = () => {
-      setIsVisible(false);
-    };
-
-    // Animation loop with smooth lerp
     const animate = () => {
-      const lerp = 0.18;
-      posRef.current.x += (targetRef.current.x - posRef.current.x) * lerp;
-      posRef.current.y += (targetRef.current.y - posRef.current.y) * lerp;
-
-      if (pointerRef.current) {
-        pointerRef.current.style.transform = `translate3d(${posRef.current.x}px, ${posRef.current.y}px, 0)`;
-      }
-
-      rafRef.current = requestAnimationFrame(animate);
+      const dx = targetRef.current.x - posRef.current.x;
+      const dy = targetRef.current.y - posRef.current.y;
+      posRef.current.x += dx * 0.18;
+      posRef.current.y += dy * 0.18;
+      pointer.style.transform = `translate3d(${posRef.current.x}px, ${posRef.current.y}px, 0)`;
+      rafRef.current = Math.abs(dx) + Math.abs(dy) > 0.1 ? requestAnimationFrame(animate) : null;
     };
-
-    // Hide native cursor globally
-    document.documentElement.style.cursor = "none";
-    document.body.style.cursor = "none";
-
-    // Add a style tag for all interactive elements
-    const styleEl = document.createElement("style");
-    styleEl.id = "colored-pointer-style";
-    styleEl.textContent = `
-      *, *::before, *::after {
-        cursor: none !important;
-      }
-    `;
-    document.head.appendChild(styleEl);
-
+    const handleMove = (event: PointerEvent) => {
+      if (!enabled.matches || document.hidden || event.pointerType === "touch") return;
+      targetRef.current = { x: event.clientX, y: event.clientY };
+      if (pointer.style.opacity !== "1") posRef.current = { ...targetRef.current };
+      pointer.style.opacity = "1";
+      document.documentElement.classList.add("custom-pointer-active");
+      if (rafRef.current === null) rafRef.current = requestAnimationFrame(animate);
+    };
     window.addEventListener("pointermove", handleMove, { passive: true });
-    document.addEventListener("pointerenter", handleEnter);
-    document.addEventListener("pointerleave", handleLeave);
-
-    rafRef.current = requestAnimationFrame(animate);
-
+    document.addEventListener("pointerleave", stop);
+    window.addEventListener("blur", stop);
+    document.addEventListener("visibilitychange", stop);
+    enabled.addEventListener("change", stop);
     return () => {
-      // Restore native cursor
-      document.documentElement.style.cursor = "";
-      document.body.style.cursor = "";
-      const style = document.getElementById("colored-pointer-style");
-      if (style) style.remove();
-
+      stop();
       window.removeEventListener("pointermove", handleMove);
-      document.removeEventListener("pointerenter", handleEnter);
-      document.removeEventListener("pointerleave", handleLeave);
-
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      document.removeEventListener("pointerleave", stop);
+      window.removeEventListener("blur", stop);
+      document.removeEventListener("visibilitychange", stop);
+      enabled.removeEventListener("change", stop);
     };
-  }, [isVisible]);
-
-  // Don't render on touch/coarse-pointer devices
-  if (typeof window !== "undefined" && isCoarseRef.current) return null;
+  }, []);
 
   return (
     <div
@@ -107,7 +72,7 @@ export function ColoredPointer({
       className="fixed top-0 left-0 pointer-events-none select-none"
       style={{
         zIndex: 99999,
-        opacity: isVisible ? 1 : 0,
+        opacity: 0,
         transition: "opacity 150ms ease-out",
         willChange: "transform",
       }}
