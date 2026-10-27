@@ -387,7 +387,7 @@ body {
   transition: object-position 7.5s ease-in-out !important;
 }
 
-.custom-pointer-active, .custom-pointer-active * { cursor: none !important; }
+.custom-pointer-active, .custom-pointer-active * { cursor: var(--portfolio-cursor, auto) !important; }
 .group:hover, .group:focus-within { --shine-play-state: running; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
