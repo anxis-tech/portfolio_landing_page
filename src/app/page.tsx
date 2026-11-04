@@ -2,6 +2,7 @@ import React from "react";
 import { HeaderPill } from "@/components/header-pill";
 import { HeroEditorial } from "@/components/hero-editorial";
 import { RecentProjects } from "@/components/recent-projects";
+import { SystemsShowcase } from "@/components/systems-showcase";
 import { AgencyCarousel } from "@/components/agency-carousel";
 import { IntegrationsShowcase } from "@/components/integrations-showcase";
 import { FooterEditorial } from "@/components/footer-editorial";
@@ -32,13 +33,16 @@ export default function Home() {
         {/* Hero Autoral com Social Proof, Fundo Interativo e Métricas Sutis */}
         <HeroEditorial />
 
-        {/* Trabalhos Recentes (3 Iniciais + Expansão 'Ver mais') */}
+        {/* Sites Institucionais, E-commerce e Landing Pages */}
         <RecentProjects />
+
+        {/* Sistemas Web, CRM & Dashboards (Showcase Interativo ao Vivo) */}
+        <SystemsShowcase />
 
         {/* Projetos em Parceria com Agências (Carrossel 2 no desktop / 1 no mobile) */}
         <AgencyCarousel />
 
-        {/* Seção 'Integrações' (Referência Aura F76DCB) */}
+        {/* Seção 'Integrações' */}
         <IntegrationsShowcase />
       </main>
 

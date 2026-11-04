@@ -10,12 +10,16 @@ interface ColoredPointerProps {
 
 // Let the browser draw the same custom arrow at the actual mouse position.
 // A native cursor needs no interpolation, pointermove handler or animation loop.
+import { usePathname } from "next/navigation";
+
 export function ColoredPointer({
   color = "#d8ff7c",
   strokeColor = "#000000",
   size = 22,
 }: ColoredPointerProps) {
+  const pathname = usePathname();
   useEffect(() => {
+    if (pathname && pathname.startsWith("/crm")) return;
     const root = document.documentElement;
     const enabled = window.matchMedia("(pointer: fine) and (prefers-reduced-motion: no-preference)");
     const previousCursor = root.style.getPropertyValue("--portfolio-cursor");

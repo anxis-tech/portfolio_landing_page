@@ -1,18 +1,31 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo, useRef } from "react";
 import Image from "next/image";
-import { getProjectImage } from "@/lib/project-image";
 import Link from "next/link";
-import { getRecentProjects, Project } from "@/data/portfolio";
-import { ArrowUpRight, ChevronDown, ChevronUp } from "lucide-react";
+import { getRecentProjects, type Project } from "@/data/portfolio";
+import { getProjectImage } from "@/lib/project-image";
+import { ArrowUpRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { SpotlightCard } from "@/components/ui/spotlight-card";
 import { ShineBorder } from "@/components/ui/shine-border";
 import { ProjectExpandableModal, type ProjectModalOrigin } from "@/components/project-expandable-modal";
 
+const ITEMS_PER_PAGE = 6;
+
 export function RecentProjects() {
-  const [showAll, setShowAll] = useState(false);
   const recentProjects = getRecentProjects();
+
+  // Divide os projetos em páginas de 6 em 6
+  const pages = useMemo(() => {
+    const chunks: Project[][] = [];
+    for (let i = 0; i < recentProjects.length; i += ITEMS_PER_PAGE) {
+      chunks.push(recentProjects.slice(i, i + ITEMS_PER_PAGE));
+    }
+    return chunks;
+  }, [recentProjects]);
+
+  const [currentPage, setCurrentPage] = useState(0);
+  const totalPages = pages.length;
 
   // Estado do Modal Expandido
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
@@ -27,91 +40,123 @@ export function RecentProjects() {
     setSelectedProject(null);
   };
 
-  // Exibe os projetos recentes diretamente em grid de 3 colunas (ou 2 colunas se até 4)
-  const isCompact = recentProjects.length <= 4;
-  const initialProjects = recentProjects.length <= 6 ? recentProjects : recentProjects.slice(0, 6);
-  const extraProjects = recentProjects.length <= 6 ? [] : recentProjects.slice(6);
-
-  const toggleShowAll = () => {
-    setShowAll((prev) => !prev);
+  const prevPage = () => {
+    setCurrentPage((prev) => Math.max(0, prev - 1));
   };
 
-  const gridColsClass = isCompact
-    ? "grid-cols-1 md:grid-cols-2"
-    : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3";
+  const nextPage = () => {
+    setCurrentPage((prev) => Math.min(totalPages - 1, prev + 1));
+  };
+
+  // Suporte a swipe por toque em dispositivos móveis
+  const touchStartX = useRef<number | null>(null);
+  const touchEndX = useRef<number | null>(null);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.targetTouches[0].clientX;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    touchEndX.current = e.targetTouches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStartX.current || !touchEndX.current) return;
+    const distance = touchStartX.current - touchEndX.current;
+    const minSwipeDistance = 50;
+
+    if (distance > minSwipeDistance && currentPage < totalPages - 1) {
+      nextPage();
+    } else if (distance < -minSwipeDistance && currentPage > 0) {
+      prevPage();
+    }
+
+    touchStartX.current = null;
+    touchEndX.current = null;
+  };
 
   return (
     <section id="projetos" className="pt-16 sm:pt-20 pb-16 px-6 sm:px-10 lg:px-14">
-      {/* Header da Seção */}
-      <div className="mb-10">
-        <div className="flex items-center gap-2 mb-3">
-          <span className="w-2 h-2 rounded-full bg-[#d8ff7c] border border-black/20" />
-          <span className="text-[11px] font-semibold tracking-wider uppercase text-neutral-400 font-mono">
-            Projetos recentes
-          </span>
-        </div>
-        <div className="flex items-end justify-between gap-4">
+      {/* Header com Título e Controles Minimalistas do Carrossel */}
+      <div className="flex items-center justify-between mb-8 sm:mb-10">
+        <div>
+          <div className="flex items-center gap-2 mb-3">
+            <span className="w-2 h-2 rounded-full bg-[#d8ff7c] border border-black/20" />
+            <span className="text-[11px] font-semibold tracking-wider uppercase text-neutral-400 font-mono">
+              Sites institucional, ecommerce e landing pages
+            </span>
+          </div>
           <h2 className="font-serif-editorial text-2xl sm:text-3xl lg:text-4xl text-neutral-950 font-normal tracking-tight leading-tight">
-            Trabalhos selecionados e cases reais.
+            Sites institucional, ecommerce e landing pages.
           </h2>
-          <span className="text-[12px] text-neutral-400 shrink-0 hidden sm:inline">
-            {recentProjects.length} trabalhos selecionados
-          </span>
         </div>
+
+        {/* Setas de Navegação do Carrossel (Estilo idêntico à seção de parcerias) */}
+        {totalPages > 1 && (
+          <div className="flex items-center gap-2 shrink-0">
+            <span className="text-[11px] font-mono text-neutral-400 mr-1 hidden sm:inline">
+              {currentPage + 1} / {totalPages}
+            </span>
+            <button
+              type="button"
+              onClick={prevPage}
+              disabled={currentPage === 0}
+              className="w-9 h-9 rounded-full border border-neutral-200 bg-white hover:bg-neutral-50 disabled:opacity-30 disabled:pointer-events-none flex items-center justify-center text-neutral-700 transition-colors shadow-2xs active:scale-95 cursor-pointer"
+              aria-label="Página anterior de projetos"
+            >
+              <ChevronLeft size={15} />
+            </button>
+            <button
+              type="button"
+              onClick={nextPage}
+              disabled={currentPage >= totalPages - 1}
+              className="w-9 h-9 rounded-full border border-neutral-200 bg-white hover:bg-neutral-50 disabled:opacity-30 disabled:pointer-events-none flex items-center justify-center text-neutral-700 transition-colors shadow-2xs active:scale-95 cursor-pointer"
+              aria-label="Próxima página de projetos"
+            >
+              <ChevronRight size={15} />
+            </button>
+          </div>
+        )}
       </div>
 
-      {/* Grid Principal (2 colunas equilibradas para 4 projetos, ou 3 colunas se mais) */}
-      <div className={`grid ${gridColsClass} gap-6 sm:gap-7 lg:gap-8`}>
-        {initialProjects.map((project) => (
-          <ProjectCard
-            key={project.id}
-            project={project}
-            onSelect={handleOpenProject}
-          />
-        ))}
-      </div>
-
-      {/* Área Expansível (Se houver mais projetos) */}
-      {showAll && extraProjects.length > 0 && (
+      {/* Contêiner do Carrossel com Transição de 6 em 6 Projetos */}
+      <div
+        className="overflow-hidden"
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
         <div
-          className={`grid ${gridColsClass} gap-6 sm:gap-7 lg:gap-8 transition-all duration-500 ease-in-out overflow-hidden ${
-            showAll ? "opacity-100 mt-6 sm:mt-7 lg:mt-8 pt-2" : "max-h-0 opacity-0 pointer-events-none mt-0"
-          }`}
+          className="flex transition-transform duration-500 ease-out"
+          style={{
+            transform: `translateX(-${currentPage * 100}%)`,
+          }}
         >
-          {extraProjects.map((project) => (
-            <ProjectCard
-              key={project.id}
-              project={project}
-              onSelect={handleOpenProject}
-            />
+          {pages.map((pageProjects, pageIndex) => (
+            <div
+              key={pageIndex}
+              className="w-full shrink-0 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7 lg:gap-8 p-1"
+            >
+              {pageProjects.map((project) => (
+                <ProjectCard
+                  key={project.id}
+                  project={project}
+                  onSelect={handleOpenProject}
+                />
+              ))}
+            </div>
           ))}
         </div>
-      )}
-
-      {/* Botão Centralizado "Ver mais" / "Ver menos" */}
-      {extraProjects.length > 0 && (
-        <div className="mt-8 flex justify-center">
-          <button
-            type="button"
-            onClick={toggleShowAll}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-neutral-200 bg-white hover:bg-neutral-50 hover:border-neutral-300 text-[13px] font-medium text-neutral-800 transition-all duration-200 shadow-2xs active:scale-98 cursor-pointer group"
-          >
-            <span>{showAll ? "Ver menos" : "Ver mais"}</span>
-            {showAll ? (
-              <ChevronUp size={15} className="text-neutral-500 group-hover:text-neutral-900 transition-colors" />
-            ) : (
-              <ChevronDown size={15} className="text-neutral-500 group-hover:text-neutral-900 transition-colors" />
-            )}
-          </button>
-        </div>
-      )}
+      </div>
 
       {/* Modal Expandido com Shared Element Transition */}
-      {selectedProject && <ProjectExpandableModal
-        project={selectedProject}
-        originRect={originRect}
-        onClose={handleCloseProject}
-      />}
+      {selectedProject && (
+        <ProjectExpandableModal
+          project={selectedProject}
+          originRect={originRect}
+          onClose={handleCloseProject}
+        />
+      )}
     </section>
   );
 }
@@ -206,4 +251,3 @@ function ProjectCard({
     </SpotlightCard>
   );
 }
-

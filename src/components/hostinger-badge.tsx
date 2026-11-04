@@ -1,11 +1,58 @@
-import React from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 
 export function HostingerBadge() {
+  const pathname = usePathname();
+  const [isFramed, setIsFramed] = useState(false);
+  const [isIntersectingShowcase, setIsIntersectingShowcase] = useState(false);
+
+  useEffect(() => {
+    try {
+      if (typeof window !== "undefined" && window.self !== window.top) {
+        setIsFramed(true);
+      }
+    } catch {
+      setIsFramed(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const target = document.getElementById("sistemas");
+    if (!target) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const isVisible = entries.some((entry) => entry.isIntersecting);
+        setIsIntersectingShowcase(isVisible);
+      },
+      {
+        root: null,
+        // Trigger with slight margin so it smoothly fades out before colliding with the panel
+        rootMargin: "50px 0px 50px 0px",
+        threshold: [0, 0.05, 0.1],
+      }
+    );
+
+    observer.observe(target);
+    return () => observer.disconnect();
+  }, [pathname]);
+
+  if (isFramed || (pathname && (pathname.startsWith("/crm") || pathname.startsWith("/drexgames-admin")))) {
+    return null;
+  }
+
   return (
     <aside
       aria-label="Parceiro Oficial Hostinger"
-      className="fixed bottom-5 right-5 sm:bottom-6 sm:right-6 z-40 print:hidden"
+      className={`fixed bottom-5 right-5 sm:bottom-6 sm:right-6 z-40 print:hidden transition-all duration-300 ${
+        isIntersectingShowcase
+          ? "opacity-0 pointer-events-none translate-y-4 scale-95"
+          : "opacity-100 pointer-events-auto translate-y-0 scale-100"
+      }`}
     >
       <a
         href="https://www.hostinger.com/br?REFERRALCODE=MATEUSOLIVEIRA"

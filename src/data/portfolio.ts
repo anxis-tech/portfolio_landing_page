@@ -115,6 +115,14 @@ export const statsData: StatItem[] = [
    ========================================================================= */
 export const categoriesData: ProjectCategory[] = [
   {
+    slug: "sistemas",
+    name: "Sistemas & CRM",
+    title: "Sistemas Web, CRM & Dashboards",
+    description:
+      "Plataformas sob medida, painéis administrativos interativos, CRM de vendas, automação de processos e controle financeiro robusto.",
+  },
+
+  {
     slug: "landing-pages",
     name: "Landing Pages",
     title: "Projetos de Landing Pages",
@@ -150,6 +158,42 @@ export const categoriesData: ProjectCategory[] = [
    ========================================================================= */
 export const projectsData: Project[] = [
   // --- PROJETOS RECENTES ---
+  {
+    id: "logoipsum-crm",
+    title: "Sistema CRM & Gestão Empresarial",
+    slug: "sistema-crm",
+    category: "Sistemas Web & CRM",
+    categories: ["sistemas"],
+    description:
+      "Painel administrativo corporativo completo com gestão de projetos em Kanban, integração de conversas WhatsApp, calculadora de precificação inteligente, financeiro e controle de permissões RBAC.",
+    image: "/projects/logoipsum-crm.webp",
+    fullPageImage: "/projects/logoipsum-crm.webp",
+    link: "/crm",
+    year: "2026",
+    client: "Logoipsum Enterprise",
+    type: "Sistema Web / SaaS CRM",
+    recent: false,
+    featured: true,
+  },
+
+  {
+    id: "drexgames-admin",
+    title: "DrexGames — Painel de Gestão E-commerce",
+    slug: "drexgames-admin",
+    category: "Sistemas Web & ERP",
+    categories: ["sistemas"],
+    description:
+      "Painel administrativo e operacional de e-commerce de games: automação de entrega de chaves digitais, emissão de NF-e via Bling ERP, conciliação Pix/Cartão e controle de estoque de ativação.",
+    image: "/projects/drex-games.webp",
+    fullPageImage: "/projects/drex-games.webp",
+    link: "/drexgames-admin",
+    year: "2026",
+    client: "Drex Games",
+    type: "Painel E-commerce / ERP",
+    recent: false,
+    featured: true,
+  },
+
   {
     id: "mirele-fabro",
     title: "Mirele Fabro",
@@ -365,11 +409,27 @@ export function getAllProjects(): Project[] {
   return projectsData;
 }
 
-// Retorna projetos recentes (com limite opcional)
-export function getRecentProjects(limit?: number): Project[] {
-  const recent = projectsData.filter((p) => p.recent);
-  return limit ? recent.slice(0, limit) : recent;
+
+// Retorna projetos web (Sites institucionais, E-commerce e Landing pages), excluindo sistemas
+export function getWebProjects(limit?: number): Project[] {
+  const web = projectsData.filter(
+    (p) =>
+      !p.categories.includes("sistemas") &&
+      p.categories.some((c) => ["landing-pages", "ecommerce", "institucional"].includes(c))
+  );
+  return limit ? web.slice(0, limit) : web;
 }
+
+// Retorna projetos de sistemas / CRM
+export function getSystemsProjects(): Project[] {
+  return projectsData.filter((p) => p.categories.includes("sistemas"));
+}
+
+// Retorna projetos recentes (com limite opcional) - alinhado estritamente com sites, ecommerce e landing pages
+export function getRecentProjects(limit?: number): Project[] {
+  return getWebProjects(limit);
+}
+
 
 // Retorna projetos em parceria com agências
 export function getAgencyProjects(): Project[] {
