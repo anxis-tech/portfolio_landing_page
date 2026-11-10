@@ -55,7 +55,7 @@ export function HostingerBadge() {
       }`}
     >
       <a
-        href="https://www.hostinger.com/br?REFERRALCODE=MATEUSOLIVEIRA"
+        href="https://www.hostinger.com/br?REFERRALCODE=anxis20"
         target="_blank"
         rel="noopener noreferrer"
         title="Hostinger Partner — Hospedagem de Alta Performance"
