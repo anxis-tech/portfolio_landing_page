@@ -91,14 +91,14 @@ export function HeroEditorial() {
           Desenvolvedor e <span className="italic font-medium text-neutral-950">UI/UX Designer</span> criando experiências digitais funcionais, estratégicas e visualmente refinadas.
         </p>
 
-        <p className="text-[15px] text-neutral-500 leading-relaxed max-w-2xl">
-          Especializado em unir arquitetura de software front-end de alto padrão à direção visual editorial para marcas, criadores e agências.
+        <p className="mt-3 text-[15px] text-neutral-500 leading-relaxed max-w-2xl">
+          Sites, landing pages e sistemas sob medida que transmitem confiança e transformam visitantes em clientes, para marcas, criadores e agências.
         </p>
       </div>
 
-      {/* 3. CTA Principal Interativo (Efeito Popout Uiverse Itchy Wolverine) */}
-      <div className="mt-16 mb-7 sm:mb-9 flex items-center pl-7 sm:pl-8">
-        <div className="popout-btn-container">
+      {/* 3. CTAs do Hero: botão popout lime + botão secundário */}
+      <div className="mt-12 mb-7 sm:mb-9 flex items-center gap-3">
+        <div className="popout-btn-container hero-cta-primary">
           {/* Drawer Superior com transição e rotação */}
           <div className="popout-btn-drawer popout-transition-top" aria-hidden="true">
             cases selecionados...
@@ -119,41 +119,20 @@ export function HeroEditorial() {
               Ver projetos
             </span>
           </a>
-
-          {/* 4 Cantos Dinâmicos com Expansão e Sombra no Hover */}
-          <svg
-            className="popout-btn-corner popout-corner-tl"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="-1 1 32 32"
-            aria-hidden="true"
-          >
-            <path d="M32,32C14.355,32,0,17.645,0,0h.985c0,17.102,13.913,31.015,31.015,31.015v.985Z" />
-          </svg>
-          <svg
-            className="popout-btn-corner popout-corner-tr"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="-1 1 32 32"
-            aria-hidden="true"
-          >
-            <path d="M32,32C14.355,32,0,17.645,0,0h.985c0,17.102,13.913,31.015,31.015,31.015v.985Z" />
-          </svg>
-          <svg
-            className="popout-btn-corner popout-corner-br"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="-1 1 32 32"
-            aria-hidden="true"
-          >
-            <path d="M32,32C14.355,32,0,17.645,0,0h.985c0,17.102,13.913,31.015,31.015,31.015v.985Z" />
-          </svg>
-          <svg
-            className="popout-btn-corner popout-corner-bl"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="-1 1 32 32"
-            aria-hidden="true"
-          >
-            <path d="M32,32C14.355,32,0,17.645,0,0h.985c0,17.102,13.913,31.015,31.015,31.015v.985Z" />
-          </svg>
         </div>
+
+        <a
+          href="#servicos"
+          className="group flex-1 sm:flex-none inline-flex min-h-12 items-center justify-between sm:justify-start gap-3 rounded-2xl whitespace-nowrap border border-neutral-200 bg-white/90 pl-5 pr-2 text-[15px] font-semibold text-neutral-900 shadow-[0_1px_2px_rgba(0,0,0,0.04),0_8px_20px_-12px_rgba(0,0,0,0.18)] backdrop-blur-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-neutral-300 hover:shadow-[0_1px_2px_rgba(0,0,0,0.05),0_14px_28px_-14px_rgba(0,0,0,0.25)] active:scale-[0.98]"
+        >
+          Ver serviços
+          <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-neutral-950 text-[#d8ff7c] transition-transform duration-200 group-hover:translate-x-0.5">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4" aria-hidden="true">
+              <path d="M5 12h14" />
+              <path d="m13 6 6 6-6 6" />
+            </svg>
+          </span>
+        </a>
       </div>
 
       {/* 4. Social Proof & Métricas Sutis Abaixo do CTA */}

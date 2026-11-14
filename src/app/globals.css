@@ -382,6 +382,13 @@ body {
   transform: scale(1);
 }
 
+/* Mobile: CTAs do hero lado a lado, dividindo a largura */
+@media (max-width: 639px) {
+  .hero-cta-primary { flex: 1 1 0; min-width: 0; }
+  .hero-cta-primary .popout-btn { width: 100%; min-width: 0; padding: 0.5em 1em; }
+  .hero-cta-primary .popout-btn-text { font-size: 1em; white-space: nowrap; }
+}
+
 @keyframes popout-hue-anim {
   0%, 100% {
     filter: hue-rotate(0deg);

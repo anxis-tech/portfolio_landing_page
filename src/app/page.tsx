@@ -6,6 +6,7 @@ import { SystemsShowcase } from "@/components/systems-showcase";
 import { AgencyCarousel } from "@/components/agency-carousel";
 import { IntegrationsShowcase } from "@/components/integrations-showcase";
 import { FooterEditorial } from "@/components/footer-editorial";
+import { ServicesProcess } from "@/components/services-process";
 import { GlobalDotBackground } from "@/components/ui/global-dot-background";
 
 export default function Home() {
@@ -35,6 +36,9 @@ export default function Home() {
 
         {/* Sites Institucionais, E-commerce e Landing Pages */}
         <RecentProjects />
+
+        {/* Serviços orientados a resultado + processo de trabalho */}
+        <ServicesProcess />
 
         {/* Sistemas Web, CRM & Dashboards (Showcase Interativo ao Vivo) */}
         <SystemsShowcase />
