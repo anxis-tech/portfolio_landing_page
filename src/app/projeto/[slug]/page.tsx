@@ -195,7 +195,7 @@ export default async function ProjectDetailPage({ params }: Props) {
               )}
 
               {/* CTA com a nossa cor verde oficial (#d8ff7c) - Oculto para o CRM por solicitação */}
-              {project.link && project.id !== "logoipsum-crm" && (
+              {project.link && project.id !== "logoipsum-crm" && project.id !== "anxis-copilot" && (
                 <div className="pt-2">
                   <a
                     href={project.link}

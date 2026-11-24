@@ -165,7 +165,7 @@ export function ProjectExpandableModal({
 
   if (!project) return null;
 
-  const isCrm = project.id === "logoipsum-crm";
+  const hideProjectLink = project.id === "logoipsum-crm" || project.id === "anxis-copilot";
   const dimensions = imageDetails[project.id as keyof typeof imageDetails] || { width: 1440, height: 3600 };
   const isExpanded = phase === "expanded";
 
@@ -217,7 +217,7 @@ export function ProjectExpandableModal({
             <span className="w-2.5 h-2.5 rounded-full bg-red-400/80" />
             <span className="w-2.5 h-2.5 rounded-full bg-amber-400/80" />
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-400/80" />
-            {!isCrm && project.link && (
+            {!hideProjectLink && project.link && (
               <div className="ml-2 hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-neutral-200/80 text-[11px] font-mono text-neutral-500">
                 <Globe size={11} className="text-neutral-400" />
                 <span className="truncate max-w-[220px]">{project.link.replace(/^https?:\/\//, "")}</span>
@@ -488,7 +488,7 @@ export function ProjectExpandableModal({
             </div>
 
             {/* Bloco Inferior: CTA "Ver projeto completo ↗" (Oculto para o CRM por solicitação) */}
-            {!isCrm && project.link && (
+            {!hideProjectLink && project.link && (
               <div className="pt-6 mt-6 border-t border-neutral-100">
                 <a
                   href={project.link}
