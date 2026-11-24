@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import React, { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
 import { getProjectImage } from "@/lib/project-image";
-import { X, ArrowUpRight, Globe } from "lucide-react";
+import { X, ArrowUpRight, Globe, ChevronLeft, ChevronRight } from "lucide-react";
 import { Project } from "@/data/portfolio";
 import { TechBadge } from "@/components/ui/tech-badge";
 import imageDetails from "@/data/project-images.json";
@@ -33,12 +33,50 @@ export function ProjectExpandableModal({
 }: ProjectExpandableModalProps) {
   const [phase, setPhase] = useState<"expanding" | "expanded" | "closing">("expanding");
   const [screenshotStatus, setScreenshotStatus] = useState<"loading" | "ready" | "error">("loading");
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [isImageLandscape, setIsImageLandscape] = useState(false);
+
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const enterFrameRef = useRef<number | null>(null);
   const closingRef = useRef(false);
   const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   useEffect(() => () => { if (closeTimerRef.current) clearTimeout(closeTimerRef.current); }, []);
+
+  // Lista de imagens do projeto (Imagem principal + Galeria secundária)
+  const images = useMemo(() => {
+    if (!project) return [];
+    const mainSrc = getProjectImage(project);
+    const list: string[] = [mainSrc];
+
+    if (project.gallery && Array.isArray(project.gallery)) {
+      project.gallery
+        .filter((src) => src && typeof src === "string" && !src.includes("/previews/"))
+        .forEach((src) => {
+          if (!list.includes(src)) {
+            list.push(src);
+          }
+        });
+    }
+    return list;
+  }, [project]);
+
+  // Sempre que o projeto mudar, reseta para a primeira imagem
+  useEffect(() => {
+    setActiveImageIndex(0);
+  }, [project?.id]);
+
+  const currentImageSrc = images[activeImageIndex] || (project ? getProjectImage(project) : "");
+  const hasMultipleImages = images.length > 1;
+
+  // Reset scroll position and status when changing images
+  useEffect(() => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTop = 0;
+    }
+    setIsImageLandscape(false);
+  }, [activeImageIndex]);
 
   const finishClose = useCallback(() => {
     if (closeTimerRef.current === null) return;
@@ -53,9 +91,18 @@ export function ProjectExpandableModal({
     if (enterFrameRef.current !== null) cancelAnimationFrame(enterFrameRef.current);
     setPhase("closing");
     const immediate = phase === "expanding" || window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    // Normally transitionend completes the close; the timer covers interrupted transitions.
     closeTimerRef.current = setTimeout(finishClose, immediate ? 0 : MODAL_TRANSITION_MS + 80);
   }, [phase, project, finishClose]);
+
+  const handlePrevImage = useCallback((e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    setActiveImageIndex((prev) => (prev > 0 ? prev - 1 : images.length - 1));
+  }, [images.length]);
+
+  const handleNextImage = useCallback((e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    setActiveImageIndex((prev) => (prev < images.length - 1 ? prev + 1 : 0));
+  }, [images.length]);
 
   // Bloquear scroll do body quando o modal estiver aberto
   useEffect(() => {
@@ -73,7 +120,7 @@ export function ProjectExpandableModal({
     };
   }, [project]);
 
-  // Listener da tecla Escape
+  // Listener da tecla Escape e Navegação com Setas Esquerda/Direita
   useEffect(() => {
     if (!project) return;
 
@@ -87,11 +134,20 @@ export function ProjectExpandableModal({
       if (e.key === "Escape") {
         handleClose();
       }
+      if (hasMultipleImages) {
+        if (e.key === "ArrowLeft") {
+          e.preventDefault();
+          handlePrevImage();
+        } else if (e.key === "ArrowRight") {
+          e.preventDefault();
+          handleNextImage();
+        }
+      }
     };
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [project, handleClose]);
+  }, [project, handleClose, hasMultipleImages, handlePrevImage, handleNextImage]);
 
   // Paint the initial scale before starting the transition, without resizing content.
   useEffect(() => {
@@ -107,12 +163,19 @@ export function ProjectExpandableModal({
     };
   }, [project]);
 
-
   if (!project) return null;
 
-  const fullPageSrc = getProjectImage(project);
+  const isCrm = project.id === "logoipsum-crm";
   const dimensions = imageDetails[project.id as keyof typeof imageDetails] || { width: 1440, height: 3600 };
   const isExpanded = phase === "expanded";
+
+  const isCover =
+    isImageLandscape ||
+    currentImageSrc.includes("_cover") ||
+    currentImageSrc.includes("-cover") ||
+    currentImageSrc.includes("logoipsum-crm") ||
+    currentImageSrc.includes("drexgames-admin") ||
+    (activeImageIndex === 0 && dimensions.height <= dimensions.width * 1.3);
 
   const modalContent = (
     <div
@@ -162,8 +225,14 @@ export function ProjectExpandableModal({
             )}
           </div>
 
-          {/* Lado Direito: Ano do projeto + Botão Fechar em Vermelho Acessível (sem o dot verde) */}
+          {/* Lado Direito: Carrossel info + Ano + Botão Fechar */}
           <div className="flex items-center gap-3">
+            {hasMultipleImages && (
+              <div className="hidden xs:inline-flex items-center px-2.5 py-0.5 rounded-md bg-neutral-200/70 border border-neutral-300/80 text-[10.5px] font-mono font-medium text-neutral-700">
+                {activeImageIndex + 1} / {images.length}
+              </div>
+            )}
+
             <div className="flex items-center text-[11px] font-mono text-neutral-400">
               <span className="hidden xs:inline text-neutral-600 font-semibold">{project.year || "2026"}</span>
             </div>
@@ -182,97 +251,150 @@ export function ProjectExpandableModal({
         </div>
 
         {/* =========================================================================
-            CORPO DO MODAL (ÁREA PRINCIPAL: SCREENSHOT FULL-PAGE + PAINEL DE INFO)
+            CORPO DO MODAL (ÁREA PRINCIPAL: VISUALIZADOR + PAINEL DE INFO)
            ========================================================================= */}
         <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-[1fr_360px] overflow-hidden">
           
-          {/* COLUNA ESQUERDA: VISUALIZADOR DA SCREENSHOT REAL COM SCROLL VERTICAL */}
-          <div
-            ref={scrollContainerRef}
-            className={`relative flex-1 h-full bg-neutral-100/70 border-b lg:border-b-0 lg:border-r border-neutral-200/80 ${
-              isCover ? "overflow-hidden" : "overflow-y-auto overscroll-contain"
-            }`}
-            style={{ WebkitOverflowScrolling: "touch" }}
-          >
-            {/* Keep the already loaded card image scrollable until the full image decodes. */}
-            <div className={`relative w-full ${isCover ? "h-full" : "min-h-full"}`} aria-busy={screenshotStatus === "loading"}>
-              <Image
-                src={originRect?.previewSrc || getProjectImage(project, true)}
-                alt=""
-                aria-hidden="true"
-                width={dimensions.width}
-                height={dimensions.height}
-                unoptimized
-                loading="eager"
-                className={`block select-none ${isCover ? "w-full h-full object-cover object-top" : "w-full h-auto"}`}
-              />
-              <Image
-                src={fullPageSrc}
-                alt={`Screenshot completa do site ${project.title}`}
-                width={dimensions.width}
-                height={dimensions.height}
-                unoptimized
-                loading="eager"
-                fetchPriority="high"
-                onLoad={() => setScreenshotStatus("ready")}
-                onError={() => setScreenshotStatus("error")}
-                className={`absolute top-0 left-0 block select-none transition-opacity duration-150 ${
-                  isCover ? "w-full h-full object-cover object-top" : "w-full h-auto"
-                } ${
-                  screenshotStatus === "ready" ? "opacity-100" : "opacity-0"
-                }`}
-              />
+          {/* COLUNA ESQUERDA: VISUALIZADOR COM SUPORTE A CARROSSEL */}
+          <div className="relative flex flex-col flex-1 h-full bg-neutral-100/70 border-b lg:border-b-0 lg:border-r border-neutral-200/80 overflow-hidden">
+            
+            {/* Área Rolável da Imagem Atual */}
+            <div
+              ref={scrollContainerRef}
+              className={`relative flex-1 w-full h-full ${
+                isCover ? "overflow-hidden flex items-center justify-center" : "overflow-y-auto overscroll-contain"
+              }`}
+              style={{ WebkitOverflowScrolling: "touch" }}
+            >
+              <div
+                className={`relative w-full ${isCover ? "h-full flex items-center justify-center" : "min-h-full"}`}
+                aria-busy={screenshotStatus === "loading"}
+              >
+                {/* Fallback inicial da imagem do card para expansão sem tela branca */}
+                {activeImageIndex === 0 && (
+                  <Image
+                    src={originRect?.previewSrc || getProjectImage(project, true)}
+                    alt=""
+                    aria-hidden="true"
+                    width={dimensions.width}
+                    height={dimensions.height}
+                    unoptimized
+                    loading="eager"
+                    className={`block select-none ${isCover ? "w-full h-full object-cover object-top" : "w-full h-auto"}`}
+                  />
+                )}
+
+                {/* Imagem em Alta Resolução */}
+                <img
+                  key={currentImageSrc}
+                  src={currentImageSrc}
+                  alt={`Captura ${activeImageIndex + 1} de ${images.length} do projeto ${project.title}`}
+                  loading="eager"
+                  decoding="sync"
+                  onLoad={(e) => {
+                    setScreenshotStatus("ready");
+                    const img = e.currentTarget;
+                    if (img.naturalWidth > 0 && img.naturalHeight > 0) {
+                      const ratio = img.naturalHeight / img.naturalWidth;
+                      if (ratio < 1.3) {
+                        setIsImageLandscape(true);
+                      }
+                    }
+                  }}
+                  onError={() => setScreenshotStatus("error")}
+                  className={`select-none transition-opacity duration-200 ${
+                    activeImageIndex === 0 ? "absolute top-0 left-0" : "relative"
+                  } ${
+                    isCover ? "w-full h-full object-cover object-top block" : "w-full h-auto block"
+                  } ${
+                    screenshotStatus === "ready" || activeImageIndex > 0 ? "opacity-100" : "opacity-0"
+                  }`}
+                />
+              </div>
+
+              {/* Dica de rolagem quando a imagem for vertical comprida */}
+              {phase !== "expanding" && !isCover && (
+                <div className="sticky bottom-3.5 inset-x-0 flex justify-center pointer-events-none pb-1 animate-in fade-in duration-500 z-10">
+                  <span className="px-3.5 py-1.5 rounded-full bg-neutral-900/85 backdrop-blur-md text-white text-[11px] font-medium shadow-lg flex items-center gap-2 border border-white/10">
+                    <span className="hidden sm:inline-flex items-center">
+                      <svg width="14" height="18" viewBox="0 0 14 18" fill="none" className="text-white">
+                        <rect x="0.75" y="0.75" width="12.5" height="16.5" rx="6.25" stroke="currentColor" strokeWidth="1.5" />
+                        <line x1="7" y1="4" x2="7" y2="7.5" stroke="#d8ff7c" strokeWidth="1.5" strokeLinecap="round" className="animate-bounce" />
+                      </svg>
+                    </span>
+                    <span className="sm:hidden inline-flex items-center">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[#d8ff7c]">
+                        <path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0" />
+                        <path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2" />
+                        <path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8" />
+                        <path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15" />
+                      </svg>
+                    </span>
+                    <span className="font-semibold tracking-wide hidden sm:inline">Rolar</span>
+                    <span className="font-semibold tracking-wide sm:hidden">Arraste</span>
+                  </span>
+                </div>
+              )}
             </div>
 
-            {/* Dica de rolagem com ícone de mouse no desktop e toque no mobile */}
-            {phase !== "expanding" && !isCover && (
-              <div className="sticky bottom-3.5 inset-x-0 flex justify-center pointer-events-none pb-1 animate-in fade-in duration-500">
-                <span className="px-3.5 py-1.5 rounded-full bg-neutral-900/85 backdrop-blur-md text-white text-[11px] font-medium shadow-lg flex items-center gap-2 border border-white/10">
-                  {/* Ícone de Mouse (Desktop) */}
-                  <span className="hidden sm:inline-flex items-center">
-                    <svg
-                      width="14"
-                      height="18"
-                      viewBox="0 0 14 18"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="text-white"
-                    >
-                      <rect x="0.75" y="0.75" width="12.5" height="16.5" rx="6.25" stroke="currentColor" strokeWidth="1.5" />
-                      <line x1="7" y1="4" x2="7" y2="7.5" stroke="#d8ff7c" strokeWidth="1.5" strokeLinecap="round" className="animate-bounce" />
-                    </svg>
-                  </span>
-                  {/* Ícone de Dedo/Toque (Mobile) */}
-                  <span className="sm:hidden inline-flex items-center">
-                    <svg
-                      width="15"
-                      height="15"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="text-[#d8ff7c]"
-                    >
-                      <path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0" />
-                      <path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2" />
-                      <path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8" />
-                      <path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15" />
-                    </svg>
-                  </span>
-                  {/* Texto: Rolar no desktop, Arraste no mobile */}
-                  <span className="font-semibold tracking-wide hidden sm:inline">Rolar</span>
-                  <span className="font-semibold tracking-wide sm:hidden">Arraste</span>
-                </span>
-              </div>
+            {/* Setas Flutuantes de Navegação Anterior / Próxima (quando houver mais de uma imagem) */}
+            {hasMultipleImages && (
+              <>
+                <button
+                  type="button"
+                  onClick={handlePrevImage}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 z-20 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-neutral-900/85 hover:bg-neutral-900 text-white backdrop-blur-md border border-white/20 shadow-lg flex items-center justify-center transition-all hover:scale-105 active:scale-95 cursor-pointer"
+                  aria-label="Imagem anterior"
+                  title="Imagem anterior (Seta esquerda)"
+                >
+                  <ChevronLeft size={20} />
+                </button>
+                <button
+                  type="button"
+                  onClick={handleNextImage}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 z-20 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-neutral-900/85 hover:bg-neutral-900 text-white backdrop-blur-md border border-white/20 shadow-lg flex items-center justify-center transition-all hover:scale-105 active:scale-95 cursor-pointer"
+                  aria-label="Próxima imagem"
+                  title="Próxima imagem (Seta direita)"
+                >
+                  <ChevronRight size={20} />
+                </button>
+
+                {/* Barra Inferior com Indicadores (Bullets) e Miniaturas */}
+                <div className="shrink-0 py-2.5 px-4 bg-white/95 border-t border-neutral-200/80 flex items-center justify-center gap-2 select-none z-20">
+                  {images.map((imgSrc, idx) => {
+                    const isActive = activeImageIndex === idx;
+                    return (
+                      <button
+                        key={`${imgSrc}-${idx}`}
+                        type="button"
+                        onClick={() => setActiveImageIndex(idx)}
+                        className={`group relative rounded-lg overflow-hidden transition-all duration-200 cursor-pointer ${
+                          isActive
+                            ? "ring-2 ring-neutral-950 ring-offset-1 scale-105 shadow-xs"
+                            : "opacity-60 hover:opacity-100 border border-neutral-300"
+                        }`}
+                        title={`Ver imagem ${idx + 1}`}
+                      >
+                        <div className="w-12 h-8 sm:w-14 sm:h-9 bg-neutral-100 overflow-hidden">
+                          <img
+                            src={imgSrc}
+                            alt=""
+                            className="w-full h-full object-cover object-top"
+                          />
+                        </div>
+                        {isActive && (
+                          <span className="absolute bottom-0.5 right-0.5 w-1.5 h-1.5 rounded-full bg-[#d8ff7c] border border-black/30" />
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              </>
             )}
           </div>
 
           {/* COLUNA DIREITA: PAINEL DE INFORMAÇÕES E AÇÕES DO PROJETO */}
-          <div
-            className="p-6 sm:p-7 flex flex-col justify-between overflow-y-auto bg-white"
-          >
+          <div className="p-6 sm:p-7 flex flex-col justify-between overflow-y-auto bg-white">
             <div className="space-y-5">
               {/* Badge de Categoria */}
               <div className="flex items-center gap-2">
