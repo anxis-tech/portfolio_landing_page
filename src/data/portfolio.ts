@@ -125,14 +125,14 @@ export const categoriesData: ProjectCategory[] = [
     name: "Sistemas & CRM",
     title: "Sistemas Web, CRM & Dashboards",
     description:
-      "Plataformas sob medida, painéis administrativos interativos, CRM de vendas, automação de processos e controle financeiro robusto.",
+      "Plataformas sob medida, painéis administrativos e sistemas de gestão desenhados para organizar operações e dar clareza aos negócios.",
   },
   {
     slug: "chatbots",
     name: "Chatbots & IA",
     title: "Chatbots & IA",
     description:
-      "Automação de atendimento inteligente via WhatsApp, fluxos de conversão automatizados, conciliação de pagamentos e conexões com APIs externas.",
+      "Fluxos inteligentes de atendimento e automações pensadas para responder leads com agilidade no WhatsApp e integrar com APIs externas.",
   },
 
 
@@ -141,28 +141,28 @@ export const categoriesData: ProjectCategory[] = [
     name: "Landing Pages",
     title: "Projetos de Landing Pages",
     description:
-      "Páginas focadas em alta taxa de conversão, velocidade máxima de carregamento, storytelling visual persuasivo e posicionamento de marca.",
+      "Páginas focadas no que realmente importa: captar leads qualificados, vender produtos e serviços e transformar visitantes em clientes reais.",
   },
   {
     slug: "ecommerce",
     name: "E-commerce",
     title: "E-commerce & Lojas Virtuais",
     description:
-      "Ecossistemas de venda online com fluxos intuitivos de navegação, checkout otimizado e apresentação envolvente de produtos.",
+      "Lojas virtuais com navegação sem fricção, vitrines atraentes e checkout rápido para transformar visitas em compras concluídas.",
   },
   {
     slug: "institucional",
     name: "Sites Institucionais",
     title: "Sites Institucionais & Corporativos",
     description:
-      "Plataformas digitais corporativas desenvolvidas para transmitir autoridade, elegância e credibilidade imediata ao mercado.",
+      "Portais pensados para apresentar empresas com clareza, construir credibilidade sólida e abrir portas para novas parcerias comerciais.",
   },
   {
     slug: "parcerias",
     name: "Parcerias com Agências",
     title: "Projetos em Parceria",
     description:
-      "Trabalhos desenvolvidos em estreita colaboração técnica e criativa com agências de publicidade, estúdios de design e consultorias.",
+      "Projetos desenvolvidos em colaboração técnica e de interface com agências digitais e estúdios de design.",
   },
 ];
 
@@ -179,9 +179,9 @@ export const projectsData: Project[] = [
     category: "Sistemas Web & CRM",
     categories: ["sistemas", "chatbots"],
     technologies: ["nextjs", "react", "node", "supabase", "whatsapp-business"],
-    description:
-      "SaaS corporativo de gestão operacional e CRM com foco em centralização de vendas, controle financeiro e automação de atendimento multicanal.",
-    purpose: "Desenvolvido com o objetivo de unificar a operação comercial e operacional da empresa em um único ecossistema, eliminando planilhas dispersas, reduzindo o tempo de resposta aos leads no WhatsApp e oferecendo visibilidade financeira em tempo real para a tomada de decisões executivas.",
+    description: "Painel sob medida feito para o time comercial parar de se perder em planilhas, organizar negociações no funil e atender leads no WhatsApp com agilidade.",
+    purpose: "A intenção deste sistema foi acabar com o retrabalho comercial. Antes, as conversas ficavam soltas em vários aparelhos e os dados em planilhas desatualizadas. O CRM centralizou tudo em uma esteira visual clara (Kanban), alertando o vendedor para responder na hora e dando ao gestor previsibilidade real de faturamento.",
+    detailedDescription: "A plataforma foi desenhada para o dia a dia acelerado de vendas: cards que se movem de forma intuitiva, histórico unificado de conversas no WhatsApp e métricas automáticas de conversão. O foco foi criar uma interface leve e prática, onde qualquer membro da equipe aprende a usar em minutos sem precisar de treinamentos longos.",
     features: [
       "Pipeline de vendas e projetos em Kanban com drag-and-drop",
       "Inbox integrado ao WhatsApp Business API para atendimento e disparo de templates",
@@ -207,8 +207,9 @@ export const projectsData: Project[] = [
     category: "Landing Page & Saúde",
     categories: ["landing-pages"],
     technologies: ["wordpress", "elementor", "whatsapp"],
-    description: "Landing page de alta sensibilidade e sofisticação desenvolvida para consolidar a autoridade clínica e captar novos pacientes para consultoria em psicologia e desenvolvimento infantil.",
-    purpose: "A intenção central do projeto foi traduzir o acolhimento e a abordagem clínica multidisciplinar da psicóloga em uma experiência digital refinada, transmitindo segurança imediata aos pais e facilitando o contato direto com a clínica.",
+    description: "Página pensada para acolher famílias em busca de psicologia infantil, tirando dúvidas sobre o desenvolvimento dos filhos e facilitando o agendamento no WhatsApp.",
+    purpose: "O propósito principal da página é gerar acolhimento imediato. Pais que procuram apoio para os filhos geralmente chegam com dúvidas e inseguranças. A página explica as especialidades de forma humana e acessível, quebrando a hesitação e conduzindo a família diretamente para uma conversa inicial no WhatsApp.",
+    detailedDescription: "Construída com cores suaves, espaçamentos generosos e ilustrações serenas, a página foge de termos técnicos frios da clínica e foca nas situações reais vividas em casa e na escola. Cada seção foi planejada para responder perguntas comuns dos pais e oferecer um botão de contato rápido e sem barreiras.",
     features: [
       "Jornada do usuário humanizada com foco em acolhimento e quebra de objeções",
       "Seções interativas de áreas de atuação clínica e metodologia de avaliação",
@@ -234,8 +235,9 @@ export const projectsData: Project[] = [
     category: "Landing Page de Conversão",
     categories: ["landing-pages"],
     technologies: ["wordpress", "elementor", "whatsapp"],
-    description: "Página de conversão humanizada criada para posicionar o advogado como autoridade jurídica consultiva e acelerar a captação de clientes qualificados.",
-    purpose: "Criada com a intenção clara de atrair e filtrar potenciais clientes em momentos de urgência jurídica, apresentando soluções de forma direta, clara e acessível, gerando conversões imediatas para o canal de atendimento no WhatsApp.",
+    description: "Landing page direta ao ponto para captação de clientes jurídicos, explicando direitos de forma simples e direcionando o contato para análise no WhatsApp.",
+    purpose: "Quem pesquisa por um advogado quase sempre está vivenciando um problema urgente ou um momento de estresse. A intenção dessa página foi cortar o juridiquês, mostrar que existe solução para o caso e colocar o botão de atendimento no WhatsApp acessível em qualquer ponto da rolagem para análise imediata.",
+    detailedDescription: "A estrutura foi pensada para resposta rápida: uma proposta clara de valor já no primeiro bloco, explicação das áreas de atuação sem enrolação, depoimentos de clientes atendidos e respostas às dúvidas mais frequentes. O foco total é transformar visitas de tráfego pago em conversas reais com o escritório.",
     features: [
       "Estrutura de conversão rápida (Direct Response) focada em consultoria jurídica",
       "Pontos de contato estratégicos via WhatsApp com mensagens pré-configuradas",
@@ -261,8 +263,9 @@ export const projectsData: Project[] = [
     category: "Landing Page & Dermatologia",
     categories: ["landing-pages"],
     technologies: ["wordpress", "elementor", "whatsapp"],
-    description: "Landing page premium voltada para clínica dermatológica com foco em procedimentos clínicos, cirúrgicos e estéticos avançados.",
-    purpose: "O projeto teve como intenção primordial elevar a percepção de valor dos tratamentos oferecidos pela clínica, diferenciando a profissional no mercado de estética médica de alta renda e convertendo visitantes em consultas agendadas.",
+    description: "Página desenvolvida para clínica dermatológica com foco em valorizar procedimentos estéticos de alto padrão e agendar consultas particulares de avaliação.",
+    purpose: "A intenção foi valorizar a autoridade médica e a naturalidade dos procedimentos. Pacientes que buscam tratamentos faciais e corporais precisam de segurança clínica e elegância; a página apresenta os protocolos com clareza e estimula a marcação de uma avaliação presencial personalizada.",
+    detailedDescription: "Combinamos fotografia com estética editorial, tipografia limpa e explicações práticas sobre cada queixa tratada (rejuvenescimento, bioestimuladores, manchas e saúde capilar). Cada procedimento conta com orientações claras sobre como funciona o tratamento e um direcionamento direto para a agenda da clínica.",
     features: [
       "Catálogo visual de tratamentos estéticos e dermatológicos com explicações claras",
       "Design editorial refinado com estética clean e tipografia de alto padrão",
@@ -287,8 +290,9 @@ export const projectsData: Project[] = [
     category: "Site Institucional & Advocacia",
     categories: ["institucional"],
     technologies: ["wordpress", "elementor", "whatsapp"],
-    description: "Portal institucional corporativo para escritório de advocacia especializado em Direito Bancário Empresarial, reestruturação de passivos e defesa patrimonial.",
-    purpose: "A intenção foi construir uma presença digital imponente e institucional que transmita segurança jurídica a diretores e empresários que enfrentam endividamento bancário ou litígios financeiros de alto valor.",
+    description: "Site institucional corporativo para escritório focado em defender empresas contra abusos bancários e reestruturar passivos financeiros.",
+    purpose: "A real intenção do site é falar a linguagem do empresário. Diretores e executivos com dívidas bancárias ou litígios financeiros pesados precisam de segurança jurídica e discrição. O portal constrói essa autoridade institucional e incentiva o agendamento de uma reunião estratégica confidencial com os sócios.",
+    detailedDescription: "A identidade do site reflete o porte dos casos atendidos: paleta institucional sóbria, detalhamento de teses bancárias vitoriosas e apresentação técnica dos advogados sócios. Toda a navegação foi projetada para que tomadores de decisão corporativos encontrem credibilidade imediata e peçam um diagnóstico do seu passivo.",
     features: [
       "Apresentação estruturada das áreas de atuação empresarial e bancária",
       "Seção de corpo jurídico e sócios com apresentação da equipe técnica",
@@ -314,8 +318,9 @@ export const projectsData: Project[] = [
     category: "E-commerce & Plataforma Gamer",
     categories: ["ecommerce"],
     technologies: ["nextjs", "react", "node", "pix"],
-    description: "Plataforma moderna de e-commerce gamer desenvolvida sob medida para comercialização e entrega automatizada de jogos digitais para PC.",
-    purpose: "Projetada com a intenção de competir no mercado digital de games oferecendo preços competitivos, experiência de compra sem fricção e liberação imediata do produto após o pagamento via PIX.",
+    description: "Loja virtual focada na venda rápida de chaves digitais para PC, com preços promocionais e liberação automática via PIX.",
+    purpose: "O objetivo aqui é vender sem atrito: o gamer quer encontrar o jogo, conferir se os requisitos batem com o PC dele, pagar no PIX sem taxas abusivas e receber a chave na hora para ativar na Steam ou Epic. A experiência foi montada para concluir a compra em poucos cliques.",
+    detailedDescription: "Com visual dark característico do universo gamer, a loja tem busca em tempo real com autocompletar, vitrine com selos de desconto bem destacados e checkout simplificado. O sistema valida o pagamento instantaneamente e exibe o código de ativação na própria tela e por e-mail, sem exigir cadastros longos ou burocráticos.",
     features: [
       "Catálogo dinâmico com filtros avançados por gênero, plataforma e faixa de preço",
       "Fluxo de checkout transparente de alta conversão integrado com PIX e cartão de crédito",
@@ -340,8 +345,9 @@ export const projectsData: Project[] = [
     category: "E-commerce & Games",
     categories: ["ecommerce"],
     technologies: ["wordpress", "woocommerce", "elementor", "pix"],
-    description: "Loja virtual especializada na venda de jogos digitais para consoles e PC, estruturada com foco em ofertas, variedade de títulos e compra descomplicada.",
-    purpose: "A intenção foi criar uma loja virtual acessível e amigável para o consumidor gamer final que busca jogos digitais a preços populares, garantindo segurança na transação e suporte ágil pós-compra.",
+    description: "E-commerce de jogos digitais para PlayStation, Xbox e PC, estruturado para quem busca títulos populares com suporte próximo para instalação.",
+    purpose: "A intenção deste projeto foi quebrar a desconfiança de quem quer economizar comprando jogos em mídia digital. A loja oferece preços mais em conta do que as lojas oficiais dos consoles, garantindo transparência, tutoriais passo a passo e um canal de atendimento pronto para tirar dúvidas antes e depois da compra.",
+    detailedDescription: "A interface organiza os jogos por plataforma e faixas de preço, com seções dedicadas a lançamentos e promoções em destaque. As páginas de produto trazem explicações fáceis sobre o tipo de licença (primária ou secundária) e depoimentos reais de jogadores, dando tranquilidade para quem nunca comprou mídia digital antes.",
     features: [
       "Vitrine de ofertas dinâmicas com badges de desconto e promoções em destaque",
       "Mecanismo de busca instantânea com indexação ágil de catálogo de jogos",
@@ -366,8 +372,9 @@ export const projectsData: Project[] = [
     category: "Landing Page de Alta Conversão",
     categories: ["landing-pages"],
     technologies: ["wordpress", "elementor", "whatsapp"],
-    description: "Landing page de altíssimo impacto visual voltada para o lançamento e captação de vagas do treinamento executivo de imersão 'Conquistadores de Sonhos'.",
-    purpose: "Desenvolvida com a intenção estratégica de maximizar as conversões de tráfego pago para um evento presencial exclusivo, transmitindo exclusividade, transformação e urgência aos executivos e líderes interessados.",
+    description: "Página de vendas focada em preencher as vagas da imersão presencial 'Conquistadores de Sonhos', gerando desejo e urgência para a compra do ingresso.",
+    purpose: "O intuito é converter tráfego pago em vendas de ingressos de alto valor. A página guia o visitante por uma narrativa envolvente: apresenta a história do mentor, toca nas dores e ambições de líderes e executivos, detalha a programação do evento presencial e estimula o fechamento antes da virada de lote.",
+    detailedDescription: "Desenvolvida com contraste marcante, vídeo de abertura de alta produção e depoimentos em vídeo de ex-alunos, a página utiliza gatilhos de prova social, escassez de vagas e garantia. A tabela comparativa de ingressos (Silver, Gold e Black) facilita a escolha e direciona o usuário diretamente para o checkout seguro.",
     features: [
       "Design imersivo 'Black Edition' com contraste dramático e tipografia impactante",
       "Narrativa persuasiva estruturada para venda de ingressos e vagas de alto ticket",
@@ -392,8 +399,9 @@ export const projectsData: Project[] = [
     category: "Site Institucional & Saúde",
     categories: ["institucional"],
     technologies: ["wordpress", "elementor", "whatsapp"],
-    description: "Portal institucional e catálogo digital da clínica de especialidades médicas e diagnósticos Riosmed em Feira de Santana.",
-    purpose: "A intenção do site foi transformar a presença online da clínica em um ponto central de informação e agendamento para a população local, facilitando a consulta de médicos conveniados e reduzindo o tempo de espera no agendamento.",
+    description: "Portal de clínica médica e diagnósticos desenvolvido para o paciente encontrar sua especialidade ou exame em segundos e agendar pelo WhatsApp.",
+    purpose: "A proposta do site foi resolver o atendimento da clínica de forma prática. Em vez de obrigar o paciente a ligar e esperar na linha, o portal permite consultar médicos conveniados, especialidades e exames disponíveis, abrindo uma conversa no WhatsApp com um único clique para confirmar a data.",
+    detailedDescription: "O layout é limpo e acessível para qualquer faixa etária, com carregamento rápido e navegação clara. O catálogo inclui orientações práticas de preparo para cada tipo de exame (laboratório e imagem), localização com mapa interativo e informações sobre convênios aceitos, desafogando a recepção da clínica.",
     features: [
       "Guia completo de especialidades médicas e exames laboratoriais/imagem disponíveis",
       "Apresentação do corpo clínico multidisciplinar com fotos e qualificações",
@@ -418,8 +426,9 @@ export const projectsData: Project[] = [
     category: "E-commerce & Plataforma Gamer",
     categories: ["ecommerce"],
     technologies: ["wordpress", "woocommerce", "elementor", "pix"],
-    description: "E-commerce ágil voltado para a distribuição de gift cards digitais, assinaturas de serviços (PlayStation Plus, Xbox Game Pass) e moedas virtuais.",
-    purpose: "Criado para oferecer uma alternativa rápida, segura e sem burocracia para gamers que precisam recarregar suas carteiras virtuais ou renovar assinaturas instantaneamente a qualquer hora do dia ou da noite.",
+    description: "Plataforma de recargas instantâneas e cartões-presente para consoles e mobile, feita para quem quer comprar créditos e receber o código no mesmo minuto.",
+    purpose: "Aqui a intenção é atender compras de conveniência e impulso. O jogador está no meio da partida ou na madrugada de sábado e quer comprar uma skin ou renovar a assinatura do Game Pass ou PlayStation Plus. O site corta qualquer burocracia: selecionou o valor, pagou no PIX, recebeu o código imediatamente.",
+    detailedDescription: "A plataforma foi desenhada prioritariamente para navegação mobile, com botões amplos e fluxo de pagamento em uma etapa. Uma rotina automatizada confirma a transação bancária e envia o voucher para o e-mail e para a tela do comprador, mantendo a operação rodando 24 horas por dia sem intervenção manual.",
     features: [
       "Catálogo organizado por cartões de presentes, assinaturas e créditos digitais",
       "Sistema de checkout expresso em uma única etapa com PIX nativo",
@@ -443,8 +452,9 @@ export const projectsData: Project[] = [
     category: "E-commerce & Cosméticos",
     categories: ["ecommerce"],
     technologies: ["wix"],
-    description: "Loja virtual de cosméticos naturais, skincare e massageadores faciais de autocuidado, desenvolvida sobre a plataforma Wix com catálogo visual fluido.",
-    purpose: "A intenção foi criar uma loja visualmente encantadora e profissional que transmitisse a essência de relaxamento da marca, incentivando a compra de produtos de cuidados diários por meio de uma navegação suave e intuitiva.",
+    description: "Loja virtual de cosméticos naturais e skincare, criada para inspirar rotinas de autocuidado e incentivar a compra de kits completos de beleza.",
+    purpose: "O objetivo foi criar uma loja visualmente encantadora que despertasse o desejo de cuidar de si. Quem compra skincare quer conhecer a textura, os ingredientes e ver resultados reais. A página foi pensada para valorizar os benefícios de cada produto e incentivar a montagem de rotinas completas (limpeza, hidratação e massagem).",
+    detailedDescription: "Customizada sobre a plataforma Wix, a loja conta com carrinho lateral deslizante (mini-cart) para facilitar compras de múltiplos itens sem sair da página, fotos em alta definição, avaliações com fotos de clientes e cálculo de frete rápido, proporcionando uma experiência de compra suave e prazerosa.",
     features: [
       "Vitrine estética de produtos com fotos em alta definição e variações de cor/modelo",
       "Carrinho lateral deslizante (Mini-cart) proporcionando experiência de compra contínua",
@@ -470,8 +480,9 @@ export const projectsData: Project[] = [
     category: "E-commerce & Revestimentos",
     categories: ["parcerias", "ecommerce"],
     technologies: ["tray"],
-    description: "Loja virtual de e-commerce especializada em pisos vinílicos, laminados, rodapés e acabamentos, desenvolvida em parceria com a agência Virtualiti.",
-    purpose: "Desenvolvida em parceria com a Virtualiti com o propósito de descomplicar a compra de revestimentos online, permitindo que o cliente calcule a quantidade exata de caixas necessárias para sua reforma e feche o pedido com confiança técnica.",
+    description: "Loja virtual de pisos vinílicos e acabamentos com calculadora automática de caixas por metro quadrado e cotação transparente de frete pesado.",
+    purpose: "Desenvolvida em parceria com a agência Virtualiti, a intenção da loja foi acabar com a maior dor de quem compra piso pela internet: o medo de errar a quantidade de caixas ou levar um susto com o frete. O cliente insere a metragem do cômodo e a loja já calcula o número exato de caixas e o custo da transportadora.",
+    detailedDescription: "Integrada na plataforma Tray, a calculadora de m² fica visível diretamente na página do produto, somando a margem de perda recomendada para recortes. O catálogo traz ambientações reais em alta definição para inspirar quem está reformando, além de filtros técnicos por espessura, padrão de cor e uso residencial ou comercial.",
     features: [
       "Calculadora de metragem quadrada (m²) integrada à página do produto",
       "Filtros técnicos de especificação por espessura, padrão de cor, textura e uso",
@@ -497,8 +508,9 @@ export const projectsData: Project[] = [
     category: "E-commerce & Lentes de Contato",
     categories: ["parcerias", "ecommerce"],
     technologies: ["tray"],
-    description: "E-commerce de lentes de contato de grau, coloridas e produtos ópticos, desenvolvido em parceria com a agência Virtualiti.",
-    purpose: "A intenção do projeto conjunto com a Virtualiti foi oferecer aos usuários de lentes uma experiência de compra online tão precisa quanto uma ótica física, facilitando a inserção dos parâmetros médicos e fidelizando clientes de uso contínuo.",
+    description: "E-commerce de lentes de contato com seletor guiado de grau e curvatura, simplificando a compra conforme a receita médica.",
+    purpose: "Em parceria com a agência Virtualiti, o propósito da loja foi transformar a compra de lentes de contato em algo tão simples e seguro quanto ir a uma ótica física. O configurador ajuda o cliente a preencher o grau e o eixo sem confusão, evitando erros médicos e fidelizando para recompras recorrentes.",
+    detailedDescription: "A loja reúne marcas líderes de mercado (Acuvue, Alcon, Bausch + Lomb) organizadas por tipo de descarte (diário, quinzenal e mensal). O formulário de prescrição na plataforma Tray valida os parâmetros antes do checkout e o sistema conta com lembretes automáticos para avisar quando as lentes do cliente estiverem perto de vencer.",
     features: [
       "Configurador dinâmico de prescrição médica (grau esférico, cilíndrico e eixo) por olho",
       "Sistema de alerta de reposição periódica de lentes para compras recorrentes",
@@ -524,8 +536,9 @@ export const projectsData: Project[] = [
     category: "E-commerce & Home Center",
     categories: ["parcerias", "ecommerce"],
     technologies: ["tray"],
-    description: "Mega portal de comércio eletrônico no segmento de materiais de construção, ferramentas e acabamentos, desenvolvido em parceria com a agência Virtualiti.",
-    purpose: "Construído em cooperação com a agência Virtualiti com a intenção de digitalizar o catálogo tradicional de um home center de grande porte, permitindo tanto ao consumidor final quanto ao profissional da construção comprar materiais com agilidade e entrega programada.",
+    description: "Mega portal de materiais de construção, ferramentas e acabamentos, integrando o estoque físico da loja ao comércio eletrônico.",
+    purpose: "Construído em parceria com a agência Virtualiti, o objetivo foi levar a conveniência do grande home center para o digital. A plataforma permite tanto ao morador comprar uma ferramenta ou torneira com entrega expressa, quanto ao mestre de obras cotar e encomendar materiais pesados direto para a obra.",
+    detailedDescription: "Com milhares de produtos cadastrados na plataforma Tray, a estrutura conta com busca preditiva inteligente que corrige erros de digitação e filtros por departamentos. As páginas incluem fichas técnicas completas e sugestão de itens complementares essenciais (como argamassa para pisos), aumentando o ticket médio dos pedidos.",
     features: [
       "Catálogo expansivo com milhares de SKUs divididos em departamentos e categorias",
       "Sistema de busca inteligente com autocompletar e tolerância a erros de digitação",

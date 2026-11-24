@@ -231,7 +231,7 @@ export default async function ProjectDetailPage({ params }: Props) {
             <div className="mt-6 space-y-4 text-[15px] sm:text-[16px] text-neutral-600 leading-relaxed">
               {project.purpose ? (
                 <p className="leading-relaxed">
-                  <strong>Objetivo Estratégico:</strong> {project.purpose}
+                  <strong>Propósito da Página:</strong> {project.purpose}
                 </p>
               ) : null}
               {project.detailedDescription ? (
