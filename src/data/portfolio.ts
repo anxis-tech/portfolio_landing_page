@@ -177,7 +177,7 @@ export const projectsData: Project[] = [
     title: "Sistema CRM & Gestão Empresarial",
     slug: "sistema-crm",
     category: "Sistemas Web & CRM",
-    categories: ["sistemas", "chatbots"],
+    categories: ["sistemas"],
     technologies: ["nextjs", "react", "node", "supabase", "whatsapp-business"],
     description: "Painel sob medida feito para o time comercial parar de se perder em planilhas, organizar negociações no funil e atender leads no WhatsApp com agilidade.",
     purpose: "A intenção deste sistema foi acabar com o retrabalho comercial. Antes, as conversas ficavam soltas em vários aparelhos e os dados em planilhas desatualizadas. O CRM centralizou tudo em uma esteira visual clara (Kanban), alertando o vendedor para responder na hora e dando ao gestor previsibilidade real de faturamento.",
@@ -197,6 +197,39 @@ export const projectsData: Project[] = [
     client: "Anxis",
     type: "Sistema Web / SaaS CRM",
     recent: false,
+    featured: true,
+  },
+
+  {
+    id: "anxis-copilot",
+    title: "ANXIS Copilot",
+    slug: "anxis-copilot",
+    category: "Chatbots & Inteligência Artificial",
+    categories: ["chatbots"],
+    technologies: ["chatbots", "nextjs", "react", "node", "supabase"],
+    description: "Assistente inteligente integrado ao ecossistema do CRM da ANXIS, permitindo consultas instantâneas em linguagem natural sobre projetos, leads, contratos e métricas.",
+    purpose: "A intenção do Copilot foi dar aos gestores e à equipe comercial uma forma imediata de consultar dados complexos do CRM sem precisar navegar por múltiplos menus ou filtros. Com uma simples pergunta no chat, ele cruza informações operacionais, pipeline e financeiro em segundos.",
+    detailedDescription: "Desenvolvido como uma interface de conversa fluida e moderna com tema dark, o ANXIS Copilot interpreta dúvidas do dia a dia sobre o quadro Kanban, leads em prospecção, histórico de conversas do WhatsApp, orçamentos e auditoria. O assistente foi desenhado estritamente para consulta e análise segura, garantindo integridade dos dados e agilizando tomadas de decisão internas.",
+    features: [
+      "Processamento de linguagem natural para consulta ágil de tarefas e projetos no Kanban",
+      "Varredura em tempo real de leads comerciais, oportunidades e status de prospecção",
+      "Consulta e resumo de conversas e mensagens de atendimento via WhatsApp",
+      "Verificação de orçamentos, tabelas de precificação e regras de comissionamento",
+      "Visão consolidada de cobranças financeiras, contratos e notas fiscais",
+      "Interface conversacional moderna com atalhos de teclado (⌘K), ditado por voz e tema dark"
+    ],
+    gallery: [
+      "/projects/anxis-copilot-01.webp",
+      "/projects/anxis-copilot-02.webp",
+      "/projects/anxis-copilot-03.webp"
+    ],
+    image: "/projects/anxis-copilot.webp",
+    fullPageImage: "/projects/anxis-copilot.webp",
+    link: "https://anxis.com.br",
+    year: "2026",
+    client: "ANXIS",
+    type: "Chatbot & IA Conversacional",
+    recent: true,
     featured: true,
   },
 
