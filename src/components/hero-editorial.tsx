@@ -107,11 +107,11 @@ export function HeroEditorial() {
             </h1>
 
             <p className="font-serif-editorial text-base sm:text-lg lg:text-[19px] leading-[1.3] text-neutral-800 tracking-[-0.015em] font-normal">
-              Desenvolvedor e <span className="italic font-medium text-neutral-950">UI/UX Designer</span> criando experiências digitais funcionais, estratégicas e visualmente refinadas.
+              Desenvolvedor e <span className="italic font-medium text-neutral-950">UI/UX Designer</span> construindo ferramentas que geram resultados para seu negócio ou serviço.
             </p>
 
             <p className="mt-2.5 text-[13.5px] sm:text-[14px] text-neutral-500 leading-relaxed">
-              Sites, landing pages e sistemas sob medida que transmitem confiança e transformam visitantes em clientes, para marcas, criadores e agências.
+              Sites, landing pages e sistemas sob medida para gerar mais resultados de vendas, captação de leads, gerenciamento e otimização do seu fluxo de trabalho.
             </p>
 
             {/* 3. Linha do CTA + Widget 99Freelas ao Lado (Sem fundo/borda, avatares abaixo do texto, 1 estrela no 5.0) */}

@@ -76,7 +76,7 @@ export const profileData: ProfileInfo = {
   role: "Desenvolvedor & UI/UX Designer",
   headlinePrefix: "Olá, eu sou",
   headlineHighlight: "UI/UX Designer & Desenvolvedor",
-  headlineSuffix: "criando experiências digitais funcionais, estratégicas e visualmente refinadas.",
+  headlineSuffix: "construindo ferramentas que geram resultados para seu negócio ou serviço.",
   statusBadge: "Vamos conversar",
   availabilityText: "Disponível para novos projetos",
   bio: "Atuo na intersecção entre design de interface e engenharia front-end, desenvolvendo plataformas, landing pages e produtos digitais autorais de alto impacto visual e desempenho.",
