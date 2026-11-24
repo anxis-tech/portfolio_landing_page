@@ -52,17 +52,15 @@ export function ProjectGalleryViewer({
       }
     });
 
-  // Preenchemos com placeholders pontilhados somente se o projeto tiver galeria configurada
-  if (galleryImages.length > 0) {
-    const totalSlotsNeeded = Math.max(5, items.length);
-    for (let i = items.length; i < totalSlotsNeeded; i++) {
-      items.push({
-        id: `placeholder-${i}`,
-        src: "",
-        title: `Prévia em breve (${i + 1})`,
-        isPlaceholder: true,
-      });
-    }
+  // Preenchemos sempre até o mínimo de 5 slots (com placeholders quando faltar)
+  const totalSlotsNeeded = Math.max(5, items.length);
+  for (let i = items.length; i < totalSlotsNeeded; i++) {
+    items.push({
+      id: `placeholder-${i}`,
+      src: "",
+      title: `Prévia em breve (${i + 1})`,
+      isPlaceholder: true,
+    });
   }
 
   // Estado da imagem ativa em exibição (1ª imagem sempre selecionada inicialmente)
@@ -176,7 +174,6 @@ export function ProjectGalleryViewer({
       {/* =========================================================================
           THUMBNAILS SECUNDÁRIAS (5 NO DESKTOP ADAPTADAS PONTA A PONTA / CARROSSEL SE > 5)
          ========================================================================= */}
-      {galleryImages.length > 0 && (
       <div className="relative w-full">
         {/* Controles de navegação para carrossel (quando > 5) */}
         {isMoreThanFive && (
@@ -268,7 +265,6 @@ export function ProjectGalleryViewer({
           })}
         </div>
       </div>
-      )}
 
       {/* =========================================================================
           MODAL DE ZOOM / LIGHTBOX EXPANDIDO EM TELA CHEIA
