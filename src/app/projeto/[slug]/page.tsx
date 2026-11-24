@@ -94,12 +94,7 @@ export default async function ProjectDetailPage({ params }: Props) {
             <span>Voltar aos projetos</span>
           </Link>
 
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-[#d8ff7c] border border-black/20" />
-            <span className="text-[11px] font-semibold tracking-wider uppercase text-neutral-400 font-mono">
-              Case Study
-            </span>
-          </div>
+
         </div>
 
         {/* =========================================================================
