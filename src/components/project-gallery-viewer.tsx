@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import { createPortal } from "react-dom";
 import { ZoomIn, X, ChevronLeft, ChevronRight, Eye } from "lucide-react";
 
@@ -14,7 +14,7 @@ export interface GalleryItem {
 interface ProjectGalleryViewerProps {
   projectTitle: string;
   mainImageSrc: string;
-  previewSrc?: string; // Mantido para compatibilidade, ignorado se for preview de baixa resolução
+  previewSrc?: string;
   galleryImages?: string[];
   dimensions?: { width: number; height: number };
 }
@@ -27,43 +27,47 @@ export function ProjectGalleryViewer({
   dimensions,
 }: ProjectGalleryViewerProps) {
   // Construímos a lista de thumbnails (mínimo de 5 itens preenchidos)
-  // A 1ª imagem é SEMPRE a imagem principal em altíssima definição (já selecionada por padrão)
-  const items: GalleryItem[] = [];
+  // A 1ª imagem é SEMPRE a imagem principal em altíssima definição
+  const items: GalleryItem[] = useMemo(() => {
+    const list: GalleryItem[] = [
+      {
+        id: "main-0",
+        src: mainImageSrc,
+        title: `${projectTitle} - Visão Principal`,
+        isPlaceholder: false,
+      },
+    ];
 
-  // Item 1: Imagem principal / tela completa em alta definição
-  items.push({
-    id: "main-0",
-    src: mainImageSrc,
-    title: `${projectTitle} - Visão Principal`,
-    isPlaceholder: false,
-  });
+    galleryImages
+      .filter((img) => img && typeof img === "string" && !img.includes("/previews/"))
+      .forEach((img, idx) => {
+        if (!list.some((it) => it.src === img)) {
+          list.push({
+            id: `gallery-${idx}`,
+            src: img,
+            title: `${projectTitle} - Vista Adicional ${idx + 1}`,
+            isPlaceholder: false,
+          });
+        }
+      });
 
-  // Itens da galeria do projeto (apenas imagens de alta resolução; filtramos qualquer preview de baixa qualidade)
-  galleryImages
-    .filter((img) => img && typeof img === "string" && !img.includes("/previews/"))
-    .forEach((img, idx) => {
-      if (!items.some((it) => it.src === img)) {
-        items.push({
-          id: `gallery-${idx}`,
-          src: img,
-          title: `${projectTitle} - Vista Adicional ${idx + 1}`,
-          isPlaceholder: false,
-        });
-      }
-    });
+    const totalSlotsNeeded = Math.max(5, list.length);
+    for (let i = list.length; i < totalSlotsNeeded; i++) {
+      list.push({
+        id: `placeholder-${i}`,
+        src: "",
+        title: `Prévia em breve (${i + 1})`,
+        isPlaceholder: true,
+      });
+    }
 
-  // Preenchemos sempre até o mínimo de 5 slots (com placeholders quando faltar)
-  const totalSlotsNeeded = Math.max(5, items.length);
-  for (let i = items.length; i < totalSlotsNeeded; i++) {
-    items.push({
-      id: `placeholder-${i}`,
-      src: "",
-      title: `Prévia em breve (${i + 1})`,
-      isPlaceholder: true,
-    });
-  }
+    return list;
+  }, [projectTitle, mainImageSrc, galleryImages]);
 
-  // Estado da imagem ativa em exibição (1ª imagem sempre selecionada inicialmente)
+  // Apenas as imagens reais (não placeholders) para navegação no zoom
+  const realItems = useMemo(() => items.filter((it) => !it.isPlaceholder), [items]);
+
+  // Estado da imagem ativa em exibição
   const [activeIndex, setActiveIndex] = useState(0);
   const activeItem = items[activeIndex] || items[0];
   const activeSrc = activeItem.isPlaceholder ? mainImageSrc : activeItem.src;
@@ -73,8 +77,6 @@ export function ProjectGalleryViewer({
     setMounted(true);
   }, []);
 
-  // Detecta se a imagem ativa é formato de capa (horizontal/landscape)
-  // Aplica para CRM, DrexGames Admin e qualquer capa de projeto (ex: felipe_bezerril_cover, erika_vieira_cover, riosmed_cover, etc.)
   const [isLandscape, setIsLandscape] = useState(false);
 
   useEffect(() => {
@@ -92,7 +94,7 @@ export function ProjectGalleryViewer({
   // Estado do Modal de Zoom / Lightbox
   const [isZoomOpen, setIsZoomOpen] = useState(false);
 
-  // Controle de scroll do carrossel quando houver mais de 5 itens
+  // Controle de scroll do carrossel de miniaturas
   const carouselRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
@@ -118,46 +120,107 @@ export function ProjectGalleryViewer({
     }
   };
 
-  // Fechar zoom com tecla Escape
+  // Funções de navegação anterior/próximo
+  const handlePrev = useCallback((e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    if (realItems.length <= 1) return;
+    setActiveIndex((current) => {
+      const currentRealIdx = realItems.findIndex((it) => it.id === items[current]?.id);
+      const nextRealIdx = currentRealIdx > 0 ? currentRealIdx - 1 : realItems.length - 1;
+      return items.findIndex((it) => it.id === realItems[nextRealIdx]?.id);
+    });
+  }, [realItems, items]);
+
+  const handleNext = useCallback((e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    if (realItems.length <= 1) return;
+    setActiveIndex((current) => {
+      const currentRealIdx = realItems.findIndex((it) => it.id === items[current]?.id);
+      const nextRealIdx = currentRealIdx < realItems.length - 1 ? currentRealIdx + 1 : 0;
+      return items.findIndex((it) => it.id === realItems[nextRealIdx]?.id);
+    });
+  }, [realItems, items]);
+
+  // Teclado: Escape para fechar zoom, Setas Esquerda/Direita para trocar imagem
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setIsZoomOpen(false);
+      if (e.key === "Escape") {
+        setIsZoomOpen(false);
+      } else if (realItems.length > 1) {
+        if (e.key === "ArrowLeft") {
+          e.preventDefault();
+          handlePrev();
+        } else if (e.key === "ArrowRight") {
+          e.preventDefault();
+          handleNext();
+        }
+      }
     };
+
+    window.addEventListener("keydown", handleKeyDown);
     if (isZoomOpen) {
-      window.addEventListener("keydown", handleKeyDown);
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "";
     }
+
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
       document.body.style.overflow = "";
     };
-  }, [isZoomOpen]);
+  }, [isZoomOpen, realItems.length, handlePrev, handleNext]);
 
   const isMoreThanFive = items.length > 5;
+  const hasMultipleRealItems = realItems.length > 1;
 
   return (
-    <div className="flex flex-col gap-3.5 w-full">
+    <div className="flex flex-col gap-4 w-full select-none">
       {/* =========================================================================
-          IMAGEM PRINCIPAL ATIVA COM ALTURA FIXA E CONSISTENTE (H-540PX NO DESKTOP)
-          Se a imagem for mais longa, cria a rolagem vertical suave internamente.
-          Renderização em 100% da resolução nativa sem compressão ou degradação.
+          IMAGEM PRINCIPAL ATIVA (COM SCROLL VERTICAL SUAVE E SUPORTE A CARROSSEL)
          ========================================================================= */}
-      <div className="relative w-full h-[400px] sm:h-[480px] lg:h-[540px] rounded-2xl sm:rounded-3xl overflow-hidden bg-white border border-neutral-200/90 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.06),0_1px_3px_rgba(0,0,0,0.03)] group flex flex-col">
-        
-        {/* Botão de Dica de Zoom Flutuante */}
-        <button
-          type="button"
-          onClick={() => setIsZoomOpen(true)}
-          className="absolute top-3.5 right-3.5 z-20 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-neutral-950/80 hover:bg-neutral-950 text-white backdrop-blur-md text-[11px] font-mono font-medium shadow-md transition-all duration-200 hover:scale-105 active:scale-95 cursor-pointer"
-          title="Clique para ampliar em tela cheia"
-        >
-          <ZoomIn size={13} className="text-[#d8ff7c]" />
-          <span className="hidden sm:inline">Ampliar</span>
-        </button>
+      <div className="group relative w-full aspect-[16/10] sm:aspect-[16/10] bg-neutral-100 rounded-2xl sm:rounded-3xl overflow-hidden border border-neutral-200/90 shadow-[0_2px_12px_rgba(0,0,0,0.04)]">
+        {/* Badge flutuante de Zoom no topo direito */}
+        <div className="absolute top-3 right-3 z-20 pointer-events-none transition-opacity duration-300 opacity-90 group-hover:opacity-100">
+          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-neutral-900/85 backdrop-blur-md text-white text-[11px] font-medium shadow-md border border-white/10">
+            <ZoomIn size={12} className="text-[#d8ff7c]" />
+            <span>Expandir</span>
+          </span>
+        </div>
 
-        {/* Contêiner com altura 100% fixa e preenchimento total */}
+        {/* Indicador de posição do carrossel no topo esquerdo (quando houver > 1 imagem) */}
+        {hasMultipleRealItems && (
+          <div className="absolute top-3 left-3 z-20 pointer-events-none transition-opacity duration-300 opacity-90 group-hover:opacity-100">
+            <span className="inline-flex items-center px-2.5 py-1 rounded-full bg-neutral-900/85 backdrop-blur-md text-white text-[11px] font-mono font-medium shadow-md border border-white/10">
+              {realItems.findIndex((it) => it.id === activeItem.id) + 1} / {realItems.length}
+            </span>
+          </div>
+        )}
+
+        {/* Setas flutuantes de navegação anterior/próxima na imagem principal */}
+        {hasMultipleRealItems && (
+          <>
+            <button
+              type="button"
+              onClick={handlePrev}
+              className="absolute left-3 top-1/2 -translate-y-1/2 z-20 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-neutral-900/80 hover:bg-neutral-900 text-white backdrop-blur-md border border-white/20 shadow-lg flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 hover:scale-105 active:scale-95 cursor-pointer"
+              aria-label="Imagem anterior"
+              title="Imagem anterior (Seta esquerda)"
+            >
+              <ChevronLeft size={20} />
+            </button>
+            <button
+              type="button"
+              onClick={handleNext}
+              className="absolute right-3 top-1/2 -translate-y-1/2 z-20 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-neutral-900/80 hover:bg-neutral-900 text-white backdrop-blur-md border border-white/20 shadow-lg flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 hover:scale-105 active:scale-95 cursor-pointer"
+              aria-label="Próxima imagem"
+              title="Próxima imagem (Seta direita)"
+            >
+              <ChevronRight size={20} />
+            </button>
+          </>
+        )}
+
+        {/* Área clicável da imagem para abrir o Lightbox ampliado */}
         <div
           role="button"
           tabIndex={0}
@@ -174,6 +237,7 @@ export function ProjectGalleryViewer({
           title="Clique para abrir ampliação em tela cheia"
         >
           <img
+            key={activeSrc}
             src={activeSrc}
             alt={activeItem.title || projectTitle}
             onLoad={(e) => {
@@ -203,7 +267,6 @@ export function ProjectGalleryViewer({
           THUMBNAILS SECUNDÁRIAS (5 NO DESKTOP ADAPTADAS PONTA A PONTA / CARROSSEL SE > 5)
          ========================================================================= */}
       <div className="relative w-full">
-        {/* Controles de navegação para carrossel (quando > 5) */}
         {isMoreThanFive && (
           <>
             <button
@@ -231,7 +294,6 @@ export function ProjectGalleryViewer({
           </>
         )}
 
-        {/* Grade de 5 Thumbs ou Carrossel com Scroll Horizontal */}
         <div
           ref={carouselRef}
           onScroll={checkScroll}
@@ -284,7 +346,6 @@ export function ProjectGalleryViewer({
                   loading="lazy"
                 />
 
-                {/* Indicador de ativação sutil */}
                 {isActive && (
                   <span className="absolute bottom-1 right-1 w-2 h-2 rounded-full bg-[#d8ff7c] border border-black/30 shadow-xs" />
                 )}
@@ -295,11 +356,11 @@ export function ProjectGalleryViewer({
       </div>
 
       {/* =========================================================================
-          MODAL DE ZOOM / LIGHTBOX EXPANDIDO EM TELA CHEIA (PORTAL PARA O BODY)
+          MODAL DE ZOOM / LIGHTBOX EXPANDIDO EM TELA CHEIA (COM NAVEGAÇÃO DE CARROSSEL)
          ========================================================================= */}
       {isZoomOpen && mounted && createPortal(
         <div
-          className="fixed inset-0 z-[10000] flex items-center justify-center p-3 sm:p-6 bg-neutral-950/85 backdrop-blur-md transition-all animate-in fade-in duration-200"
+          className="fixed inset-0 z-[10000] flex items-center justify-center p-3 sm:p-6 bg-neutral-950/90 backdrop-blur-md transition-all animate-in fade-in duration-200"
           onClick={() => setIsZoomOpen(false)}
         >
           {/* Header Flutuante do Modal de Zoom */}
@@ -307,15 +368,20 @@ export function ProjectGalleryViewer({
             className="absolute top-4 left-4 right-4 flex items-center justify-between z-30 max-w-6xl mx-auto"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center gap-2 bg-neutral-900/90 text-white px-3.5 py-1.5 rounded-full text-xs font-mono backdrop-blur-md border border-white/10 shadow-lg">
+            <div className="flex items-center gap-2.5 bg-neutral-900/95 text-white px-3.5 py-1.5 rounded-full text-xs font-mono backdrop-blur-md border border-white/10 shadow-lg">
               <span className="w-2 h-2 rounded-full bg-[#d8ff7c]" />
               <span className="truncate max-w-xs sm:max-w-md">{activeItem.title || projectTitle}</span>
+              {hasMultipleRealItems && (
+                <span className="px-2 py-0.5 rounded-md bg-white/10 text-[10.5px] font-mono text-neutral-300">
+                  {realItems.findIndex((it) => it.id === activeItem.id) + 1} / {realItems.length}
+                </span>
+              )}
             </div>
 
             <button
               type="button"
               onClick={() => setIsZoomOpen(false)}
-              className="w-9 h-9 rounded-full bg-neutral-900/90 hover:bg-neutral-800 text-white border border-white/10 flex items-center justify-center transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-lg"
+              className="w-9 h-9 rounded-full bg-neutral-900/95 hover:bg-neutral-800 text-white border border-white/10 flex items-center justify-center transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-lg"
               aria-label="Fechar visualização (Esc)"
               title="Fechar visualização (Esc)"
             >
@@ -323,12 +389,37 @@ export function ProjectGalleryViewer({
             </button>
           </div>
 
+          {/* Setas flutuantes no Lightbox de Zoom (quando houver > 1 imagem) */}
+          {hasMultipleRealItems && (
+            <>
+              <button
+                type="button"
+                onClick={handlePrev}
+                className="absolute left-4 sm:left-8 top-1/2 -translate-y-1/2 z-40 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-neutral-900/90 hover:bg-neutral-900 text-white backdrop-blur-md border border-white/20 shadow-2xl flex items-center justify-center transition-all hover:scale-110 active:scale-95 cursor-pointer"
+                aria-label="Imagem anterior"
+                title="Imagem anterior (Seta esquerda)"
+              >
+                <ChevronLeft size={24} />
+              </button>
+              <button
+                type="button"
+                onClick={handleNext}
+                className="absolute right-4 sm:right-8 top-1/2 -translate-y-1/2 z-40 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-neutral-900/90 hover:bg-neutral-900 text-white backdrop-blur-md border border-white/20 shadow-2xl flex items-center justify-center transition-all hover:scale-110 active:scale-95 cursor-pointer"
+                aria-label="Próxima imagem"
+                title="Próxima imagem (Seta direita)"
+              >
+                <ChevronRight size={24} />
+              </button>
+            </>
+          )}
+
           {/* Janela de Visualização Ampliada com Scroll Vertical Fluido */}
           <div
             className="relative max-w-5xl w-full max-h-[90vh] bg-neutral-900 rounded-2xl overflow-y-auto overscroll-contain shadow-2xl border border-white/10 no-scrollbar"
             onClick={(e) => e.stopPropagation()}
           >
             <img
+              key={activeSrc}
               src={activeSrc}
               alt={activeItem.title || projectTitle}
               className="w-full h-auto block select-none"
