@@ -229,44 +229,60 @@ export default async function ProjectDetailPage({ params }: Props) {
             </h2>
 
             <div className="mt-6 space-y-4 text-[15px] sm:text-[16px] text-neutral-600 leading-relaxed">
+              {project.purpose ? (
+                <p className="leading-relaxed">
+                  <strong>Objetivo Estratégico:</strong> {project.purpose}
+                </p>
+              ) : null}
               {project.detailedDescription ? (
                 <p className="whitespace-pre-line">{project.detailedDescription}</p>
               ) : (
-                <>
-                  <p>
-                    O projeto <strong>{project.title}</strong> foi planejado e construído com foco prioritário em aliar uma estética visual limpa e autoral à alta performance de carregamento, responsividade e jornada de conversão.
-                  </p>
-                  <p>
-                    Cada elemento gráfico, espaçamento e hierarquia tipográfica foram desenhados para transmitir credibilidade imediata ao visitante, enquanto a arquitetura técnica foi desenvolvida com padrões modernos de código, garantindo máxima estabilidade e facilidade de manutenção a longo prazo.
-                  </p>
-                </>
+                <p>
+                  O projeto <strong>{project.title}</strong> foi planejado e construído com foco prioritário em aliar uma estética visual limpa e autoral à alta performance de carregamento, responsividade e jornada de conversão. Cada elemento gráfico, espaçamento e hierarquia tipográfica foram desenhados para transmitir credibilidade imediata ao visitante.
+                </p>
               )}
             </div>
 
-            {/* Destaques / Principais Entregas */}
-            <div className="mt-8 pt-8 border-t border-neutral-200/80">
-              <span className="text-xs font-mono font-semibold uppercase tracking-wider text-neutral-500 block mb-4">
-                Destaques & Diferenciais do Desenvolvimento
-              </span>
-              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm text-neutral-700">
-                <li className="flex items-start gap-2.5">
-                  <Sparkles size={16} className="text-[#84cc16] shrink-0 mt-0.5" />
-                  <span>Design exclusivo desenhado sob medida para o posicionamento da marca.</span>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <Sparkles size={16} className="text-[#84cc16] shrink-0 mt-0.5" />
-                  <span>Otimização para velocidade máxima de abertura (Core Web Vitals).</span>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <Sparkles size={16} className="text-[#84cc16] shrink-0 mt-0.5" />
-                  <span>Adaptação 100% responsiva para smartphones, tablets e telas retina.</span>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <Sparkles size={16} className="text-[#84cc16] shrink-0 mt-0.5" />
-                  <span>Estrutura de código semântico e SEO técnico para mecanismos de busca.</span>
-                </li>
-              </ul>
-            </div>
+            {/* Funcionalidades Implementadas */}
+            {project.features && project.features.length > 0 ? (
+              <div className="mt-8 pt-8 border-t border-neutral-200/80">
+                <span className="text-xs font-mono font-semibold uppercase tracking-wider text-neutral-500 block mb-4">
+                  Principais Funcionalidades Implementadas
+                </span>
+                <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm text-neutral-700">
+                  {project.features.map((feat, idx) => (
+                    <li key={idx} className="flex items-start gap-2.5">
+                      <Sparkles size={16} className="text-[#84cc16] shrink-0 mt-0.5" />
+                      <span>{feat}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : (
+              <div className="mt-8 pt-8 border-t border-neutral-200/80">
+                <span className="text-xs font-mono font-semibold uppercase tracking-wider text-neutral-500 block mb-4">
+                  Destaques & Diferenciais do Desenvolvimento
+                </span>
+                <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm text-neutral-700">
+                  <li className="flex items-start gap-2.5">
+                    <Sparkles size={16} className="text-[#84cc16] shrink-0 mt-0.5" />
+                    <span>Design exclusivo desenhado sob medida para o posicionamento da marca.</span>
+                  </li>
+                  <li className="flex items-start gap-2.5">
+                    <Sparkles size={16} className="text-[#84cc16] shrink-0 mt-0.5" />
+                    <span>Otimização para velocidade máxima de abertura (Core Web Vitals).</span>
+                  </li>
+                  <li className="flex items-start gap-2.5">
+                    <Sparkles size={16} className="text-[#84cc16] shrink-0 mt-0.5" />
+                    <span>Adaptação 100% responsiva para smartphones, tablets e telas retina.</span>
+                  </li>
+                  <li className="flex items-start gap-2.5">
+                    <Sparkles size={16} className="text-[#84cc16] shrink-0 mt-0.5" />
+                    <span>Estrutura de código semântico e SEO técnico para mecanismos de busca.</span>
+                  </li>
+                </ul>
+              </div>
+            )}
           </div>
         </div>
 

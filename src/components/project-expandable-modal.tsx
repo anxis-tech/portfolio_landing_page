@@ -296,6 +296,36 @@ export function ProjectExpandableModal({
                 </p>
               </div>
 
+              {/* Intenção Estratégica do Projeto */}
+              {project.purpose && (
+                <div className="p-3.5 rounded-xl bg-neutral-50/90 border border-neutral-200/80">
+                  <span className="text-[11px] font-mono text-neutral-500 uppercase tracking-wider block mb-1 font-semibold flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#d8ff7c] border border-black/20" />
+                    <span>Objetivo & Intenção</span>
+                  </span>
+                  <p className="text-xs text-neutral-600 leading-relaxed">
+                    {project.purpose}
+                  </p>
+                </div>
+              )}
+
+              {/* Lista de Principais Funcionalidades Implementadas */}
+              {project.features && project.features.length > 0 && (
+                <div>
+                  <span className="text-[11px] font-mono text-neutral-500 uppercase tracking-wider block mb-2 font-semibold">
+                    Principais Funcionalidades
+                  </span>
+                  <ul className="space-y-1.5">
+                    {project.features.map((feat, idx) => (
+                      <li key={idx} className="flex items-start gap-2 text-xs text-neutral-700 leading-snug">
+                        <span className="w-1.5 h-1.5 rounded-full bg-neutral-950 mt-1.5 shrink-0" />
+                        <span>{feat}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
               {/* Parceria com Agência se existir */}
               {project.agencyLogo && (
                 <div className="p-3.5 rounded-xl bg-neutral-50 border border-neutral-200/80">
