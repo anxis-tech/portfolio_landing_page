@@ -2,7 +2,6 @@ import React from "react";
 import { HeaderPill } from "@/components/header-pill";
 import { HeroEditorial } from "@/components/hero-editorial";
 import { RecentProjects } from "@/components/recent-projects";
-import { SystemsShowcase } from "@/components/systems-showcase";
 import { AgencyCarousel } from "@/components/agency-carousel";
 import { IntegrationsShowcase } from "@/components/integrations-showcase";
 import { FooterEditorial } from "@/components/footer-editorial";
@@ -27,27 +26,26 @@ export default function Home() {
       {/* 1. Navegação Flutuante em Cápsula (Pill Navigation) */}
       <HeaderPill />
 
+      {/* Hero Autoral com Vitrine Bleeding na Direita */}
+      <div className="w-full relative overflow-x-clip" style={{ zIndex: 1 }}>
+        <HeroEditorial />
+      </div>
+
       {/* 
-        2. Coluna Central Fluida e Orgânica (Sem caixas ou bordas delimitadoras rígidas)
+        2. Coluna Central Fluida e Orgânica para as demais seções
       */}
       <main className="w-full max-w-6xl mx-auto relative" style={{ zIndex: 1 }}>
-        {/* Hero Autoral com Social Proof, Fundo Interativo e Métricas Sutis */}
-        <HeroEditorial />
-
-        {/* Sites Institucionais, E-commerce e Landing Pages */}
+        {/* Sites Institucionais, Sistemas Web, E-commerce e Landing Pages */}
         <RecentProjects />
+
+        {/* Seção 'Integrações' */}
+        <IntegrationsShowcase />
 
         {/* Serviços orientados a resultado + processo de trabalho */}
         <ServicesProcess />
 
-        {/* Sistemas Web, CRM & Dashboards (Showcase Interativo ao Vivo) */}
-        <SystemsShowcase />
-
         {/* Projetos em Parceria com Agências (Carrossel 2 no desktop / 1 no mobile) */}
         <AgencyCarousel />
-
-        {/* Seção 'Integrações' */}
-        <IntegrationsShowcase />
       </main>
 
       {/* 3. Footer de Alto Contraste Escuro com Mensagem Autoral */}

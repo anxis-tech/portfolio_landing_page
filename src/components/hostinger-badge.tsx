@@ -41,7 +41,7 @@ export function HostingerBadge() {
     return () => observer.disconnect();
   }, [pathname]);
 
-  if (isFramed || (pathname && (pathname.startsWith("/crm") || pathname.startsWith("/drexgames-admin")))) {
+  if (isFramed || (pathname && (pathname.startsWith("/drexgames-admin")))) {
     return null;
   }
 

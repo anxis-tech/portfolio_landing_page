@@ -4,9 +4,9 @@ import React, { useEffect, useState, useRef, useCallback } from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
 import { getProjectImage } from "@/lib/project-image";
-import Link from "next/link";
 import { X, ArrowUpRight, Globe } from "lucide-react";
 import { Project } from "@/data/portfolio";
+import { TechBadge } from "@/components/ui/tech-badge";
 import imageDetails from "@/data/project-images.json";
 
 export interface ProjectModalOrigin {
@@ -154,10 +154,12 @@ export function ProjectExpandableModal({
             <span className="w-2.5 h-2.5 rounded-full bg-red-400/80" />
             <span className="w-2.5 h-2.5 rounded-full bg-amber-400/80" />
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-400/80" />
-            <div className="ml-2 hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-neutral-200/80 text-[11px] font-mono text-neutral-500">
-              <Globe size={11} className="text-neutral-400" />
-              <span className="truncate max-w-[220px]">{project.link.replace(/^https?:\/\//, "")}</span>
-            </div>
+            {!isCrm && project.link && (
+              <div className="ml-2 hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-neutral-200/80 text-[11px] font-mono text-neutral-500">
+                <Globe size={11} className="text-neutral-400" />
+                <span className="truncate max-w-[220px]">{project.link.replace(/^https?:\/\//, "")}</span>
+              </div>
+            )}
           </div>
 
           {/* Lado Direito: Ano do projeto + Botão Fechar em Vermelho Acessível (sem o dot verde) */}
@@ -187,11 +189,13 @@ export function ProjectExpandableModal({
           {/* COLUNA ESQUERDA: VISUALIZADOR DA SCREENSHOT REAL COM SCROLL VERTICAL */}
           <div
             ref={scrollContainerRef}
-            className="relative flex-1 h-full overflow-y-auto bg-neutral-100/70 border-b lg:border-b-0 lg:border-r border-neutral-200/80 overscroll-contain"
+            className={`relative flex-1 h-full bg-neutral-100/70 border-b lg:border-b-0 lg:border-r border-neutral-200/80 ${
+              isCrm ? "overflow-hidden" : "overflow-y-auto overscroll-contain"
+            }`}
             style={{ WebkitOverflowScrolling: "touch" }}
           >
             {/* Keep the already loaded card image scrollable until the full image decodes. */}
-            <div className="relative w-full min-h-full" aria-busy={screenshotStatus === "loading"}>
+            <div className={`relative w-full ${isCrm ? "h-full" : "min-h-full"}`} aria-busy={screenshotStatus === "loading"}>
               <Image
                 src={originRect?.previewSrc || getProjectImage(project, true)}
                 alt=""
@@ -200,7 +204,7 @@ export function ProjectExpandableModal({
                 height={dimensions.height}
                 unoptimized
                 loading="eager"
-                className="w-full h-auto block select-none"
+                className={`block select-none ${isCrm ? "w-full h-full object-cover object-top" : "w-full h-auto"}`}
               />
               <Image
                 src={fullPageSrc}
@@ -212,14 +216,16 @@ export function ProjectExpandableModal({
                 fetchPriority="high"
                 onLoad={() => setScreenshotStatus("ready")}
                 onError={() => setScreenshotStatus("error")}
-                className={`absolute top-0 left-0 w-full h-auto block select-none transition-opacity duration-150 ${
+                className={`absolute top-0 left-0 block select-none transition-opacity duration-150 ${
+                  isCrm ? "w-full h-full object-cover object-top" : "w-full h-auto"
+                } ${
                   screenshotStatus === "ready" ? "opacity-100" : "opacity-0"
                 }`}
               />
             </div>
 
             {/* Dica de rolagem com ícone de mouse no desktop e toque no mobile */}
-            {phase !== "expanding" && (
+            {phase !== "expanding" && !isCrm && (
               <div className="sticky bottom-3.5 inset-x-0 flex justify-center pointer-events-none pb-1 animate-in fade-in duration-500">
                 <span className="px-3.5 py-1.5 rounded-full bg-neutral-900/85 backdrop-blur-md text-white text-[11px] font-medium shadow-lg flex items-center gap-2 border border-white/10">
                   {/* Ícone de Mouse (Desktop) */}
@@ -314,40 +320,35 @@ export function ProjectExpandableModal({
                 </div>
               )}
 
-              {/* Tags de Categorias */}
-              {project.categories && project.categories.length > 0 && (
+              {/* Tecnologias & Integrações */}
+              {project.technologies && project.technologies.length > 0 && (
                 <div>
                   <span className="text-[11px] font-mono text-neutral-400 uppercase tracking-wider block mb-2 font-semibold">
-                    Segmentos
+                    Tecnologias & Integrações
                   </span>
                   <div className="flex flex-wrap gap-1.5">
-                    {project.categories.map((cat) => (
-                      <Link
-                        key={cat}
-                        href={`/projetos/${cat}`}
-                        onClick={handleClose}
-                        className="text-[11px] font-medium text-neutral-600 bg-neutral-100 hover:bg-neutral-200 px-2.5 py-1 rounded-md transition-colors"
-                      >
-                        #{cat}
-                      </Link>
+                    {project.technologies.map((tech) => (
+                      <TechBadge key={tech} techKey={tech} />
                     ))}
                   </div>
                 </div>
               )}
             </div>
 
-            {/* Bloco Inferior: CTA "Ver projeto completo ↗" (Único que direciona para a URL externa) */}
-            <div className="pt-6 mt-6 border-t border-neutral-100">
-              <a
-                href={project.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full inline-flex items-center justify-center gap-2 bg-neutral-950 hover:bg-neutral-800 text-white hover:text-[#d8ff7c] text-[13px] font-semibold tracking-tight py-3.5 px-5 rounded-xl transition-all duration-200 active:scale-98 shadow-sm group cursor-pointer"
-              >
-                <span>Ver projeto completo</span>
-                <ArrowUpRight size={15} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-              </a>
-            </div>
+            {/* Bloco Inferior: CTA "Ver projeto completo ↗" (Oculto para o CRM por solicitação) */}
+            {!isCrm && project.link && (
+              <div className="pt-6 mt-6 border-t border-neutral-100">
+                <a
+                  href={project.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full inline-flex items-center justify-center gap-2 bg-neutral-950 hover:bg-neutral-800 text-white hover:text-[#d8ff7c] text-[13px] font-semibold tracking-tight py-3.5 px-5 rounded-xl transition-all duration-200 active:scale-98 shadow-sm group cursor-pointer"
+                >
+                  <span>Ver projeto completo</span>
+                  <ArrowUpRight size={15} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                </a>
+              </div>
+            )}
           </div>
         </div>
       </div>

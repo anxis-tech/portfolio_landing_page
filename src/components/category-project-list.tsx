@@ -6,6 +6,7 @@ import { getProjectImage } from "@/lib/project-image";
 import { ArrowUpRight } from "lucide-react";
 import { Project } from "@/data/portfolio";
 import { ProjectExpandableModal, type ProjectModalOrigin } from "@/components/project-expandable-modal";
+import { TechBadgeList } from "@/components/ui/tech-badge";
 
 interface CategoryProjectListProps {
   projects: Project[];
@@ -81,6 +82,9 @@ export function CategoryProjectList({ projects }: CategoryProjectListProps) {
             <p className="text-[12px] text-neutral-500 mt-0.5 leading-snug">
               {project.type || project.category}
             </p>
+
+            {/* Tecnologias e Integrações */}
+            <TechBadgeList technologies={project.technologies} />
 
             {/* Parceria com Agência se existir */}
             {project.agencyLogo && (

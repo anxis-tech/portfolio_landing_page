@@ -37,7 +37,7 @@ export function HeaderPill() {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 40);
 
-      const sections = ["inicio", "numeros", "projetos", "sistemas", "parcerias", "integracoes", "sobre"];
+      const sections = ["inicio", "numeros", "projetos", "servicos", "parcerias", "integracoes", "sobre"];
       const current = sections.find((section) => {
         const el = document.getElementById(section);
         if (el) {
@@ -242,16 +242,16 @@ export function HeaderPill() {
             </div>
           </div>
 
-          {/* Link Sistemas */}
+          {/* Link Serviços */}
           <a
-            href="#sistemas"
+            href="#servicos"
             className={`px-3.5 py-1.5 text-[13px] font-medium transition-all duration-200 rounded-full ${
-              activeSection === "sistemas"
+              activeSection === "servicos"
                 ? "bg-neutral-100 text-neutral-900 font-semibold shadow-2xs"
                 : "text-neutral-500 hover:text-neutral-900 hover:bg-neutral-50"
             }`}
           >
-            Sistemas & CRM
+            Serviços
           </a>
 
           {/* Link Parcerias */}

@@ -1,4 +1,12 @@
-import { MOCK_USER_PROFILE, MOCK_TEAM_DIRECTORY, MOCK_CLIENT_PROJECTS, MOCK_SAVED_QUOTES, MOCK_HOME_PROJECTS } from '@/components/admin/mock-crm-data'
+import {
+  MOCK_USER_PROFILE,
+  MOCK_TEAM_DIRECTORY,
+  MOCK_CLIENT_PROJECTS,
+  MOCK_SAVED_QUOTES,
+  MOCK_HOME_PROJECTS,
+  MOCK_CONTRACTS,
+  MOCK_PAYMENTS,
+} from '@/components/admin/mock-crm-data'
 import { TAB_PERMISSION_KEYS } from '@/components/admin/tabs/users-permissions-tab'
 
 export function createClient() {
@@ -27,9 +35,9 @@ export function createClient() {
       } else if (table === 'quotes') {
         currentData = MOCK_SAVED_QUOTES
       } else if (table === 'payments') {
-        currentData = []
+        currentData = MOCK_PAYMENTS
       } else if (table === 'contracts') {
-        currentData = []
+        currentData = MOCK_CONTRACTS
       } else if (table === 'roles') {
         currentData = [
           { id: 'role-1', name: 'Administrador Master', slug: 'admin' },

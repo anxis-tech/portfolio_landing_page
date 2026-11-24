@@ -5,7 +5,7 @@ const baseURL = process.env.PORTFOLIO_URL || 'http://localhost:3100';
 const cases = [
   { path: '/', title: 'Mirele Fabro', image: 'mirele-fabro', width: 1440 },
   { path: '/', title: 'Felipe Torres Black', image: 'felipe-torres-black', width: 390 },
-  { path: '/projetos/landing-pages', title: 'Neves Pádua Advocacia', image: 'neves-padua', width: 1440, titleClick: true },
+  { path: '/projetos/institucional', title: 'Neves Pádua Advocacia', image: 'neves-padua', width: 1440, titleClick: true },
   { path: '/', title: 'Decopisos Revestimentos', image: 'decopisos', width: 1440, fail: true },
 ];
 const browser = await chromium.launch({ channel: 'chrome' });

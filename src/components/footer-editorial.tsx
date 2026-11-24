@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 import { profileData } from "@/data/portfolio";
 
 export function FooterEditorial() {
@@ -24,7 +25,7 @@ export function FooterEditorial() {
           </svg>
         </div>
 
-        {/* Mensagem Editorial Autoral (Idêntica à referência visual) */}
+        {/* Mensagem Editorial Autoral */}
         <p className="font-serif-editorial text-2xl sm:text-3xl text-neutral-200 tracking-tight font-normal">
           {profileData.footerQuote.primary}
         </p>
@@ -32,8 +33,28 @@ export function FooterEditorial() {
           {profileData.footerQuote.secondary}
         </p>
 
+        {/* Badge Oficial Hostinger Partner */}
+        <div className="mt-8 mb-2 flex justify-center">
+          <a
+            href="https://www.hostinger.com/br?REFERRALCODE=anxis20"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Hostinger Partner — Hospedagem de Alta Performance"
+            aria-label="Hostinger Partner — Abrir link em nova guia"
+            className="group relative inline-flex items-center transition-all duration-300 hover:-translate-y-0.5 active:scale-95 drop-shadow-[0_2px_8px_rgba(108,43,237,0.25)] hover:drop-shadow-[0_4px_14px_rgba(108,43,237,0.4)] focus:outline-hidden focus:ring-2 focus:ring-[#6C2BED] focus:ring-offset-2 rounded-[5px]"
+          >
+            <Image
+              src="/badges/hostinger-partner-desktop.png"
+              alt="Hostinger Partner"
+              width={140}
+              height={44}
+              className="h-10 w-auto select-none transition-transform duration-300 group-hover:scale-[1.02]"
+            />
+          </a>
+        </div>
+
         {/* Linha de Copyright e Créditos */}
-        <div className="mt-10 pt-6 border-t border-neutral-900/80 w-full max-w-xs flex flex-col items-center gap-1 text-[11px] font-mono text-neutral-500">
+        <div className="mt-8 pt-6 border-t border-neutral-900/80 w-full max-w-xs flex flex-col items-center gap-1 text-[11px] font-mono text-neutral-500">
           <span>© {currentYear} {profileData.name}</span>
           <span className="text-neutral-400">Trabalhos Selecionados · UI/UX & Código</span>
         </div>

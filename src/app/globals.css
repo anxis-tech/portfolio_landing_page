@@ -559,3 +559,76 @@ body {
   box-shadow: none;
   transform: translateX(22px);
 }
+
+
+/* ===================================================
+   Balão de Mensagem Flutuante 99Freelas
+   =================================================== */
+@keyframes message-balloon-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.7) translateY(8px);
+  }
+  70% {
+    opacity: 1;
+    transform: scale(1.05) translateY(-2px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes message-balloon-float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+.animate-message-balloon {
+  animation: 
+    message-balloon-pop 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards,
+    message-balloon-float 3.2s ease-in-out 0.5s infinite;
+}
+
+
+/* ===================================================
+   Hero 50/50 3-Column Stream Animation (21st.dev style)
+   =================================================== */
+@keyframes hero-stream-up {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-50%);
+  }
+}
+
+@keyframes hero-stream-down {
+  0% {
+    transform: translateY(-50%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.animate-stream-col-1 {
+  animation: hero-stream-up 38s linear infinite;
+  will-change: transform;
+}
+
+.animate-stream-col-2 {
+  animation: hero-stream-down 42s linear infinite;
+  will-change: transform;
+}
+
+.animate-stream-col-3 {
+  animation: hero-stream-up 46s linear infinite;
+  will-change: transform;
+}
+
+/* continuous ambient stream - visual only */

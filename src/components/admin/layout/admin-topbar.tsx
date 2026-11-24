@@ -1,17 +1,12 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
+import { AnimatePresence, motion } from 'motion/react'
 import { cn } from '@/lib/utils'
 import { UserProfileWithRole } from '@/lib/auth/permissions'
-import {
-  Search,
-  Bell,
-  Menu,
-  Command,
-  HelpCircle,
-  ChevronDown,
-  LogOut,
-} from 'lucide-react'
+import { Search, Bell, Menu, ChevronDown, ChevronRight, LogOut } from '@/components/admin/ui/icons'
+export const COPILOT_TOGGLE_EVENT = 'anxis:copilot-toggle';
+export function CopilotAvatar({ className = '' }: { className?: string }) { return <img src='/images/copilot-avatar.png' alt='' aria-hidden className={`shrink-0 bg-[#161616] object-cover ${className}`} /> }
 
 interface AdminTopbarProps {
   sectionTitle?: string
@@ -26,9 +21,15 @@ interface AdminTopbarProps {
   onSearchChange?: (q: string) => void
   onLogout?: () => void
   isDarkMode?: boolean
+  /** Mostra o botão do Copilot ao lado das notificações. */
+  showCopilot?: boolean
 }
 
+const iconButton = 'flex h-8 w-8 items-center justify-center rounded-lg text-crm-subtle transition-colors hover:bg-crm-fg/[0.05] hover:text-crm-fg'
+
 export function AdminTopbar({
+  sectionTitle,
+  pageTitle,
   isSidebarCollapsed,
   onToggleSidebarMobile,
   userProfile,
@@ -36,17 +37,19 @@ export function AdminTopbar({
   searchQuery,
   onSearchChange,
   onLogout,
-  isDarkMode = false,
+  showCopilot = false,
 }: AdminTopbarProps) {
   const [searchValue, setSearchValue] = useState(searchQuery || '')
   const [isProfileOpen, setIsProfileOpen] = useState(false)
   const searchInputRef = useRef<HTMLInputElement>(null)
   const profileDropdownRef = useRef<HTMLDivElement>(null)
 
-  // ⌘K global shortcut listener
+  // "/" focuses the search; ⌘K belongs to the Copilot.
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+      const target = e.target as HTMLElement | null
+      const typing = target?.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(target?.tagName ?? '')
+      if (e.key === '/' && !typing && !e.metaKey && !e.ctrlKey && !e.altKey) {
         e.preventDefault()
         searchInputRef.current?.focus()
       }
@@ -72,163 +75,141 @@ export function AdminTopbar({
     onSearchChange?.(e.target.value)
   }
 
+  const firstName = userProfile?.full_name?.split(' ')[0] || 'Usuário'
+  const initials =
+    (userProfile?.full_name || 'U')
+      .split(' ')
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((part) => part[0])
+      .join('')
+      .toUpperCase() || 'U'
+
   return (
     <header
       className={cn(
-        'h-14 fixed top-0 right-0 z-30 transition-all duration-300 ease-in-out flex items-center justify-between pl-4 md:pl-0 pr-4 sm:pr-6 lg:pr-8 select-none',
-        isDarkMode
-          ? 'bg-[#0B132B] text-slate-200'
-          : 'bg-[#2E3E4F] text-slate-100',
+        'fixed right-0 top-0 z-30 flex h-14 select-none items-center justify-between gap-4 bg-crm-canvas pl-3 pr-3 text-crm-fg transition-[left] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] sm:pr-5 md:pl-2',
         isSidebarCollapsed ? 'left-0 md:left-16' : 'left-0 md:left-60'
       )}
     >
-      {/* LEFT: MOBILE TOGGLE & SEARCH BAR (IN PLACE OF BREADCRUMB) */}
-      <div className="flex items-center gap-3 flex-1 min-w-0 max-w-sm sm:max-w-md">
-        <button
-          type="button"
-          onClick={onToggleSidebarMobile}
-          className={cn(
-            'p-1.5 rounded-lg md:hidden transition-colors cursor-pointer shrink-0',
-            isDarkMode
-              ? 'text-slate-400 hover:text-white hover:bg-slate-800'
-              : 'text-slate-300 hover:text-white hover:bg-[#182331]/60'
-          )}
-          title="Abrir menu lateral"
-        >
+      <div className="flex min-w-0 flex-1 items-center gap-3">
+        <button type="button" onClick={onToggleSidebarMobile} className={cn(iconButton, 'md:hidden')} title="Abrir menu lateral">
           <Menu size={18} />
         </button>
 
-        {/* SEARCH BAR (HUBSPOT STYLE WITH ⌘K) */}
-        <div className="relative w-full">
-          <Search
-            size={14}
-            className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400"
-          />
+        <nav aria-label="Você está em" className="hidden min-w-0 items-center gap-1.5 text-[13px] lg:flex">
+          <span className="truncate text-crm-subtle">{sectionTitle}</span>
+          {pageTitle && pageTitle !== sectionTitle && (
+            <>
+              <ChevronRight size={13} className="shrink-0 text-crm-subtle/70" />
+              <AnimatePresence mode="wait" initial={false}>
+                <motion.span
+                  key={pageTitle}
+                  initial={{ opacity: 0, y: 4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -4 }}
+                  transition={{ duration: 0.18 }}
+                  className="truncate font-medium text-crm-fg"
+                >
+                  {pageTitle}
+                </motion.span>
+              </AnimatePresence>
+            </>
+          )}
+        </nav>
+
+        <div className="relative w-full max-w-sm lg:ml-4">
+          <Search size={15} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-crm-subtle" />
           <input
             ref={searchInputRef}
             type="text"
             value={searchValue}
             onChange={handleSearchChange}
-            placeholder="Buscar no sistema (⌘K)..."
-            className={cn(
-              'w-full h-8 pl-8 pr-12 rounded-lg text-xs transition-all outline-none border',
-              isDarkMode
-                ? 'bg-slate-900/90 border-slate-700/70 text-slate-200 placeholder:text-slate-500 focus:border-slate-500 focus:ring-1 focus:ring-slate-500'
-                : 'bg-[#182331] border-[#182331] text-slate-100 placeholder:text-slate-400 focus:border-[#2E3E4F] focus:ring-1 focus:ring-[#182331]'
-            )}
+            placeholder="Buscar no sistema"
+            className="h-8 w-full rounded-lg border border-crm-border bg-crm-surface pl-9 pr-10 text-[13px] text-crm-fg shadow-xs outline-none placeholder:text-crm-subtle hover:border-crm-border-strong"
             onClick={onSearchClick}
           />
-          <div
-            className={cn(
-              'absolute right-2.5 top-1/2 -translate-y-1/2 hidden sm:flex items-center gap-0.5 pointer-events-none text-[10px] font-mono px-1 py-0.5 rounded border',
-              isDarkMode
-                ? 'text-slate-400 bg-slate-800 border-slate-700'
-                : 'text-slate-300 bg-[#2E3E4F] border-[#243240]'
-            )}
-          >
-            <Command size={10} />
-            <span>K</span>
-          </div>
+          <kbd className="pointer-events-none absolute right-2 top-1/2 hidden h-5 -translate-y-1/2 items-center rounded-md border border-crm-border bg-crm-surface-2 px-1.5 font-[family-name:var(--font-code)] text-[10.5px] text-crm-subtle sm:flex">
+            /
+          </kbd>
         </div>
       </div>
 
-      {/* RIGHT: NOTIFICATIONS, HELP, SUBTLE DIVIDER & USER PROFILE DROPDOWN */}
-      <div className="flex items-center gap-2 shrink-0">
-        {/* NOTIFICATIONS BELL */}
-        <button
-          type="button"
-          className={cn(
-            'relative p-2 rounded-lg transition-colors cursor-pointer',
-            isDarkMode
-              ? 'text-slate-400 hover:text-white hover:bg-slate-800'
-              : 'text-slate-300 hover:text-white hover:bg-[#182331]/60'
-          )}
-          title="Notificações do sistema"
-        >
-          <Bell size={16} />
-          <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-amber-400" />
+      <div className="flex shrink-0 items-center gap-1">
+        {showCopilot && (
+          <button
+            type="button"
+            onClick={() => window.dispatchEvent(new Event(COPILOT_TOGGLE_EVENT))}
+            className="group relative rounded-[10px] bg-gradient-to-r from-[#0a72f0]/70 via-white/15 to-[#0a72f0]/40 p-px shadow-xs transition-shadow hover:shadow-[0_0_10px_-4px_rgba(10,114,240,0.45)]"
+            title="Abrir ANXIS Copilot (⌘K)"
+          >
+            <span className="flex h-[30px] items-center gap-1.5 rounded-[9px] bg-[#111111] pl-1 pr-1 text-[12.5px] font-medium text-white sm:pr-1.5">
+              <CopilotAvatar className="h-6 w-6 rounded-[7px] transition-transform duration-300 group-hover:scale-110" />
+              <span className="hidden sm:inline">
+                Copilot
+              </span>
+              <kbd className="hidden rounded border border-white/10 bg-white/[0.06] px-1 font-mono text-[10px] text-white/50 lg:inline">⌘K</kbd>
+            </span>
+          </button>
+        )}
+        <button type="button" className={iconButton} title="Notificações do sistema">
+          <Bell size={17} />
         </button>
 
-        {/* HELP / ASSISTANT */}
-        <button
-          type="button"
-          className={cn(
-            'p-2 rounded-lg transition-colors hidden sm:inline-flex cursor-pointer',
-            isDarkMode
-              ? 'text-slate-400 hover:text-white hover:bg-slate-800'
-              : 'text-slate-300 hover:text-white hover:bg-[#182331]/60'
-          )}
-          title="Central de Ajuda"
-        >
-          <HelpCircle size={16} />
-        </button>
+        <div className="mx-1.5 h-5 w-px bg-crm-border" />
 
-        {/* SUBTLE VERTICAL DIVIDER */}
-        <div
-          className={cn(
-            'h-5 w-px mx-1',
-            isDarkMode ? 'bg-slate-700/60' : 'bg-white/15'
-          )}
-        />
-
-        {/* USER PROFILE DROPDOWN */}
         <div ref={profileDropdownRef} className="relative">
           <button
             type="button"
             onClick={() => setIsProfileOpen((prev) => !prev)}
-            className={cn(
-              'flex items-center gap-2 p-1 rounded-lg transition-colors cursor-pointer',
-              isDarkMode ? 'hover:bg-slate-800/60' : 'hover:bg-[#182331]/60'
-            )}
+            className="flex items-center gap-2 rounded-lg py-1 pl-1 pr-1.5 transition-colors hover:bg-crm-fg/[0.05]"
             title={userProfile?.full_name || 'Usuário'}
+            aria-expanded={isProfileOpen}
           >
-            <div
-              className={cn(
-                'w-7 h-7 rounded-full text-white flex items-center justify-center font-bold text-xs shadow-sm ring-1',
-                isDarkMode
-                  ? 'bg-slate-800 ring-white/10'
-                  : 'bg-[#182331] ring-white/10'
-              )}
-            >
-              {userProfile?.full_name?.charAt(0) || 'U'}
-            </div>
-            <span className="text-xs font-semibold text-slate-100 hidden xl:inline max-w-[120px] truncate">
-              {userProfile?.full_name?.split(' ')[0] || 'Usuário'}
+            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-crm-primary text-[11px] font-semibold text-white ring-2 ring-crm-surface">
+              {initials}
             </span>
-            <ChevronDown size={12} className={cn('hidden xl:inline', isDarkMode ? 'text-slate-400' : 'text-slate-300')} />
+            <span className="hidden max-w-[120px] truncate text-[13px] font-medium text-crm-fg xl:inline">{firstName}</span>
+            <ChevronDown size={13} className={cn('hidden text-crm-subtle transition-transform xl:inline', isProfileOpen && 'rotate-180')} />
           </button>
 
-          {isProfileOpen && (
-            <div
-              className={cn(
-                'absolute right-0 top-full mt-2 w-52 rounded-xl border shadow-2xl p-2 z-50 text-xs animate-in fade-in-50 zoom-in-95',
-                isDarkMode
-                  ? 'bg-[#161D31] border-slate-700/80 text-slate-200'
-                  : 'bg-[#182331] border-[#2E3E4F] text-slate-100'
-              )}
-            >
-              <div className={cn('px-2 py-1.5 border-b mb-1', isDarkMode ? 'border-slate-800' : 'border-[#2E3E4F]')}>
-                <div className="font-bold text-white truncate">{userProfile?.full_name || 'Usuário'}</div>
-                <div className={cn('text-[10px] capitalize', isDarkMode ? 'text-slate-400' : 'text-slate-300/80')}>
-                  {userProfile?.role_name || userProfile?.role_slug || 'Membro da equipe'}
+          <AnimatePresence>
+            {isProfileOpen && (
+              <motion.div
+                initial={{ opacity: 0, y: -4, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -4, scale: 0.98 }}
+                transition={{ duration: 0.16, ease: [0.22, 1, 0.36, 1] }}
+                className="absolute right-0 top-full z-50 mt-2 w-56 origin-top-right rounded-xl border border-crm-border bg-crm-surface p-1.5 text-[13px] text-crm-fg shadow-xl"
+              >
+                <div className="mb-1 flex items-center gap-2.5 border-b border-crm-border px-2 pb-2.5 pt-1.5">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-crm-primary text-[11.5px] font-semibold text-white">
+                    {initials}
+                  </span>
+                  <span className="min-w-0">
+                    <span className="block truncate font-medium">{userProfile?.full_name || 'Usuário'}</span>
+                    <span className="block truncate text-[11.5px] capitalize text-crm-subtle">
+                      {userProfile?.role_name || userProfile?.role_slug || 'Membro da equipe'}
+                    </span>
+                  </span>
                 </div>
-              </div>
 
-              {onLogout && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsProfileOpen(false)
-                    onLogout()
-                  }}
-                  className="w-full flex items-center gap-2 px-2 py-1.5 rounded-lg text-rose-400 hover:bg-rose-950/40 transition-colors text-left cursor-pointer"
-                >
-                  <LogOut size={14} />
-                  <span>Sair da conta</span>
-                </button>
-              )}
-            </div>
-          )}
+                {onLogout && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsProfileOpen(false)
+                      onLogout()
+                    }}
+                    className="flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left text-rose-600 transition-colors hover:bg-rose-500/10 dark:text-rose-400"
+                  >
+                    <LogOut size={15} />
+                    Sair da conta
+                  </button>
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
     </header>

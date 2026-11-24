@@ -38,6 +38,7 @@ export interface Project {
   slug: string;
   category: string;
   categories: string[]; // Slugs for dynamic category routing
+  technologies?: string[]; // Stack de tecnologias e integrações
   description: string;
   image: string; // Editorial cover image
   fullPageImage?: string; // Full-page real screenshot
@@ -51,6 +52,9 @@ export interface Project {
   recent?: boolean; // Appears in "Projetos recentes"
   agencyProject?: boolean; // Appears in "Projetos em parceria" carousel
   featured?: boolean;
+  gallery?: string[]; // Imagens adicionais do projeto
+  detailedDescription?: string; // Descrição detalhada do projeto para o case study
+  highlights?: string[]; // Principais destaques/entregas
 }
 
 export interface ServiceArea {
@@ -121,6 +125,14 @@ export const categoriesData: ProjectCategory[] = [
     description:
       "Plataformas sob medida, painéis administrativos interativos, CRM de vendas, automação de processos e controle financeiro robusto.",
   },
+  {
+    slug: "chatbots",
+    name: "Chatbots & IA",
+    title: "Chatbots & IA",
+    description:
+      "Automação de atendimento inteligente via WhatsApp, fluxos de conversão automatizados, conciliação de pagamentos e conexões com APIs externas.",
+  },
+
 
   {
     slug: "landing-pages",
@@ -163,33 +175,16 @@ export const projectsData: Project[] = [
     title: "Sistema CRM & Gestão Empresarial",
     slug: "sistema-crm",
     category: "Sistemas Web & CRM",
-    categories: ["sistemas"],
+    categories: ["sistemas", "chatbots"],
+    technologies: ["nextjs", "react", "node", "supabase", "whatsapp-business"],
     description:
       "Painel administrativo corporativo completo com gestão de projetos em Kanban, integração de conversas WhatsApp, calculadora de precificação inteligente, financeiro e controle de permissões RBAC.",
     image: "/projects/logoipsum-crm.webp",
     fullPageImage: "/projects/logoipsum-crm.webp",
-    link: "/crm",
+    link: "https://anxis.com.br",
     year: "2026",
-    client: "Logoipsum Enterprise",
+    client: "Anxis",
     type: "Sistema Web / SaaS CRM",
-    recent: false,
-    featured: true,
-  },
-
-  {
-    id: "drexgames-admin",
-    title: "DrexGames — Painel de Gestão E-commerce",
-    slug: "drexgames-admin",
-    category: "Sistemas Web & ERP",
-    categories: ["sistemas"],
-    description:
-      "Painel administrativo e operacional de e-commerce de games: automação de entrega de chaves digitais, emissão de NF-e via Bling ERP, conciliação Pix/Cartão e controle de estoque de ativação.",
-    image: "/projects/drex-games.webp",
-    fullPageImage: "/projects/drex-games.webp",
-    link: "/drexgames-admin",
-    year: "2026",
-    client: "Drex Games",
-    type: "Painel E-commerce / ERP",
     recent: false,
     featured: true,
   },
@@ -200,6 +195,7 @@ export const projectsData: Project[] = [
     slug: "mirele-fabro",
     category: "Landing Page & Saúde",
     categories: ["landing-pages"],
+    technologies: ["wordpress", "elementor", "whatsapp"],
     description: "Landing page de alto padrão e sensibilidade visual voltada para consultoria em psicologia e desenvolvimento infantil.",
     image: "/projects/mirele-fabro.webp",
     fullPageImage: "/projects/mirele-fabro.webp",
@@ -213,9 +209,11 @@ export const projectsData: Project[] = [
   {
     id: "felipe-bezerril",
     title: "Felipe Bezerril",
+    gallery: ["/projects/felipe_bezerril_cover.webp"],
     slug: "felipe-bezerril",
     category: "Landing Page de Conversão",
     categories: ["landing-pages"],
+    technologies: ["wordpress", "elementor", "whatsapp"],
     description: "Página de conversão humanizada com foco em consultoria jurídica especializada e captação de clientes.",
     image: "/projects/felipe-bezerril.webp",
     fullPageImage: "/projects/felipe-bezerril.webp",
@@ -229,9 +227,11 @@ export const projectsData: Project[] = [
   {
     id: "erika-vieira",
     title: "Erika Vieira",
+    gallery: ["/projects/erika_vieira_cover.webp"],
     slug: "erika-vieira",
     category: "Landing Page & Dermatologia",
     categories: ["landing-pages"],
+    technologies: ["wordpress", "elementor", "whatsapp"],
     description: "Landing page elegante de alta conversão para clínica de dermatologia clínica, cirúrgica e estética com foco em captação de leads.",
     image: "/projects/erika_vieira.webp",
     fullPageImage: "/projects/erika_vieira.webp",
@@ -246,25 +246,28 @@ export const projectsData: Project[] = [
     id: "neves-padua",
     title: "Neves Pádua Advocacia",
     slug: "neves-padua",
-    category: "Landing Page & Advocacia",
-    categories: ["landing-pages", "institucional"],
+    category: "Site Institucional & Advocacia",
+    categories: ["institucional"],
+    technologies: ["wordpress", "elementor", "whatsapp"],
     description: "Plataforma de alta autoridade voltada para Direito Bancário Empresarial, reestruturação de dívidas, defesa em execuções e proteção patrimonial.",
     image: "/projects/neves-padua.webp",
     fullPageImage: "/projects/neves-padua.webp",
     link: "https://nevespaduaadvocacia.com.br/",
     year: "2026",
     client: "Neves Pádua Advocacia",
-    type: "Landing Page & Advocacia",
+    type: "Site Institucional & Advocacia",
     recent: true,
     featured: true,
   },
   {
     id: "drex-games",
     title: "Drex Games",
+    gallery: ["/projects/drexgames-admin.webp", "/projects/games-drex.webp"],
     slug: "drex-games",
     category: "E-commerce & Plataforma Gamer",
     categories: ["ecommerce"],
-    description: "Loja virtual especializada em jogos digitais para PC, com catálogo dinâmico, checkout ágil via PIX ou cartão e experiência focada no público gamer.",
+    technologies: ["nextjs", "react", "node", "pix"],
+    description: "Plataforma de e-commerce gamer moderna desenvolvida com arquitetura de alta performance, catálogo dinâmico, checkout ágil via PIX ou cartão e entrega automatizada.",
     image: "/projects/drex-games.webp",
     fullPageImage: "/projects/drex-games.webp",
     link: "https://drexgames.com/",
@@ -275,11 +278,29 @@ export const projectsData: Project[] = [
     featured: true,
   },
   {
+    id: "games-drex",
+    title: "GamesDrex",
+    slug: "games-drex",
+    category: "E-commerce & Games",
+    categories: ["ecommerce"],
+    technologies: ["wordpress", "woocommerce", "elementor", "pix"],
+    description: "Loja virtual especializada em jogos digitais para PC e consoles mais baratos, catálogo com busca rápida, checkout transparente PIX e entrega rápida.",
+    image: "/projects/games-drex.webp",
+    fullPageImage: "/projects/games-drex.webp",
+    link: "https://www.gamesdrex.com.br/",
+    year: "2026",
+    client: "GamesDrex",
+    type: "E-commerce & Loja Virtual",
+    recent: true,
+    featured: true,
+  },
+  {
     id: "felipe-torres-black",
     title: "Felipe Torres Black",
     slug: "felipe-torres-black",
     category: "Landing Page de Alta Conversão",
     categories: ["landing-pages"],
+    technologies: ["wordpress", "elementor", "whatsapp"],
     description: "Página imersiva de alta conversão para o treinamento de liderança, inteligência emocional e desenvolvimento executivo 'Conquistadores de Sonhos'.",
     image: "/projects/felipe-torres-black.webp",
     fullPageImage: "/projects/felipe-torres-black.webp",
@@ -292,9 +313,11 @@ export const projectsData: Project[] = [
   {
     id: "riosmed",
     title: "Riosmed Saúde",
+    gallery: ["/projects/riosmed_cover.webp"],
     slug: "riosmed",
     category: "Site Institucional & Saúde",
-    categories: ["institucional", "landing-pages"],
+    categories: ["institucional"],
+    technologies: ["wordpress", "elementor", "whatsapp"],
     description: "Novo portal institucional e catálogo da clínica Riosmed em Feira de Santana, apresentando corpo clínico multidisciplinar, especialidades médicas e agendamento de consultas.",
     image: "/projects/riosmed.webp",
     fullPageImage: "/projects/riosmed.webp",
@@ -307,9 +330,11 @@ export const projectsData: Project[] = [
   {
     id: "slouver-games",
     title: "Slouver Games",
+    gallery: ["/projects/slouver_cover.webp"],
     slug: "slouver-games",
     category: "E-commerce & Plataforma Gamer",
     categories: ["ecommerce"],
+    technologies: ["wordpress", "woocommerce", "elementor", "pix"],
     description: "E-commerce especializado na distribuição de gift cards digitais, assinaturas e chaves com entrega instantânea.",
     image: "/projects/slouver-games.webp",
     fullPageImage: "/projects/slouver-games.webp",
@@ -317,6 +342,22 @@ export const projectsData: Project[] = [
     year: "2026",
     client: "Slouver Games",
     type: "E-commerce & Loja Virtual",
+    recent: true,
+  },
+  {
+    id: "sweet-beauty",
+    title: "Sweet Beauty",
+    slug: "sweet-beauty",
+    category: "E-commerce & Cosméticos",
+    categories: ["ecommerce"],
+    technologies: ["wix"],
+    description: "Loja virtual e e-commerce de skincare natural, cuidados corporais e massageadores de autocuidado, desenvolvida sobre a plataforma Wix com catálogo visual e navegação fluida.",
+    image: "/projects/sweet-beauty.webp",
+    fullPageImage: "/projects/sweet-beauty.webp",
+    link: "https://www.sweetbeauty.com.br/",
+    year: "2026",
+    client: "Sweet Beauty",
+    type: "E-commerce & Loja Virtual Wix",
     recent: true,
   },
 
@@ -327,6 +368,7 @@ export const projectsData: Project[] = [
     slug: "decopisos",
     category: "E-commerce & Revestimentos",
     categories: ["parcerias", "ecommerce"],
+    technologies: ["tray"],
     description: "Loja virtual especializada em pisos vinílicos, rodapés e acabamentos com catálogo dinâmico e experiência de navegação orientada à conversão.",
     agency: "Virtualiti",
     agencyUrl: "https://virtualiti.com.br/",
@@ -344,6 +386,7 @@ export const projectsData: Project[] = [
     slug: "visalens",
     category: "E-commerce & Lentes de Contato",
     categories: ["parcerias", "ecommerce"],
+    technologies: ["tray"],
     description: "Plataforma de comércio eletrônico no segmento óptico, oferecendo jornada de compra fluida e precisa para lentes de contato e soluções visuais.",
     agency: "Virtualiti",
     agencyUrl: "https://virtualiti.com.br/",
@@ -361,6 +404,7 @@ export const projectsData: Project[] = [
     slug: "jacare-home-center",
     category: "E-commerce & Home Center",
     categories: ["parcerias", "ecommerce"],
+    technologies: ["tray"],
     description: "Portal de e-commerce de grande porte para materiais de construção, acabamentos e ferramentas, com arquitetura ágil e busca inteligente.",
     agency: "Virtualiti",
     agencyUrl: "https://virtualiti.com.br/",
@@ -451,4 +495,13 @@ export function getCategoryBySlug(slug: string): ProjectCategory | undefined {
 // Retorna todas as categorias disponíveis
 export function getAllCategories(): ProjectCategory[] {
   return categoriesData;
+}
+
+
+// Retorna projeto por id ou slug
+export function getProjectByIdOrSlug(idOrSlug: string): Project | undefined {
+  const normalized = idOrSlug.toLowerCase().trim();
+  return projectsData.find(
+    (p) => p.id.toLowerCase() === normalized || p.slug.toLowerCase() === normalized
+  );
 }

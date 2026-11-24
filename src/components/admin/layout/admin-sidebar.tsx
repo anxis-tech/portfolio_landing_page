@@ -1,14 +1,12 @@
 'use client'
 
+import { LayoutGroup, motion } from 'motion/react'
 import { AnxisLogo, AnxisIcon } from '@/components/ui/anxis-logo'
 import { HugeiconsIcon } from '@hugeicons/react'
+import { Moon02Icon, Sun03Icon } from '@hugeicons/core-free-icons'
 import { UserProfileWithRole } from '@/lib/auth/permissions'
 import { cn } from '@/lib/utils'
-import {
-  PanelLeftClose,
-  PanelLeftOpen,
-} from 'lucide-react'
-import { ThemeToggleSwitch } from '@/components/ui/theme-toggle-switch'
+import { PanelLeftClose, PanelLeftOpen } from '@/components/admin/ui/icons'
 
 export interface NavItemConfig {
   id: string
@@ -35,237 +33,182 @@ interface AdminSidebarProps {
   onToggleDarkMode: () => void
 }
 
+function NavIcon({ icon, active }: { icon: NavItemConfig['icon']; active: boolean }) {
+  const className = cn(
+    'h-[17px] w-[17px] shrink-0 transition-colors duration-200',
+    active ? 'text-crm-accent' : 'text-crm-subtle group-hover:text-crm-fg'
+  )
+  if (Array.isArray(icon)) return <HugeiconsIcon icon={icon as never} strokeWidth={1.6} className={className} />
+  const Icon = icon as React.ComponentType<{ size?: number; className?: string }>
+  return <Icon size={17} className={className} />
+}
+
+// Alterna claro/escuro com um trilho segmentado; o destaque desliza entre sol e lua.
+function ThemeSwitch({ isDarkMode, onToggle, compact }: { isDarkMode: boolean; onToggle: () => void; compact: boolean }) {
+  if (compact) {
+    return (
+      <button
+        type="button"
+        onClick={onToggle}
+        title={isDarkMode ? 'Mudar para o modo claro' : 'Mudar para o modo escuro'}
+        className="mx-auto flex h-8 w-8 items-center justify-center rounded-lg text-crm-subtle hover:bg-crm-fg/[0.05] hover:text-crm-fg"
+      >
+        <HugeiconsIcon icon={isDarkMode ? Sun03Icon : Moon02Icon} size={16} strokeWidth={1.6} />
+      </button>
+    )
+  }
+  return (
+    <div role="radiogroup" aria-label="Tema" className="relative grid h-8 grid-cols-2 rounded-lg border border-crm-border bg-crm-surface-2 p-0.5">
+      {[
+        { dark: false, icon: Sun03Icon, label: 'Claro' },
+        { dark: true, icon: Moon02Icon, label: 'Escuro' },
+      ].map((option) => {
+        const selected = option.dark === isDarkMode
+        return (
+          <button
+            key={option.label}
+            type="button"
+            role="radio"
+            aria-checked={selected}
+            onClick={() => !selected && onToggle()}
+            className={cn(
+              'relative z-10 flex items-center justify-center gap-1.5 rounded-md px-2.5 text-[11.5px] font-medium',
+              selected ? 'text-crm-fg' : 'text-crm-subtle hover:text-crm-fg'
+            )}
+          >
+            {selected && (
+              <motion.span
+                layoutId="crm-theme-pill"
+                transition={{ type: 'spring', stiffness: 500, damping: 38 }}
+                className="absolute inset-0 -z-10 rounded-md border border-crm-border bg-crm-surface shadow-sm"
+              />
+            )}
+            <HugeiconsIcon icon={option.icon} size={13} strokeWidth={1.8} />
+            {option.label}
+          </button>
+        )
+      })}
+    </div>
+  )
+}
+
 export function AdminSidebar({
   navSections,
   activeTab,
   onSelectTab,
   isCollapsed,
   onToggleCollapse,
-  userProfile,
-  onLogout,
   isDarkMode,
   onToggleDarkMode,
 }: AdminSidebarProps) {
   return (
     <aside
       className={cn(
-        'h-screen fixed top-0 bottom-0 left-0 z-40 flex flex-col justify-between transition-all duration-300 ease-in-out select-none',
-        isDarkMode
-          ? 'bg-[#0B132B] text-slate-300'
-          : 'bg-[#2E3E4F] text-slate-200',
+        'fixed bottom-0 left-0 top-0 z-40 flex h-screen select-none flex-col justify-between bg-crm-canvas text-crm-muted transition-[width] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]',
         isCollapsed ? 'w-16' : 'w-60'
       )}
     >
-      {/* TOP SECTION: BRAND LOGO */}
-      <div
-        className={cn(
-          'h-14 shrink-0 flex items-center px-3.5',
-          isCollapsed ? 'justify-center' : 'justify-start'
-        )}
-      >
+      <div className={cn('flex h-14 shrink-0 items-center', isCollapsed ? 'justify-center' : 'justify-between pl-4 pr-2')}>
         {isCollapsed ? (
-          <button
-            type="button"
-            onClick={onToggleCollapse}
-            className="p-1 hover:scale-105 transition-transform cursor-pointer"
-            title="Expandir menu"
-          >
-            <AnxisIcon size={26} theme="dark" />
+          <button type="button" onClick={onToggleCollapse} className="rounded-lg p-1.5 hover:bg-crm-fg/[0.05]" title="Expandir menu">
+            <AnxisIcon size={24} theme={isDarkMode ? 'dark' : 'light'} />
           </button>
         ) : (
-          <div className="flex items-center">
-            <AnxisLogo size="md" theme="dark" variant="crm" />
-          </div>
+          <>
+            <AnxisLogo size="sm" iconSize={24} theme={isDarkMode ? 'dark' : 'light'} variant="crm" showText={false} />
+            <button
+              type="button"
+              onClick={onToggleCollapse}
+              title="Recolher menu lateral"
+              className="flex h-8 w-8 items-center justify-center rounded-lg text-crm-subtle hover:bg-crm-fg/[0.05] hover:text-crm-fg"
+            >
+              <PanelLeftClose size={16} />
+            </button>
+          </>
         )}
       </div>
 
-      {/* NAVIGATION LIST (flex-1 so it takes all available vertical space naturally) */}
-      <nav className="flex-1 min-h-0 p-2 space-y-3.5 overflow-y-auto scrollbar-thin scrollbar-thumb-slate-700/50">
-        {navSections.map((section, sectionIdx) => {
-          const allowedItems = section.items.filter((item) => item.allowed)
-          if (allowedItems.length === 0) return null
+      <LayoutGroup id="crm-nav">
+        <nav className="crm-no-scrollbar min-h-0 flex-1 space-y-4 overflow-y-auto overflow-x-hidden px-2.5 pb-3 pt-1">
+          {navSections.map((section, sectionIdx) => {
+            const allowedItems = section.items.filter((item) => item.allowed)
+            if (allowedItems.length === 0) return null
+            const showTitle = !isCollapsed && Boolean(section.title) && !section.items.some((i) => i.id === 'dashboard')
 
-          const isDashboardSection = section.items.some((i) => i.id === 'dashboard')
+            return (
+              <div key={section.title || `section-${sectionIdx}`} className="space-y-0.5">
+                {showTitle && <div className="px-2.5 pb-1 pt-1 text-[11px] font-medium text-crm-subtle">{section.title}</div>}
+                {isCollapsed && sectionIdx > 0 && <div className="mx-auto mb-1.5 h-px w-6 bg-crm-border" />}
 
-          return (
-            <div
-              key={section.title || `section-${sectionIdx}`}
-              className={cn(
-                'space-y-0.5',
-                isDashboardSection && cn(
-                  'pb-2.5 border-b',
-                  isDarkMode ? 'border-slate-700/60' : 'border-white/15'
-                )
-              )}
-            >
-              {!isCollapsed && Boolean(section.title) && (
-                <div className={cn(
-                  'text-[10px] font-semibold uppercase tracking-wider px-2.5 pt-2 pb-1',
-                  isDarkMode ? 'text-slate-400/70' : 'text-slate-300/70'
-                )}>
-                  {section.title}
-                </div>
-              )}
-
-              <div className="space-y-0.5">
                 {allowedItems.map((item) => {
                   const isActive = activeTab === item.id
-
                   return (
                     <button
                       key={item.id}
                       type="button"
                       onClick={() => onSelectTab(item.id)}
+                      aria-current={isActive ? 'page' : undefined}
                       className={cn(
-                        'w-full flex items-center rounded-lg text-xs font-medium transition-colors cursor-pointer group relative',
-                        isCollapsed
-                          ? 'justify-center h-9 w-9 mx-auto'
-                          : 'justify-between px-2.5 py-1.5',
-                        isActive
-                          ? isDarkMode
-                            ? 'bg-[#1E293B] text-white font-semibold shadow-xs'
-                            : 'bg-[#182331] text-white font-semibold shadow-xs'
-                          : isDarkMode
-                            ? 'text-slate-400 hover:text-slate-100 hover:bg-slate-800/50'
-                            : 'text-slate-300 hover:text-white hover:bg-[#182331]/50'
+                        'group relative flex w-full items-center rounded-lg text-[13px] transition-colors duration-200',
+                        isCollapsed ? 'mx-auto h-9 w-9 justify-center' : 'h-8 justify-between px-2.5',
+                        isActive ? 'font-medium text-crm-fg' : 'text-crm-muted hover:bg-crm-fg/[0.04] hover:text-crm-fg'
                       )}
                     >
-                      <div className="flex items-center gap-2 min-w-0">
-                        {Array.isArray(item.icon) ? (
-                          <HugeiconsIcon
-                            icon={item.icon as never}
-                            strokeWidth={1.5}
-                            className={cn(
-                              'w-4 h-4 shrink-0 transition-colors',
-                              isActive
-                                ? 'text-white'
-                                : isDarkMode
-                                  ? 'text-slate-400 group-hover:text-slate-200'
-                                  : 'text-slate-300 group-hover:text-white'
-                            )}
-                          />
-                        ) : (
-                          (() => {
-                            const LucideIcon = item.icon as React.ComponentType<{
-                              size?: number
-                              className?: string
-                            }>
-                            return (
-                              <LucideIcon
-                                size={16}
-                                className={cn(
-                                  'shrink-0 transition-colors',
-                                  isActive
-                                    ? 'text-white'
-                                    : isDarkMode
-                                      ? 'text-slate-400 group-hover:text-slate-200'
-                                      : 'text-slate-300 group-hover:text-white'
-                                )}
-                              />
-                            )
-                          })()
-                        )}
-                        {!isCollapsed && (
-                          <span className="truncate">{item.label}</span>
-                        )}
-                      </div>
+                      {isActive && (
+                        <motion.span
+                          layoutId="crm-nav-active"
+                          transition={{ type: 'spring', stiffness: 520, damping: 40 }}
+                          className="absolute inset-0 rounded-lg border border-crm-border bg-crm-surface shadow-sm"
+                        />
+                      )}
+                      <span className="relative flex min-w-0 items-center gap-2.5">
+                        <NavIcon icon={item.icon} active={isActive} />
+                        {!isCollapsed && <span className="truncate">{item.label}</span>}
+                      </span>
 
                       {!isCollapsed && item.badge !== undefined && (
                         <span
                           className={cn(
-                            'text-[10px] font-mono px-1.5 py-0.2 rounded-full',
-                            isActive
-                              ? 'bg-white/20 text-white font-semibold'
-                              : isDarkMode
-                                ? 'bg-slate-800 text-slate-400'
-                                : 'bg-[#182331] text-slate-300'
+                            'relative min-w-5 rounded-md px-1.5 py-px text-center font-mono text-[10.5px] font-medium',
+                            isActive ? 'bg-crm-accent text-white' : 'bg-crm-fg/[0.06] text-crm-muted'
                           )}
                         >
                           {item.badge}
                         </span>
                       )}
 
-                      {!isCollapsed && isActive && item.badge === undefined && (
-                        <div className="w-1.5 h-1.5 rounded-full bg-white animate-pulse shrink-0" />
+                      {isCollapsed && item.badge !== undefined && (
+                        <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-crm-accent ring-2 ring-crm-canvas" />
                       )}
 
-                      {/* FLOATING TOOLTIP WHEN SIDEBAR IS COMPACT */}
                       {isCollapsed && (
-                        <div className={cn(
-                          'absolute left-full ml-3 px-2.5 py-1.5 text-xs font-semibold rounded-lg shadow-2xl border pointer-events-none opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-50 whitespace-nowrap text-left',
-                          isDarkMode
-                            ? 'bg-[#161D31] text-white border-slate-700/80'
-                            : 'bg-[#182331] text-white border-[#2E3E4F]'
-                        )}>
-                          <div className={cn(
-                            'text-[9px] font-normal uppercase tracking-wider',
-                            isDarkMode ? 'text-slate-400' : 'text-slate-300/70'
-                          )}>
-                            {section.title}
-                          </div>
-                          <div className="text-white font-bold">{item.label}</div>
-                          {item.badge !== undefined && (
-                            <div className="text-[10px] text-sky-400 font-mono mt-0.5">
-                              {item.badge} itens
-                            </div>
-                          )}
-                          <div className={cn(
-                            'absolute right-full top-1/2 -translate-y-1/2 border-4 border-transparent',
-                            isDarkMode ? 'border-r-[#161D31]' : 'border-r-[#182331]'
-                          )} />
-                        </div>
+                        <span className="pointer-events-none invisible absolute left-full z-50 ml-3 whitespace-nowrap rounded-lg border border-crm-border bg-crm-surface px-2.5 py-1.5 text-left text-xs opacity-0 shadow-lg transition-all duration-150 group-hover:visible group-hover:opacity-100">
+                          <span className="block text-[10.5px] text-crm-subtle">{section.title}</span>
+                          <span className="block font-medium text-crm-fg">{item.label}</span>
+                          {item.badge !== undefined && <span className="mt-0.5 block font-mono text-[10.5px] text-crm-accent">{item.badge} itens</span>}
+                        </span>
                       )}
                     </button>
                   )
                 })}
               </div>
-            </div>
-          )
-        })}
-      </nav>
+            )
+          })}
+        </nav>
+      </LayoutGroup>
 
-      {/* BOTTOM SECTION: THEME TOGGLE & COLLAPSE */}
-      <div
-        className={cn(
-          'shrink-0 p-2 border-t',
-          isDarkMode
-            ? 'bg-[#080E20] border-slate-800/80'
-            : 'bg-[#182331] border-[#182331]/40',
-          isCollapsed ? 'space-y-1.5' : 'flex items-center justify-between'
+      <div className={cn('shrink-0 border-t border-crm-border p-2.5', isCollapsed && 'space-y-1')}>
+        <ThemeSwitch isDarkMode={isDarkMode} onToggle={onToggleDarkMode} compact={isCollapsed} />
+        {isCollapsed && (
+          <button
+            type="button"
+            onClick={onToggleCollapse}
+            title="Expandir menu lateral"
+            className="mx-auto flex h-8 w-8 items-center justify-center rounded-lg text-crm-subtle hover:bg-crm-fg/[0.05] hover:text-crm-fg"
+          >
+            <PanelLeftOpen size={16} />
+          </button>
         )}
-      >
-        {/* THEME TOGGLE (UIVERSE SWITCH ADAPTED TO ANXIS PALETTE) */}
-        <div
-          className={cn(
-            'flex items-center',
-            isCollapsed ? 'justify-center mx-auto' : 'px-1 py-1'
-          )}
-        >
-          <ThemeToggleSwitch
-            isDarkMode={isDarkMode}
-            onToggle={onToggleDarkMode}
-          />
-        </div>
-
-        {/* COLLAPSE / EXPAND TOGGLE */}
-        <button
-          type="button"
-          onClick={onToggleCollapse}
-          className={cn(
-            'flex items-center justify-center rounded-lg transition-colors cursor-pointer',
-            isDarkMode
-              ? 'text-slate-400 hover:text-white hover:bg-slate-800/50'
-              : 'text-slate-300 hover:text-white hover:bg-[#2E3E4F]/70',
-            isCollapsed ? 'h-8 w-8 mx-auto' : 'p-1.5'
-          )}
-          title={isCollapsed ? 'Expandir menu lateral' : 'Recolher menu lateral'}
-        >
-          {isCollapsed ? (
-            <PanelLeftOpen size={16} className="shrink-0" />
-          ) : (
-            <PanelLeftClose size={16} className="shrink-0" />
-          )}
-        </button>
       </div>
     </aside>
   )

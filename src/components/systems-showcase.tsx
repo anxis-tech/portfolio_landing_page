@@ -29,7 +29,7 @@ export function SystemsShowcase() {
   const [virtualHeight, setVirtualHeight] = useState<number>(780);
 
   const activeProject: Project = systems[currentIndex] || systems[0];
-  const isInteractiveIframe = Boolean(activeProject?.link && (activeProject.link.startsWith("/crm") || activeProject.link.startsWith("/drexgames-admin")));
+  const isInteractiveIframe = Boolean(activeProject?.link && activeProject.link.startsWith("/drexgames-admin"));
 
   useEffect(() => {
     const el = viewportContainerRef.current;
@@ -66,13 +66,13 @@ export function SystemsShowcase() {
 
   const cleanDisplayUrl = activeProject?.link?.startsWith("http")
     ? activeProject.link.replace(/^https?:\/\//, "")
-    : `mateusoliveira.dev${activeProject?.link || "/crm"}`;
+    : `mateusoliveira.dev${activeProject?.link || ""}`;
 
   const handleCopyLink = () => {
     if (typeof navigator !== "undefined" && navigator.clipboard) {
       const fullUrl = activeProject?.link?.startsWith("http")
         ? activeProject.link
-        : `${window.location.origin}${activeProject?.link || "/crm"}`;
+        : `${window.location.origin}${activeProject?.link || ""}`;
       navigator.clipboard.writeText(fullUrl);
       setCopiedUrl(true);
       setTimeout(() => setCopiedUrl(false), 2000);
@@ -170,15 +170,17 @@ export function SystemsShowcase() {
                 <RotateCcw size={13} />
               </button>
             )}
-            <Link
-              href={activeProject.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-1.5 rounded-lg text-neutral-500 hover:text-neutral-800 hover:bg-neutral-200/60 transition-colors"
-              title="Abrir em tela cheia"
-            >
-              <Maximize2 size={13} />
-            </Link>
+            {activeProject.id !== "logoipsum-crm" && (
+              <Link
+                href={activeProject.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-1.5 rounded-lg text-neutral-500 hover:text-neutral-800 hover:bg-neutral-200/60 transition-colors"
+                title="Abrir em tela cheia"
+              >
+                <Maximize2 size={13} />
+              </Link>
+            )}
           </div>
         </div>
 
@@ -235,15 +237,25 @@ export function SystemsShowcase() {
                 <h3 className="text-xl font-bold mt-1 text-white">{activeProject.title}</h3>
                 <p className="text-xs text-neutral-300 mt-2 leading-relaxed">{activeProject.description}</p>
                 <div className="mt-4 flex justify-center">
-                  <Link
-                    href={activeProject.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 px-4 py-2 bg-white text-neutral-900 hover:bg-neutral-100 rounded-xl text-xs font-bold transition-all"
-                  >
-                    <span>Acessar sistema</span>
-                    <ExternalLink size={13} />
-                  </Link>
+                  {activeProject.id === "logoipsum-crm" ? (
+                    <Link
+                      href={`/projeto/${activeProject.slug}`}
+                      className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#d8ff7c] text-neutral-950 hover:bg-[#cbf66a] rounded-xl text-xs font-bold transition-all"
+                    >
+                      <span>Ver detalhes do case</span>
+                      <ExternalLink size={13} />
+                    </Link>
+                  ) : (
+                    <Link
+                      href={activeProject.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 px-4 py-2 bg-white text-neutral-900 hover:bg-neutral-100 rounded-xl text-xs font-bold transition-all"
+                    >
+                      <span>Acessar sistema</span>
+                      <ExternalLink size={13} />
+                    </Link>
+                  )}
                 </div>
               </div>
             </div>

@@ -3,10 +3,17 @@
 import { useState, ReactNode } from 'react'
 import { cn } from '@/lib/utils'
 import { AdminSidebar, NavSectionConfig } from './admin-sidebar'
+
+
+
 import { AdminTopbar } from './admin-topbar'
-import { UserProfileWithRole } from '@/lib/auth/permissions'
-import { AlertCircle, X } from 'lucide-react'
+import { hasPermission, PERMISSIONS, UserProfileWithRole } from '@/lib/auth/permissions'
+import { AlertCircle, X } from '@/components/admin/ui/icons'
 import { NotificationViewport } from '@/components/admin/ui/notifications'
+
+
+/** Variáveis das fontes do CRM, para telas fora do AppShell (como a de carregamento). */
+export const crmFontVariables = ''
 
 interface AppShellProps {
   navSections: NavSectionConfig[]
@@ -23,6 +30,8 @@ interface AppShellProps {
   onQuickAction?: () => void
   quickActionLabel?: string
   isFullHeight?: boolean
+  /** Green dot on the favicon (qualified WhatsApp contacts waiting for a reply). */
+  faviconAlert?: boolean
   children: ReactNode
 }
 
@@ -41,10 +50,12 @@ export function AppShell({
   onQuickAction,
   quickActionLabel,
   isFullHeight = false,
+  faviconAlert = false,
   children,
 }: AppShellProps) {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false)
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false)
+  const copilot = true
 
   const handleSelectTab = (tabId: string) => {
     onSelectTab(tabId)
@@ -54,8 +65,10 @@ export function AppShell({
   return (
     <div
       className={cn(
-        'h-screen w-screen overflow-hidden flex flex-col font-sans transition-colors duration-300',
-        isDarkMode ? 'bg-[#0B132B] text-slate-100 dark' : 'bg-[#2E3E4F] text-[#0C1D36]'
+        'crm-root flex h-screen w-screen flex-col overflow-hidden bg-crm-canvas font-sans text-crm-fg antialiased transition-colors duration-300',
+        
+        
+        isDarkMode && 'dark'
       )}
     >
       <NotificationViewport isDarkMode={isDarkMode} />
@@ -87,7 +100,7 @@ export function AppShell({
       {/* MOBILE BACKDROP */}
       {isMobileSidebarOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/60 backdrop-blur-xs md:hidden"
+          className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm md:hidden"
           onClick={() => setIsMobileSidebarOpen(false)}
         />
       )}
@@ -123,28 +136,33 @@ export function AppShell({
         userProfile={userProfile}
         onLogout={onLogout}
         isDarkMode={isDarkMode}
+        showCopilot={true}
       />
 
       {/* MAIN MODULE CONTENT AREA */}
       <div
         className={cn(
-          'flex-1 pt-14 transition-all duration-300 ease-in-out',
-          isSidebarCollapsed ? 'md:pl-16' : 'md:pl-60',
-          isDarkMode ? 'bg-[#0B132B]' : 'bg-[#2E3E4F]'
+          'flex-1 pt-14 transition-[padding] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]',
+          isSidebarCollapsed ? 'md:pl-16' : 'md:pl-60'
         )}
       >
         <main
           className={cn(
-            'w-full md:rounded-tl-lg',
-            !isDarkMode ? 'bg-[#fdfdfd]' : 'bg-[#0B0F19]',
-            isFullHeight
-              ? 'h-[calc(100vh-56px)] overflow-hidden p-0'
-              : 'h-[calc(100vh-56px)] overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-6'
+            'relative h-[calc(100vh-56px)] w-full bg-crm-surface md:rounded-tl-2xl md:border-l md:border-t md:border-crm-border',
+            isFullHeight ? 'overflow-hidden p-0' : 'overflow-y-auto'
           )}
         >
-          {children}
+          {!isFullHeight && <div aria-hidden="true" className="crm-canvas-grid pointer-events-none absolute inset-x-0 top-0 h-72" />}
+          {/* Os módulos ficam montados entre trocas de aba (keepAlive em app/admin/page.tsx). */}
+          <div
+            className={cn('relative', isFullHeight ? 'h-full' : 'mx-auto w-full max-w-[1600px] space-y-6 p-4 sm:p-6 lg:p-8')}
+          >
+            {children}
+          </div>
         </main>
       </div>
+      
+      
     </div>
   )
 }

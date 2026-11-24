@@ -19,7 +19,7 @@ export function ColoredPointer({
 }: ColoredPointerProps) {
   const pathname = usePathname();
   useEffect(() => {
-    if (pathname && pathname.startsWith("/crm")) return;
+    
     const root = document.documentElement;
     const enabled = window.matchMedia("(pointer: fine) and (prefers-reduced-motion: no-preference)");
     const previousCursor = root.style.getPropertyValue("--portfolio-cursor");

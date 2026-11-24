@@ -21,8 +21,8 @@
   },
   "drex-games": {
     "width": 1200,
-    "height": 5022,
-    "version": "9cbaaaf24762"
+    "height": 6071,
+    "version": "30a9b24c3c9d"
   },
   "felipe-torres-black": {
     "width": 1200,
@@ -55,8 +55,23 @@
     "version": "32acf5c1b8d6"
   },
   "logoipsum-crm": {
+    "width": 1600,
+    "height": 1000,
+    "version": "clean-cover"
+  },
+  "drexgames-admin": {
+    "width": 1920,
+    "height": 1537,
+    "version": "cfb047e7b544"
+  },
+  "games-drex": {
     "width": 1200,
-    "height": 750,
-    "version": "1a1a74af40a"
+    "height": 4520,
+    "version": "391c1c41b0c1"
+  },
+  "sweet-beauty": {
+    "width": 1200,
+    "height": 6644,
+    "version": "389a342975f0"
   }
 }

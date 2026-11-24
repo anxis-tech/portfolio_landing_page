@@ -7,14 +7,14 @@ export const INITIAL_SITE_SETTINGS: SiteSettings = {
   logo_dark_url: '/images/anxis-logo.svg',
   email: 'contato@anxis.com.br',
   phone: '(84) 8697-9790',
-  whatsapp: '558486979790',
+  whatsapp: '5511999999999',
   address: 'São Paulo, SP - Brasil',
   social_links: {
     instagram: 'https://instagram.com/anxis.digital',
     linkedin: 'https://linkedin.com/company/anxis-digital',
   },
   primary_cta_label: 'Quero criar meu site',
-  primary_cta_url: 'https://wa.me/558486979790',
+  primary_cta_url: '#',
 }
 
 export const INITIAL_SERVICES: ServiceItem[] = [
@@ -166,7 +166,7 @@ export const INITIAL_PROJECTS: Project[] = [
     id: 'p4',
     title: 'RiosMed - Centro Médico & Especialidades Integradas',
     client: 'RiosMed Saúde',
-    category: 'landing-page',
+    category: 'institucional',
     short_description: 'Landing page completa para centro médico e diagnósticos com apresentação clara de especialidades, exames e agendamento.',
     desktop_image_url: '/images/projects/riosmed-saude.webp',
     mobile_image_url: '/images/projects/riosmed-saude.webp',
