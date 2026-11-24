@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { ZoomIn, X, ChevronLeft, ChevronRight, Eye } from "lucide-react";
 
 export interface GalleryItem {
@@ -25,7 +26,6 @@ export function ProjectGalleryViewer({
   galleryImages = [],
   dimensions,
 }: ProjectGalleryViewerProps) {
-  const isCrm = mainImageSrc.includes("logoipsum-crm");
   // Construímos a lista de thumbnails (mínimo de 5 itens preenchidos)
   // A 1ª imagem é SEMPRE a imagem principal em altíssima definição (já selecionada por padrão)
   const items: GalleryItem[] = [];
@@ -67,6 +67,27 @@ export function ProjectGalleryViewer({
   const [activeIndex, setActiveIndex] = useState(0);
   const activeItem = items[activeIndex] || items[0];
   const activeSrc = activeItem.isPlaceholder ? mainImageSrc : activeItem.src;
+
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Detecta se a imagem ativa é formato de capa (horizontal/landscape)
+  // Aplica para CRM, DrexGames Admin e qualquer capa de projeto (ex: felipe_bezerril_cover, erika_vieira_cover, riosmed_cover, etc.)
+  const [isLandscape, setIsLandscape] = useState(false);
+
+  useEffect(() => {
+    setIsLandscape(false);
+  }, [activeSrc]);
+
+  const isCover =
+    isLandscape ||
+    activeSrc.includes("_cover") ||
+    activeSrc.includes("-cover") ||
+    activeSrc.includes("logoipsum-crm") ||
+    activeSrc.includes("drexgames-admin") ||
+    (dimensions ? dimensions.height <= dimensions.width * 1.3 : false);
 
   // Estado do Modal de Zoom / Lightbox
   const [isZoomOpen, setIsZoomOpen] = useState(false);
@@ -123,9 +144,7 @@ export function ProjectGalleryViewer({
           Se a imagem for mais longa, cria a rolagem vertical suave internamente.
           Renderização em 100% da resolução nativa sem compressão ou degradação.
          ========================================================================= */}
-      <div className={`relative w-full rounded-2xl sm:rounded-3xl overflow-hidden bg-white border border-neutral-200/90 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.06),0_1px_3px_rgba(0,0,0,0.03)] group flex flex-col ${
-        isCrm ? "h-[400px] sm:h-[480px] lg:h-[540px]" : "h-[400px] sm:h-[480px] lg:h-[540px]"
-      }`}>
+      <div className="relative w-full h-[400px] sm:h-[480px] lg:h-[540px] rounded-2xl sm:rounded-3xl overflow-hidden bg-white border border-neutral-200/90 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.06),0_1px_3px_rgba(0,0,0,0.03)] group flex flex-col">
         
         {/* Botão de Dica de Zoom Flutuante */}
         <button
@@ -150,15 +169,24 @@ export function ProjectGalleryViewer({
             }
           }}
           className={`relative w-full h-full no-scrollbar cursor-zoom-in ${
-            isCrm ? "overflow-hidden" : "overflow-y-auto overscroll-contain"
+            isCover ? "overflow-hidden" : "overflow-y-auto overscroll-contain"
           }`}
           title="Clique para abrir ampliação em tela cheia"
         >
           <img
             src={activeSrc}
             alt={activeItem.title || projectTitle}
+            onLoad={(e) => {
+              const img = e.currentTarget;
+              if (img.naturalWidth > 0 && img.naturalHeight > 0) {
+                const ratio = img.naturalHeight / img.naturalWidth;
+                if (ratio < 1.3) {
+                  setIsLandscape(true);
+                }
+              }
+            }}
             className={`select-none transition-opacity duration-200 ${
-              isCrm
+              isCover
                 ? "w-full h-full object-cover object-top block"
                 : "w-full h-auto block"
             }`}
@@ -267,11 +295,11 @@ export function ProjectGalleryViewer({
       </div>
 
       {/* =========================================================================
-          MODAL DE ZOOM / LIGHTBOX EXPANDIDO EM TELA CHEIA
+          MODAL DE ZOOM / LIGHTBOX EXPANDIDO EM TELA CHEIA (PORTAL PARA O BODY)
          ========================================================================= */}
-      {isZoomOpen && (
+      {isZoomOpen && mounted && createPortal(
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-neutral-950/85 backdrop-blur-md transition-all animate-in fade-in duration-200"
+          className="fixed inset-0 z-[10000] flex items-center justify-center p-3 sm:p-6 bg-neutral-950/85 backdrop-blur-md transition-all animate-in fade-in duration-200"
           onClick={() => setIsZoomOpen(false)}
         >
           {/* Header Flutuante do Modal de Zoom */}
@@ -279,7 +307,7 @@ export function ProjectGalleryViewer({
             className="absolute top-4 left-4 right-4 flex items-center justify-between z-30 max-w-6xl mx-auto"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center gap-2 bg-neutral-900/90 text-white px-3.5 py-1.5 rounded-full text-xs font-mono backdrop-blur-md border border-white/10">
+            <div className="flex items-center gap-2 bg-neutral-900/90 text-white px-3.5 py-1.5 rounded-full text-xs font-mono backdrop-blur-md border border-white/10 shadow-lg">
               <span className="w-2 h-2 rounded-full bg-[#d8ff7c]" />
               <span className="truncate max-w-xs sm:max-w-md">{activeItem.title || projectTitle}</span>
             </div>
@@ -288,6 +316,7 @@ export function ProjectGalleryViewer({
               type="button"
               onClick={() => setIsZoomOpen(false)}
               className="w-9 h-9 rounded-full bg-neutral-900/90 hover:bg-neutral-800 text-white border border-white/10 flex items-center justify-center transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-lg"
+              aria-label="Fechar visualização (Esc)"
               title="Fechar visualização (Esc)"
             >
               <X size={18} />
@@ -307,7 +336,8 @@ export function ProjectGalleryViewer({
               decoding="sync"
             />
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );

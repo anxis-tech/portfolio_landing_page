@@ -262,7 +262,7 @@ export const projectsData: Project[] = [
   {
     id: "drex-games",
     title: "Drex Games",
-    gallery: ["/projects/drexgames-admin.webp", "/projects/games-drex.webp"],
+    gallery: ["/projects/drexgames-admin.webp"],
     slug: "drex-games",
     category: "E-commerce & Plataforma Gamer",
     categories: ["ecommerce"],

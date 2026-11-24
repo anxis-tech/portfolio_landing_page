@@ -190,12 +190,12 @@ export function ProjectExpandableModal({
           <div
             ref={scrollContainerRef}
             className={`relative flex-1 h-full bg-neutral-100/70 border-b lg:border-b-0 lg:border-r border-neutral-200/80 ${
-              isCrm ? "overflow-hidden" : "overflow-y-auto overscroll-contain"
+              isCover ? "overflow-hidden" : "overflow-y-auto overscroll-contain"
             }`}
             style={{ WebkitOverflowScrolling: "touch" }}
           >
             {/* Keep the already loaded card image scrollable until the full image decodes. */}
-            <div className={`relative w-full ${isCrm ? "h-full" : "min-h-full"}`} aria-busy={screenshotStatus === "loading"}>
+            <div className={`relative w-full ${isCover ? "h-full" : "min-h-full"}`} aria-busy={screenshotStatus === "loading"}>
               <Image
                 src={originRect?.previewSrc || getProjectImage(project, true)}
                 alt=""
@@ -204,7 +204,7 @@ export function ProjectExpandableModal({
                 height={dimensions.height}
                 unoptimized
                 loading="eager"
-                className={`block select-none ${isCrm ? "w-full h-full object-cover object-top" : "w-full h-auto"}`}
+                className={`block select-none ${isCover ? "w-full h-full object-cover object-top" : "w-full h-auto"}`}
               />
               <Image
                 src={fullPageSrc}
@@ -217,7 +217,7 @@ export function ProjectExpandableModal({
                 onLoad={() => setScreenshotStatus("ready")}
                 onError={() => setScreenshotStatus("error")}
                 className={`absolute top-0 left-0 block select-none transition-opacity duration-150 ${
-                  isCrm ? "w-full h-full object-cover object-top" : "w-full h-auto"
+                  isCover ? "w-full h-full object-cover object-top" : "w-full h-auto"
                 } ${
                   screenshotStatus === "ready" ? "opacity-100" : "opacity-0"
                 }`}
@@ -225,7 +225,7 @@ export function ProjectExpandableModal({
             </div>
 
             {/* Dica de rolagem com ícone de mouse no desktop e toque no mobile */}
-            {phase !== "expanding" && !isCrm && (
+            {phase !== "expanding" && !isCover && (
               <div className="sticky bottom-3.5 inset-x-0 flex justify-center pointer-events-none pb-1 animate-in fade-in duration-500">
                 <span className="px-3.5 py-1.5 rounded-full bg-neutral-900/85 backdrop-blur-md text-white text-[11px] font-medium shadow-lg flex items-center gap-2 border border-white/10">
                   {/* Ícone de Mouse (Desktop) */}
