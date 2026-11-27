@@ -200,22 +200,21 @@ interface ProjectCardProps { project: Project; }
 function ProjectCard({ project }: ProjectCardProps) {
   return <Link href={`/projeto/${project.slug || project.id}`} aria-label={`Ver projeto ${project.title}`} className="project-card group relative block w-full sm:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-4.5rem)/4)] min-w-0 rounded-2xl overflow-hidden border border-neutral-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-950">
     <div className="relative flex flex-col w-full min-h-56 aspect-[4/3] bg-neutral-100">
-      <Image src={getProjectImage(project, true)} alt="" fill sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 25vw" className="object-cover object-top" />
-      <div className="absolute inset-0 bg-gradient-to-t from-neutral-950/90 via-neutral-950/50 to-neutral-950/30" />
-      <div className="project-card-content relative w-full min-w-0 min-h-56 flex-1 flex flex-col items-start justify-end gap-3 p-5 text-left text-white motion-safe:transition-[opacity,transform] motion-safe:duration-200">
-        <h3 className="font-serif-editorial text-xl break-words max-w-full">{project.title}</h3>
-        <TechIconList technologies={project.technologies} />
-        <span className="project-card-touch-cta inline-flex items-center gap-1.5 rounded-full bg-[#d8ff7c] px-4 py-2 text-xs font-semibold text-neutral-950">Ver projeto <ArrowUpRight size={14} /></span>
+      <Image src={getProjectImage(project)} alt="" fill unoptimized sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 25vw" className="object-cover object-top" />
+      <div className="project-card-content relative w-full min-w-0 min-h-56 flex-1 flex flex-col items-start justify-end text-left text-white motion-safe:transition-[opacity,transform] motion-safe:duration-200">
+        <div className="relative w-full min-w-0 flex flex-col items-start gap-3 px-5 pb-5 pt-6 bg-[linear-gradient(to_bottom,transparent_0%,rgba(0,0,0,0.22)_50%,rgba(0,0,0,0.48)_100%)]">
+          <h3 className="font-serif-editorial text-xl break-words max-w-full [text-shadow:0_1px_3px_rgba(0,0,0,0.6)]">{project.title}</h3>
+          <TechIconList technologies={project.technologies} />
+        </div>
       </div>
       <span aria-hidden="true" className="project-card-hover-cta absolute inset-0 flex items-center justify-center opacity-0 pointer-events-none motion-safe:transition-[opacity,transform] motion-safe:duration-200"><span className="inline-flex items-center gap-1.5 rounded-full bg-[#d8ff7c] px-4 py-2 text-xs font-semibold text-neutral-950">Ver projeto <ArrowUpRight size={14} /></span></span>
     </div>
     <style jsx global>{`
-      @media (hover: hover) and (pointer: fine) {
-        .project-card-touch-cta { display: none; }
+      @media (min-width: 640px) and (hover: hover) and (pointer: fine) {
         .project-card:hover .project-card-content, .project-card:focus-visible .project-card-content { opacity: 0; }
         .project-card:hover .project-card-hover-cta, .project-card:focus-visible .project-card-hover-cta { opacity: 1; }
       }
-      @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+      @media (min-width: 640px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
         .project-card-hover-cta { transform: translateY(0.5rem); }
         .project-card:hover .project-card-content, .project-card:focus-visible .project-card-content { transform: translateY(-0.5rem); }
         .project-card:hover .project-card-hover-cta, .project-card:focus-visible .project-card-hover-cta { transform: translateY(0); }
