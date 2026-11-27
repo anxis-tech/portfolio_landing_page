@@ -281,3 +281,12 @@ export function TechBadgeList({ technologies }: { technologies?: string[] }) {
     </div>
   );
 }
+
+export function TechIconList({ technologies }: { technologies?: string[] }) {
+  if (!technologies?.length) return null;
+  return <div className="flex flex-wrap justify-start items-center gap-3 max-w-full">{technologies.map((tech) => {
+    const meta = TECH_DEFINITIONS[tech.toLowerCase().trim() as TechKey];
+    if (!meta) return null;
+    return <span key={tech} role="img" aria-label={meta.label} title={meta.label} className="inline-flex items-center justify-center [&_svg]:text-white [&_img]:drop-shadow-[0_0_2px_rgba(255,255,255,0.9)]">{meta.icon}</span>;
+  })}</div>;
+}
