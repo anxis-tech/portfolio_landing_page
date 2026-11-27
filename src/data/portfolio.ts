@@ -40,6 +40,7 @@ export interface Project {
   categories: string[]; // Slugs for dynamic category routing
   technologies?: string[]; // Stack de tecnologias e integrações
   description: string;
+  titleTone?: "dark"; // Dark title for light cover images
   image: string; // Editorial cover image
   fullPageImage?: string; // Full-page real screenshot
   link: string;
@@ -176,6 +177,7 @@ export const projectsData: Project[] = [
     id: "logoipsum-crm",
     title: "Sistema CRM & Gestão Empresarial",
     slug: "sistema-crm",
+    titleTone: "dark",
     category: "Sistemas Web & CRM",
     categories: ["sistemas"],
     technologies: ["nextjs", "react", "node", "supabase", "whatsapp-business"],

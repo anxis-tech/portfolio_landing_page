@@ -202,9 +202,10 @@ function ProjectCard({ project }: ProjectCardProps) {
     <div className="relative flex flex-col w-full min-h-56 aspect-[4/3] bg-neutral-100">
       <Image src={getProjectImage(project)} alt="" fill unoptimized sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 25vw" className="object-cover object-top" />
       <div className="project-card-content relative w-full min-w-0 min-h-56 flex-1 flex flex-col items-start justify-end text-left text-white motion-safe:transition-[opacity,transform] motion-safe:duration-200">
-        <div className="relative w-full min-w-0 flex flex-col items-start gap-3 px-5 pb-5 pt-6 bg-[linear-gradient(to_bottom,transparent_0%,rgba(0,0,0,0.22)_50%,rgba(0,0,0,0.48)_100%)]">
-          <h3 className="font-serif-editorial text-xl break-words max-w-full [text-shadow:0_1px_3px_rgba(0,0,0,0.6)]">{project.title}</h3>
-          <TechIconList technologies={project.technologies} />
+        <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-[80px] bg-[linear-gradient(to_bottom,transparent_0%,rgba(0,0,0,0.025)_10%,rgba(0,0,0,0.10)_25%,rgba(0,0,0,0.24)_45%,rgba(0,0,0,0.43)_70%,rgba(0,0,0,0.64)_100%)]" />
+        <div className="relative w-full min-w-0 flex flex-col items-start gap-3 px-5 pb-5 pt-6">
+          <h3 className={`font-serif-editorial text-xl leading-7 w-full min-w-0 truncate ${project.titleTone === "dark" ? "text-neutral-950 [text-shadow:0_0_3px_rgba(255,255,255,0.8)]" : "[text-shadow:0_1px_4px_rgba(0,0,0,0.8),0_2px_9px_rgba(0,0,0,0.45)]"}`}>{project.title}</h3>
+          <div className="flex min-h-5 max-w-full items-center"><TechIconList technologies={project.technologies} /></div>
         </div>
       </div>
       <span aria-hidden="true" className="project-card-hover-cta absolute inset-0 flex items-center justify-center opacity-0 pointer-events-none motion-safe:transition-[opacity,transform] motion-safe:duration-200"><span className="inline-flex items-center gap-1.5 rounded-full bg-[#d8ff7c] px-4 py-2 text-xs font-semibold text-neutral-950">Ver projeto <ArrowUpRight size={14} /></span></span>
