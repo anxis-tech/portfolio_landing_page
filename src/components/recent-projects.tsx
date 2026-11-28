@@ -204,7 +204,7 @@ function ProjectCard({ project }: ProjectCardProps) {
       <div className="project-card-content relative w-full min-w-0 min-h-56 flex-1 flex flex-col items-start justify-end text-left text-white motion-safe:transition-[opacity,transform] motion-safe:duration-200">
         <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-[80px] bg-[linear-gradient(to_bottom,transparent_0%,rgba(0,0,0,0.025)_10%,rgba(0,0,0,0.10)_25%,rgba(0,0,0,0.24)_45%,rgba(0,0,0,0.43)_70%,rgba(0,0,0,0.64)_100%)]" />
         <div className="relative w-full min-w-0 flex flex-col items-start gap-3 px-5 pb-5 pt-6">
-          <h3 className={`font-serif-editorial text-xl leading-7 w-full min-w-0 truncate ${project.titleTone === "dark" ? "text-neutral-950 [text-shadow:0_0_3px_rgba(255,255,255,0.8)]" : "[text-shadow:0_1px_4px_rgba(0,0,0,0.8),0_2px_9px_rgba(0,0,0,0.45)]"}`}>{project.title}</h3>
+          <h3 className="font-serif-editorial text-xl leading-7 w-full min-w-0 truncate text-white [text-shadow:0_1px_3px_rgba(0,0,0,0.95),0_2px_7px_rgba(0,0,0,0.85),0_2px_12px_rgba(0,0,0,0.55)]">{project.title}</h3>
           <div className="flex min-h-5 max-w-full items-center"><TechIconList technologies={project.technologies} /></div>
         </div>
       </div>
